@@ -1,0 +1,34 @@
+# A more advanced use is distance fields. Note that the original size is a lot larger than
+# the final result
+# Uses: Distance Field
+
+[default]
+name = ./fonts/verdana.ttf
+# We scale up the original glyph
+size = 24*4
+
+letters = letters_ascii.txt
+
+bgcolor = (0, 0, 0)
+
+
+writer = fontout_json
+texturerender = fonttex_bitmap
+texturewriter = fonttexout_pil
+textureformat = .png
+texturesize = 1024, 1024
+texturechannels = R
+
+layers = [Layer(color=solid)]
+posteffects = [distance_field]
+
+# modes: none, light, normal. Default is 'normal'
+antialias = none
+
+[solid]
+type = solid
+color = (255, 255, 255)
+
+[distance_field]
+type = distancefield
+size = 10

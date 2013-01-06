@@ -1,0 +1,52 @@
+# This example show how to combine different layers and post effects
+# Uses: Texture, Outline, Shadow
+
+[default]
+name = ./fonts/aardvark.ttf
+size = 42
+
+unicode = 0
+letters = letters_ascii.txt
+
+bgcolor = (0,0,0)
+
+writer = fontout_json
+texturerender = fonttex_bitmap
+texturewriter = fonttexout_pil
+textureformat = .png
+texturesize = 512, 512
+
+layers = [Layer(color=texture), Layer(color=gradient, blend=blendlineardodge, opacity=127)]
+posteffects = [outline_white, outline_black, shadow]
+
+antialias = light
+
+[outline_black]
+type = outline
+width = 3
+spread = 1
+color = (0, 0, 0)
+
+[outline_white]
+type = outline
+width = 1
+color = (255, 255, 255)
+
+[shadow]
+type = dropshadow
+angle = 120
+distance = 6
+size = 3
+color = (0, 0, 0)
+opacity = 75
+
+[gradient]
+# A gradient with number of rgba values, evenly spaced [bottom color, ..., top color]
+type = gradient
+angle = 0
+colors = [(0,0,40), (150,255,150)]
+
+[texture]
+type = texture
+name = ./minecraft.png
+
