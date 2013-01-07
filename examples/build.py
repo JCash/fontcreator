@@ -3,7 +3,7 @@ import sys, os, inspect
 scriptdir = os.path.dirname( inspect.getsourcefile(inspect.currentframe()) )
 
 EXAMPLEDIR = os.path.abspath(os.path.dirname(__file__))
-OUTPUTDIR = os.path.normpath( os.path.join(EXAMPLEDIR, '..', 'build') )
+OUTPUTDIR = os.path.normpath( os.path.join(EXAMPLEDIR, '..', 'doc', 'build') )
 FONTCREATOR = os.path.normpath( os.path.join(EXAMPLEDIR, '..', 'fontcreator.py') )
 
 TEXT="Hello World!"

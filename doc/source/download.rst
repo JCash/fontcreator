@@ -14,8 +14,11 @@ The FontCreator should work on any platform that supports these prerequisites:
 - `PIL <http://www.pythonware.com/products/pil>`_
 - `numpy <http://www.scipy.org/Download>`_
 - `freetype <http://www.freetype.org/download.html>`_
-- `PySide <http://qt-project.org/wiki/PySideDownloads>`_
-- `sphinx <http://sphinx.pocoo.org>`_
+
+Optional installations:
+
+- `sphinx <http://sphinx.pocoo.org>`_ (for the documentation)
+- `PySide <http://qt-project.org/wiki/PySideDownloads>`_ (for the Editor)
 
 Note that the PIL package is only necessary if you want to use it for saving
 to a standard image format (e.g. PNG, TGA etc)
@@ -25,9 +28,15 @@ For Linux and Mac, you can get these as regular packages. (On Mac using macports
 Downloads
 ---------
 
-Here is the latest distribution of the FontCreator:
+Download the zip:
 
-- FontCreator 0.1
+- `fontcreator.zip <https://github.com/JCash/fontcreator/archive/master.zip>`_
+
+Or get the code from GitHub::
+
+	> git clone https://github.com/JCash/fontcreator.git
+	
+
 
 
 Install
@@ -42,18 +51,22 @@ Windows::
     
 Linux::
 
-    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/name/freetypelibpath
+    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/local/lib
     
 Mac::
 
-    export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:/Users/name/freetypelibpath
-    
-.. caution::
-    
-    Linux/Mac: You should always avoid setting the library path on a global scope.
-    As a rule of thumb, set it in a wrapper script instead!
-    
-Next, you can test that the tool by compiling an example file::
+    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/local/lib
+
+
+Building Code
+-------------
+
+The font creator comes with a code for some image processing. These are easily built by
+calling the appropriate compile script::
+
+	> ./compile.sh
+
+Once the code is built and the library path is set, you can test that the tool by compiling an example file::
 
     > python fontcreator.py -i examples/00_pixel.fontinfo -o build/00_pixel.fontinfo
 
@@ -66,5 +79,9 @@ Building Examples
 You can also build the examples to test the font creator::
 
     > python examples/build.py
+    
+The fontcreator comes with a script that also sets the path for you::
+
+	> ./build_examples.sh
     
 

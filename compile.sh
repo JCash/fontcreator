@@ -10,3 +10,16 @@ g++ -shared -O2 \
 	source/binpack/MaxRectsBinPack.cpp \
 	source/binpack.cpp \
 	-o _binpack.dylib
+	
+g++ -O2 \
+	source/demo.cpp \
+	-L/opt/local/lib \
+	-I/opt/local/include \
+	-lglfw \
+	-lpng \
+	-framework IOKit \
+	-framework Carbon  \
+	-framework OpenGL \
+	-framework Foundation \
+	-framework AppKit \
+	-o build/demo
