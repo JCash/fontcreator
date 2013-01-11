@@ -1,9 +1,17 @@
-import os
+import sys, os
 import ctypes
 from ctypes import POINTER, byref, c_void_p, c_float, c_int32, c_bool
 
+
+if sys.platform == 'darwin':
+    _suffix = '.dylib'
+elif sys.platform == 'win32':
+    _suffix = '.dll'
+elif sys.platform == 'linux2':
+    _suffix = '.so'
+
 _dirpath = os.path.dirname(__file__)
-_binpack = ctypes.cdll.LoadLibrary(os.path.join(_dirpath, '_binpack.dylib'))
+_binpack = ctypes.cdll.LoadLibrary(os.path.join(_dirpath, '_binpack%s' % _suffix))
 
 SKYLINE_BL = 0
 SKYLINE_MW = 1

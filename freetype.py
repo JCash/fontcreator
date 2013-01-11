@@ -19,6 +19,8 @@ elif sys.platform == 'win32':
 elif sys.platform == 'linux2':
     _prefix = 'lib'
     _suffix = '.so'
+    
+print os.path.exists('%sfreetype%s' % (_prefix, _suffix))
 
 _freetype = ctypes.cdll.LoadLibrary('%sfreetype%s' % (_prefix, _suffix))
 

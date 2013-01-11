@@ -1,6 +1,9 @@
 import os, logging, math
 import numpy as np
-from PIL import Image
+try:
+    import Image
+except ImportError:
+    from PIL import Image
 
 import utils
 import fontutils as fu
