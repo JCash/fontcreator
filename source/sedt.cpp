@@ -1,7 +1,13 @@
 /* Implements signed euclidian distance fields.
  * Implementation taken from: http://www.gbuffer.net/vector-textures
  *
- * More info: http://perso.telecom-paristech.fr/~bloch/ANIM/Danielsson.pdf
+ * More info:
+ * http://perso.telecom-paristech.fr/~bloch/ANIM/Danielsson.pdf
+ * http://www.ensta-paristech.fr/~manzaner/Download/IAD/Shih_Wu_04.pdf
+ * http://fab.cba.mit.edu/classes/S62.12/docs/Meijster_distance.pdf
+ * http://liu.diva-portal.org/smash/get/diva2:23335/FULLTEXT01  (pdf)
+ *
+ *
  * http://parmanoir.com/distance/  (interactive demo)
 */
 

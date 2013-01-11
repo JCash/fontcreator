@@ -20,6 +20,7 @@ FontCreator
     ./extensions.rst
     ./download.rst
     ./reference.rst
+    ./examples.rst
 
 Welcome to the documentation for FontCreator, a Python based bitmap font generator.
 
@@ -51,6 +52,12 @@ The FontCreator has many features/selling points:
 
     - Built in json format
     - Plugin functionality for user specified format
+
+
+License
+-------
+
+
 
 Indices and tables
 ==================
