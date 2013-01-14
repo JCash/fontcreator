@@ -4,6 +4,13 @@
 #include <stdint.h>
 #include <string.h>
 
+#if defined(_MSC_VER)
+	#define DLL_EXPORT __declspec(dllexport)
+#else
+	#define DLL_EXPORT
+#endif
+
+
 extern "C" {
 
 enum EImageLayout
@@ -18,7 +25,7 @@ enum EDataType
 	E_FLOAT,
 };
 
-struct Image
+struct DLL_EXPORT Image
 {
 	void*	m_Data;
 	size_t  m_Width;
@@ -29,13 +36,13 @@ struct Image
 	uint32_t	 m_ChannelDepth:26;
 };
 
-void convolve1d(const Image* image, const float* kernel, size_t kernelsize, size_t axis, void* out);
+DLL_EXPORT void convolve1d(const Image* image, const float* kernel, size_t kernelsize, size_t axis, void* out);
 
-void maximum(const Image* image, const float* kernel, size_t kernelwidth, size_t kernelheight, void* out);
+DLL_EXPORT void maximum(const Image* image, const float* kernel, size_t kernelwidth, size_t kernelheight, void* out);
 
-void minimum(const Image* image, const float* kernel, size_t kernelwidth, size_t kernelheight, void* out);
+DLL_EXPORT void minimum(const Image* image, const float* kernel, size_t kernelwidth, size_t kernelheight, void* out);
 
-void calculate_sedt(const Image* image, float radius, void* out);
+DLL_EXPORT void calculate_sedt(const Image* image, float radius, void* out);
 
 }
 

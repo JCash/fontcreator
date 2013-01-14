@@ -9,6 +9,12 @@
 #include <stdint.h>
 #include <string.h>
 
+#if defined(_MSC_VER)
+	#define DLL_EXPORT __declspec(dllexport)
+#else
+	#define DLL_EXPORT
+#endif
+
 extern "C" {
 
 enum EPackerType
@@ -23,7 +29,7 @@ enum EPackerType
 	E_MAXRECTS_CP,	 ///< Chooses the placement where the rectangle touches other rects as much as possible.
 };
 
-struct SRect
+struct DLL_EXPORT SRect
 {
 	int32_t x;
 	int32_t y;
@@ -35,13 +41,13 @@ struct SPacker;
 
 typedef SPacker* HPacker;
 
-HPacker create_packer(EPackerType type, int32_t w, int32_t h, bool allow_rotate);
+DLL_EXPORT HPacker create_packer(EPackerType type, int32_t w, int32_t h, bool allow_rotate);
 
-SRect pack_rect(HPacker packer, int32_t w, int32_t h);
+DLL_EXPORT SRect pack_rect(HPacker packer, int32_t w, int32_t h);
 
-void destroy_packer(HPacker packer);
+DLL_EXPORT void destroy_packer(HPacker packer);
 
-float get_occupancy(HPacker packer);
+DLL_EXPORT float get_occupancy(HPacker packer);
 
 }
 

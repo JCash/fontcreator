@@ -13,6 +13,11 @@
 
 #include "utils.h"
 #include <math.h>
+#if defined(_WIN32) || defined(_WIN64)
+#include <algorithm>
+#define fmin std::min<float>
+#define fmax std::max<float>
+#endif
 #include <stdio.h>
 
 struct Vector2int16

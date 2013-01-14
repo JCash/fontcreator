@@ -9,7 +9,10 @@ import sys, os, logging, math
 from optparse import OptionParser
 import ctypes, itertools
 
-from PIL import Image
+try:
+    from PIL import Image
+except ImportError:
+    import Image
 
 import freetype as ft
 import fontutils as fu

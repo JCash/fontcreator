@@ -1,12 +1,19 @@
-import os
+import sys, os
 import numpy as np
 import ctypes
 from ctypes import POINTER, byref, c_void_p, c_size_t, c_float, c_uint32
 
 c_float_p = POINTER(c_float)
 
+if sys.platform == 'darwin':
+    _suffix = '.dylib'
+elif sys.platform == 'win32':
+    _suffix = '.dll'
+elif sys.platform == 'linux2':
+    _suffix = '.so'
+    
 _dirpath = os.path.dirname(__file__)
-_utils = ctypes.cdll.LoadLibrary(os.path.join(_dirpath, '_utils.dylib'))
+_utils = ctypes.cdll.LoadLibrary(os.path.join(_dirpath, '_utils%s' % _suffix))
 
 LAYOUT_INTERLEAVED = 0
 LAYOUT_STACKED = 1
@@ -55,7 +62,7 @@ def _make_image(npimage, layout):
     typ = npimage.dtype
     if typ in (np.ubyte, np.uint8, np.uint16, np.uint32, np.uint64):
         image.type = TYPE_UINT
-    elif typ in (np.float16, np.float32, np.float64, np.float128):
+    elif typ in (np.float16, np.float32, np.float64):
         image.type = TYPE_FLOAT
     
     if typ in (np.ubyte, np.uint8):
@@ -66,8 +73,6 @@ def _make_image(npimage, layout):
         image.bitdepth = 32
     elif typ in (np.uint64, np.float64):
         image.bitdepth = 64
-    elif typ == np.float128:
-        image.bitdepth = 128
         
     return image
 
