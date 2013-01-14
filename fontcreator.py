@@ -107,20 +107,6 @@ def _make_array_from_bitmap(_bitmap, bitdepth=8):
     return np.array(data, np.float32).reshape(rows, width).transpose()
 
 
-class CharacterInfo(object):
-    """
-    """
-    def __init__(self, character, unicode):
-        self.character = character
-        self.unicode = unicode
-        self.bitmap = None
-        self.bearingX = 0
-        self.bearingY = 0
-        self.advance = 0
-        self.bitmap_x = 0
-        self.bitmap_y = 0
-
-
 def _apply_layer(info, layer, character, previmage, glyphimage):
     # The max y should be the same for all characters in the same row
     # This is necessary for having the same "space" during calculations
@@ -137,12 +123,12 @@ def _apply_layer(info, layer, character, previmage, glyphimage):
     return image
 
 
-def _apply_layers(info, characterinfos):
+def _apply_layers(info):
     bbox = [0.0, 0.0]
-    for character, characterinfo in characterinfos.iteritems():
-        if None == characterinfo.bitmap:
+    for glyph in info.glyphs:
+        if glyph.bitmap is None:
             continue
-        bbox[0] = max( bbox[0], characterinfo.bitmap.shape[0] )
+        bbox[0] = max( bbox[0], glyph.bitmap.shape[0] )
 
     bbox[0] += info.extrapadding[0] + info.extrapadding[2]
 
@@ -157,37 +143,39 @@ def _apply_layers(info, characterinfos):
         if hasattr(element, 'set_dimensions'):
             element.set_dimensions(info.maxsize[0], info.maxsize[1] )
 
-    for character, characterinfo in characterinfos.iteritems():
-        if None == characterinfo.bitmap:
+    for glyph in info.glyphs:
+        
+        if glyph.bitmap is None:
             continue
 
-        glyphimage = characterinfo.bitmap
+        glyphimage = glyph.bitmap
 
         # ????
         fonteffects.DefaultMask.idx = np.where(glyphimage == 0)
         
         previmage = np.dstack((glyphimage, glyphimage, glyphimage, glyphimage))
 
-        previmage = _apply_layer(info, info.layers[0], characterinfo, previmage, glyphimage)
+        previmage = _apply_layer(info, info.layers[0], glyph, previmage, glyphimage)
 
         for layer in info.layers[1:]:
-            previmage = _apply_layer(info, layer, characterinfo, previmage, glyphimage)
+            previmage = _apply_layer(info, layer, glyph, previmage, glyphimage)
 
         for effect in info.posteffects:
             previmage = effect.apply(previmage)
-
-        prevshape = (previmage.shape[0], previmage.shape[1])
-        ones = np.ones( prevshape, float)
-        zeros = np.zeros( prevshape, float)
-        r = ones * info.bgcolor[0]
-        g = ones * info.bgcolor[1]
-        b = ones * info.bgcolor[2]
-        bgimage = np.dstack( (r,g,b,zeros) )
+        
+        #ones = np.ones( previmage.shape, float)
+        #r = ones * info.bgcolor[0]
+        #g = ones * info.bgcolor[1]
+        #b = ones * info.bgcolor[2]
+        #bgimage = np.dstack( (r, g, b, np.zeros_like( previmage, float) ) )
+        bgimage = np.ones( previmage.shape, float) * (info.bgcolor[0], info.bgcolor[1], info.bgcolor[2], 0.0)
+        
         previmage = fu.alpha_blend(bgimage, previmage)
+        
+        # ???
+        #glyph.alpha = previmage[:,:,3]
 
-        characterinfo.alpha = previmage[:,:,3]
-
-        characterinfo.bitmap = previmage
+        glyph.bitmap = previmage
 
 
 def _convert_int_to_unicode(char):
@@ -225,9 +213,62 @@ def _get_extra_padding(info):
     return extrapadding
 
 
+class Glyph(object):
+    def __init__(self, character, unicode):
+        """ Holds the glyph info
+        
+        :param character:    The letter character
+        :param unicode:      The utf-8 representation of the letter
+        """
+        self.character = character
+        self.unicode = unicode
+        self.bitmap = None
+        self.bitmapbox = None
+        self.bearingX = 0
+        self.bearingY = 0
+        self.advance = 0
+
+
+def _get_glyph_info(options, info, face):
+    logging.debug("Fetching glyph info")
+    
+    face.set_char_size( width=0, height=info.size*64, hres=info.dpi, vres=info.dpi )
+    
+    # find out the needed extra padding on each side of each glyph
+    info.extrapadding = _get_extra_padding(info)
+    
+    #info.ascender = face.size.ascender >> 6
+    #info.descender = face.size.descender >> 6
+    
+    flags = ft.LOAD_NO_BITMAP
+    
+    all_letters = set()
+    
+    info.glyphs = []
+    for c in info.letters:
+        if c in all_letters:
+            continue
+        if options.writetext and not unichr(c) in options.writetext:
+            continue
+        all_letters.add(c)
+        
+        unicode = _convert_int_to_unicode(c)
+
+        face.load_char( unicode, flags )
+
+        metrics = face.glyph.contents.metrics
+
+        glyph = Glyph(c, unicode)
+        glyph.bearingX = (metrics.horiBearingX >> 6) + info.extrapadding[0]
+        glyph.bearingY = (metrics.horiBearingY >> 6) + info.internalpadding[1] + info.extrapadding[1]
+        glyph.advance = (metrics.horiAdvance >> 6) + info.extrapadding[2]
+        
+        info.glyphs.append( glyph )
+
+
 def render(options, info, face):
 
-    antialias = getattr(info, 'antialias', 'normal')
+    face.set_char_size( width=0, height=info.bitmapsize*64, hres=info.dpi, vres=info.dpi )
 
     if info.unicode:
         found = False
@@ -249,6 +290,8 @@ def render(options, info, face):
     max_width = 0
 
     flags = ft.LOAD_RENDER
+        
+    antialias = getattr(info, 'antialias', 'normal')
     if antialias == 'none':
         flags |= ft.LOAD_TARGET_MONO
     elif antialias == 'light':
@@ -256,80 +299,56 @@ def render(options, info, face):
     elif antialias == 'normal':
         flags |= ft.LOAD_TARGET_NORMAL
 
-    cinfolist = []
-    for c in set(info.letters):
-        unicode = _convert_int_to_unicode(c)
+    logging.debug("RENDERING %s", unicode([g.unicode for g in info.glyphs]))
+    
+    for glyph in info.glyphs:
 
-        face.load_char( unicode, flags )
+        face.load_char( glyph.unicode, flags )
 
-        metrics = face.glyph.contents.metrics
-
-        char = CharacterInfo(c, unicode)
-        char.bearingX = (metrics.horiBearingX >> 6) + info.extrapadding[0]
-        char.bearingY = (metrics.horiBearingY >> 6) + info.internalpadding[1] + info.extrapadding[1]
-        char.advance = (metrics.horiAdvance >> 6) + info.extrapadding[2]
-
-
-        """
-        print ""
-        print "(utf-8, unicode) =", (hex(char.character), char.unicode)
-        print "bearing", char.bearingX, char.bearingY
-        print "advance", metrics.horiAdvance >> 6, face.glyph.advance.x >> 6
-        print ""
-        """
-        
-        char.bitmap = None
         if face.glyph.contents.bitmap.rows:
-            char.bitmap = _make_array_from_bitmap(face.glyph.contents.bitmap)
-            shape = char.bitmap.shape
+            glyph.bitmap = _make_array_from_bitmap(face.glyph.contents.bitmap)
+            shape = glyph.bitmap.shape
 
-            char.bitmap = fu.pad_bitmap(char.bitmap, info.extrapadding[0], info.extrapadding[1], info.extrapadding[2], info.extrapadding[3], 0.0)
+            glyph.bitmap = fu.pad_bitmap(glyph.bitmap, info.extrapadding[0], info.extrapadding[1], info.extrapadding[2], info.extrapadding[3], 0.0)
 
             if info.useadvanceaswidth:
                 # Pad the bitmap with the bearing width on each side
                 # This is useful for file formats that doesn't carry all the glyph info into it
-                padleft = char.bearingX
-                padright = char.advance - shape[0] - padleft
-                char.bitmap = fu.pad_bitmap(char.bitmap, 0, 0, padright, 0, 0.0)
+                padleft = glyph.bearingX
+                padright = glyph.advance - shape[0] - padleft
+                glyph.bitmap = fu.pad_bitmap(glyph.bitmap, 0, 0, padright, 0, 0.0)
 
             if antialias != 'none':
-                char.bitmap /= 255.0
-
-            #char.bitmap_left = face.glyph.bitmap_left
-            #char.bitmap_top = face.glyph.bitmap_top
+                glyph.bitmap /= 255.0
 
         else:
-            logging.debug("char missing bitmap %X '%s'" % (char.character, char.unicode) )
+            logging.debug("char missing bitmap %X '%s'" % (glyph.character, glyph.unicode) )
 
-        if char.bitmap != None:
+        if glyph.bitmap != None:
             # find the highest char
-            max_bearing_y = max(max_bearing_y, char.bearingY)
+            max_bearing_y = max(max_bearing_y, glyph.bearingY)
             # find the lowest char
-            min_bearing_y = min(min_bearing_y, char.bearingY - char.bitmap.shape[1])
+            min_bearing_y = min(min_bearing_y, glyph.bearingY - glyph.bitmap.shape[1])
             # Find the widest char
-            max_width = max(max_width, char.bitmap.shape[0])
-
-        cinfolist.append( (c, char) )
-
+            max_width = max(max_width, glyph.bitmap.shape[0])
+    
     info.fontsize = face.height >> 6
     info.ascender = max_bearing_y
     info.descender = min_bearing_y
-    info.max_width = max_width
     info.max_height = info.ascender - info.descender
-
-    cinfo = dict(cinfolist)
+    info.max_width = max_width
 
     # Apply all layers on all the tiny bitmaps
-    _apply_layers(info, cinfo)
+    _apply_layers(info)
 
     # adjust the ascender/descender, since the layers may increased/decreased the size
     max_width = 0
     max_height = 0
-    for c, char in cinfo.iteritems():
-        if char.bitmap is None:
+    for glyph in info.glyphs:
+        if glyph.bitmap is None:
             continue
-        max_width = max(max_width, char.bitmap.shape[0])
-        max_height = max(max_height, char.bitmap.shape[1])
+        max_width = max(max_width, glyph.bitmap.shape[0])
+        max_height = max(max_height, glyph.bitmap.shape[1])
 
     ratio = float(max_height) / float(max_bearing_y - min_bearing_y)
     info.ascender = math.ceil( max_bearing_y * ratio )
@@ -338,34 +357,21 @@ def render(options, info, face):
     info.max_height = max_height
 
     # Now when we've found the new ratio, adjust the glyphs
-    for c, char in cinfo.iteritems():
-        char.bearingX = math.ceil( char.bearingX * ratio )
-        char.bearingY = math.ceil( char.bearingY * ratio )
-        char.advance = math.ceil( char.advance * ratio )
-
-    # Now, render the small bitmaps into the large bitmap
-
-    class Glyph(object):
-        def __init__(self, c, cinfo):
-            self.character = c
-            self.info = cinfo
-            self.bitmapbox = None
-
-    # might contain duplicates
-    glyphs = [ Glyph(c, cinfo[c]) for c in info.letters ]
-
-    return cinfo, glyphs
+    for glyph in info.glyphs:
+        glyph.bearingX = math.ceil( glyph.bearingX * ratio )
+        glyph.bearingY = math.ceil( glyph.bearingY * ratio )
+        glyph.advance = math.ceil( glyph.advance * ratio )
 
 
-def _get_pair_kernings(characters, face):
-    characters = set([ char.character for c, char in characters.iteritems()])
+def _get_pair_kernings(info, face):
+    characters = set([ glyph.character for glyph in info.glyphs])
     pairkernings = dict()
     for pair in itertools.product(characters, repeat=2):
         prevc, c = pair
         kerning = face.get_kerning(prevc, c)
         if kerning.x != 0:
-            assert c < 0xFFFF
-            assert prevc < 0xFFFF
+            assert c < 0xFFFFFFFF
+            assert prevc < 0xFFFFFFFF
             pairkernings[ _encode_pair(prevc, c) ] = kerning.x>>6
     return pairkernings
 
@@ -378,20 +384,20 @@ def compile(options):
         raise fu.FontException("Failed to find font: %s" % info.name)
 
     face = ft.new_face( info.name )
-    face.set_char_size( width=0, height=info.size*64, hres=info.dpi, vres=info.dpi )
 
-    info.ascender = face.size.ascender >> 6
-    info.descender = face.size.descender >> 6
+    # gather the glyph info
+    _get_glyph_info(options, info, face)
 
     # The actual compile step
-    cinfo, glyphs = render(options, info, face)
+    #cinfo = render(options, info, face)
+    render(options, info, face)
     
     # assemble into a texture
-    image = info.texturerender( info, glyphs )
+    image = info.texturerender( info )
 
     pairkernings = None
     if info.usepairkernings:
-        pairkernings = _get_pair_kernings(cinfo, face)
+        pairkernings = _get_pair_kernings(info, face)
 
     if not options.writetext:
         if not os.path.exists( os.path.dirname(options.output) ):
@@ -402,9 +408,9 @@ def compile(options):
         except Exception, e:
             raise fu.FontException('Failed to write texture: %s' % str(e) )
 
-        info.writer.write(options, info, glyphs, pairkernings)
+        info.writer.write(options, info, pairkernings)
 
-    return (info, cinfo, glyphs, pairkernings, image)
+    return (info, pairkernings, image)
 
 
 def _encode_pair(prevc, c):
@@ -442,7 +448,7 @@ def _calc_bbox(info, characters, pairkernings, text):
     return (maxx, y)
 
 
-def write_text(options, info, cinfo, glyphs, pairkernings):
+def write_text(options, info, pairkernings):
     """
     Writes the given text to an image
     """
@@ -454,6 +460,8 @@ def write_text(options, info, cinfo, glyphs, pairkernings):
         with open(options.writetext, 'rt') as f:
             options.writetext = f.read()
 
+    cinfo = {glyph.character : glyph for glyph in info.glyphs}
+    
     texture_size = _calc_bbox(info, cinfo, pairkernings, options.writetext)
     texture_size = (texture_size[0]+info.padding*2+60, texture_size[1]+info.padding*2)
 
@@ -571,10 +579,10 @@ if __name__ == '__main__':
     try:
         options.endian = '<' if options.endian == 'little' else '>'
 
-        (info, cinfo, glyphs, pairkernings, image) = compile(options)
+        (info, pairkernings, image) = compile(options)
 
         if options.writetext:
-            write_text(options, info, cinfo, glyphs, pairkernings)
+            write_text(options, info, pairkernings)
 
     except fu.FontException, e:
         if '-v' in sys.argv:

@@ -5,7 +5,8 @@
 [default]
 name = ./fonts/verdana.ttf
 # We scale up the original glyph
-size = 24*4
+size = 32
+bitmapsize = 32*4
 
 letters = letters_ascii.txt
 
@@ -16,11 +17,11 @@ writer = fontout_json
 texturerender = fonttex_bitmap
 texturewriter = fonttexout_pil
 textureformat = .png
-texturesize = 1024, 1024
+texturesize = 256, 256
 texturechannels = R
 
 layers = [Layer(color=solid)]
-posteffects = [distance_field]
+posteffects = [distance_field, halfsize]
 
 # modes: none, light, normal. Default is 'normal'
 antialias = none
@@ -32,3 +33,7 @@ color = (255, 255, 255)
 [distance_field]
 type = distancefield
 size = 10
+
+[halfsize]
+type = halfsize
+factor = 2

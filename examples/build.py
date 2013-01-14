@@ -226,11 +226,13 @@ if __name__ == '__main__':
             os.chdir(scriptdir)
 
         docs = []
-        fontinfos = sorted(os.listdir(EXAMPLEDIR))
-        #fontinfos = ['00_pixel.fontinfo']
-        #fontinfos = ['01_outline.fontinfo']
-        #fontinfos = ['03_layers_effects.fontinfo']
-        #fontinfos = ['05_distance_fields.fontinfo']
+        fontinfos = sorted(os.listdir(EXAMPLEDIR)) 
+        if DEBUG:
+            fontinfos = ['00_pixel.fontinfo']
+            #fontinfos = ['01_outline.fontinfo']
+            #fontinfos = ['03_layers_effects.fontinfo']
+            #fontinfos = ['05_distance_fields.fontinfo']
+            
         fontinfos = [ os.path.join(EXAMPLEDIR, x) for x in fontinfos if x.endswith('.fontinfo') ]
 
         for file in fontinfos:

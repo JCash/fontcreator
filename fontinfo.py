@@ -10,6 +10,7 @@ def GetDefaultOptions():
     defaults = dict()
     defaults['name'] = 'not set'
     defaults['size'] = '18'
+    defaults['bitmapsize'] = None
     defaults['dpi'] = '72'
     defaults['padding'] = '0'
     defaults['internalpadding'] = '0, 0'
@@ -89,6 +90,10 @@ class SFontInfo(object):
             self.name = os.path.join( os.path.dirname(options.input), self.name )
 
         self.size = int(eval(self.size))
+        if self.bitmapsize is None:
+            self.bitmapsize = self.size
+        else:
+            self.bitmapsize = int(eval(self.bitmapsize))
         self.dpi = int(self.dpi)
         self.texturesize = tuple( map( int, self.texturesize.split(',') ) )
         self.textureoffset = tuple( map( int, self.textureoffset.split(',') ) )

@@ -16,7 +16,7 @@ def split_channels(image):
         return (image[:, :, 0], image[:, :, 1], image[:, :, 2])
     elif image.shape[2] == 4:
         return (image[:, :, 0], image[:, :, 1], image[:, :, 2], image[:, :, 3])
-    assert(False)
+    assert False, "Wrong shape: %s" % str(image.shape)
 
 
 def multiply_color(image, color):

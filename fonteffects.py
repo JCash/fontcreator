@@ -336,7 +336,6 @@ class Texture(object):
                     raise
 
         if not os.path.exists( os.path.join(options.datadir, self.name)):
-            print k, kw
             raise fu.FontException("No such file: %s  in dir %s" % (self.name, options.datadir))
 
         self.bitmap = np.asarray( Image.open( os.path.join(options.datadir, self.name) ), float) / 255.0
@@ -565,6 +564,32 @@ class DistanceField(object):
         a = np.zeros_like(i)
         a[i > 0] = 1.0
         return np.dstack( (i, i, i, a) )
+
+
+@EffectFunction
+class Halfsize(object):
+    """ Down scales the glyph by a factor, using bilinear factoring
+    """
+    factor = prop.IntProperty( 1, help='The number of times the image should be minified' )
+    
+    def __init__(self, *k, **kw):
+        for name, value in kw.iteritems():
+            try:
+                setattr(self, name, eval(value) )
+            except NameError:
+                setattr(self, name, value )
+
+    def apply(self, image):
+        shape = image.shape
+        for n in xrange(self.factor):
+            out = np.zeros( (image.shape[0] / 2, image.shape[1] / 2, image.shape[2]) )
+            for y in xrange(out.shape[1]):
+                for x in xrange(out.shape[0]):
+                    xx = x*2
+                    yy = y*2
+                    out[x, y] = (image[xx, yy] + image[xx+1, yy] + image[xx, yy+1] + image[xx+1, yy+1]) / 4.0
+            image = out
+        return out
 
 
 #To be used as a mask for each layer

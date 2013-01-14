@@ -12,9 +12,9 @@ DEBUG=False
 def _guess_dimensions(glyphs):
     area = 0
     for glyph in glyphs:
-        if glyph.info.bitmap is None:
+        if glyph.bitmap is None:
             continue
-        w, h, d = glyph.info.bitmap.shape
+        w, h, d = glyph.bitmap.shape
         area += w*h
     
     #area += area / 1
@@ -42,28 +42,27 @@ def _create_image(info, w, h):
 
 
 def _glyph_cmp(a, b):
-    if a.info.bitmap is None and b.info.bitmap is not None:
+    if a.bitmap is None and b.bitmap is not None:
         return 1
-    elif b.info.bitmap is None and a.info.bitmap is not None:
+    elif b.bitmap is None and a.bitmap is not None:
         return -1
-    elif b.info.bitmap is None and a.info.bitmap is None:
+    elif b.bitmap is None and a.bitmap is None:
         return cmp(a, b)
     
-    return a.info.bitmap.shape[1] - b.info.bitmap.shape[1]
+    return a.bitmap.shape[1] - b.bitmap.shape[1]
 
 
-def render(info, glyphs):
+def render(info):
     """ Assuming (0,0) is at the top left corner of the image.
     @param info            The settings from the fontinfo file
-    @param glyphs          The set of glyphs to be rendered, as specified by the info.letters
     @param[in,out] image   The destination image where all glyphs are rendered to
     """
     
     # sort the glyphs
-    glyphs.sort(cmp=_glyph_cmp)
+    info.glyphs.sort(cmp=_glyph_cmp)
     
     # Work in progress
-    #iw, ih = _guess_dimensions(glyphs)
+    #iw, ih = _guess_dimensions(info.glyphs)
     iw, ih = info.texturesize
     #ih /= 2
     #print "guessed image size", iw, ih
@@ -71,7 +70,6 @@ def render(info, glyphs):
     
     textureoffset = info.textureoffset
     padding = info.padding
-    
     packer = binpack.create_packer(binpack.SKYLINE_BL, iw - textureoffset[0], ih - textureoffset[1], False)
     
     # DEBUG PACK RENDERING
@@ -79,11 +77,11 @@ def render(info, glyphs):
         image[:, :, 0] = 1.0
         image[:, :, 3] = 1.0
     
-    for glyph in glyphs:
-        if glyph.info.bitmap is None:
+    for glyph in info.glyphs:
+        if glyph.bitmap is None:
             continue
         
-        bitmap = glyph.info.bitmap
+        bitmap = glyph.bitmap
         
         w, h, d = bitmap.shape
         
@@ -126,7 +124,7 @@ def render(info, glyphs):
             
             #print "bmshape", (bx,by,w,h)
             print "image.shape", image.shape
-            print "char.bitmap.shape", glyph.info.bitmap.shape
+            print "char.bitmap.shape", glyph.bitmap.shape
             raise
 
         #x += max(w, w2) + info.padding + info.internalpadding[0]*2
