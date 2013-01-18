@@ -41,6 +41,11 @@ class SFontInfo(object):
     """
     def __init__(self, options):
         """ Reads the font info and converts the info into usable members in this struct """
+        
+        assert os.path.exists(options.input), "The file doesn't exist: %s\nCwd: %s" % (options.input, os.getcwd())
+        self._init(options)
+
+    def _init(self, options):
         defaults = GetDefaultOptions()
 
         cfg = SafeConfigParser()
@@ -53,7 +58,7 @@ class SFontInfo(object):
                 setattr(self, name, defaults[name] )
 
         self.functionlist = dict()
-
+        
         for section in cfg.sections():
             if section in ['default']:
                 continue
@@ -135,13 +140,17 @@ class SFontInfo(object):
         self.bold = int(self.bold)
         self.italic = int(self.italic)
 
-        if os.path.exists(self.letters):
-            with open(self.letters, 'rb') as f:
+        if os.path.isabs(self.letters):
+            letters_path = self.letters
+        else:
+            letters_path = os.path.join(os.path.dirname(options.input), self.letters )
+        if os.path.exists(letters_path):
+            with open(letters_path, 'rb') as f:
                 data = f.read()
             
             data = data.replace('\n', '').replace('\r', '')
             if not data:
-                raise f.FontException("The file '%s' was empty" % self.letters)
+                raise f.FontException("The file '%s' was empty" % letters_path)
             
             try:
                 letters = [ ord(c) for c in str(data) ]
