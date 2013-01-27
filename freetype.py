@@ -19,8 +19,6 @@ elif sys.platform == 'win32':
 elif sys.platform == 'linux2':
     _prefix = 'lib'
     _suffix = '.so'
-    
-print os.path.exists('%sfreetype%s' % (_prefix, _suffix))
 
 _freetype = ctypes.cdll.LoadLibrary('%sfreetype%s' % (_prefix, _suffix))
 
@@ -78,6 +76,33 @@ LOAD_TARGET_LCD_V   = _LOAD_TARGET( RENDER_MODE_LCD_V  )
 KERNING_DEFAULT  = 0
 KERNING_UNFITTED = 1
 KERNING_UNSCALED = 2
+
+
+def _ENCODE(a, b, c, d):
+    return ord(a) << 24 | ord(b) << 16 | ord(c) << 8 | ord(d)
+
+ENCODING_NONE = 0
+ENCODING_MS_SYMBOL = _ENCODE('s', 'y', 'm', 'b')
+ENCODING_UNICODE = _ENCODE( 'u', 'n', 'i', 'c' )
+ENCODING_SJIS = _ENCODE( 's', 'j', 'i', 's' )
+ENCODING_GB2312 = _ENCODE( 'g', 'b', ' ', ' ' )
+ENCODING_BIG5 = _ENCODE( 'b', 'i', 'g', '5' )
+ENCODING_WANSUNG = _ENCODE( 'w', 'a', 'n', 's' )
+ENCODING_JOHAB = _ENCODE( 'j', 'o', 'h', 'a' )
+
+# for backwards compatibility
+ENCODING_MS_SJIS    = ENCODING_SJIS
+ENCODING_MS_GB2312  = ENCODING_GB2312
+ENCODING_MS_BIG5    = ENCODING_BIG5
+ENCODING_MS_WANSUNG = ENCODING_WANSUNG
+ENCODING_MS_JOHAB   = ENCODING_JOHAB
+
+ENCODING_ADOBE_STANDARD = _ENCODE( 'A', 'D', 'O', 'B' )
+ENCODING_ADOBE_EXPERT = _ENCODE( 'A', 'D', 'B', 'E' )
+ENCODING_ADOBE_CUSTOM = _ENCODE( 'A', 'D', 'B', 'C' )
+ENCODING_ADOBE_LATIN_1 = _ENCODE( 'l', 'a', 't', '1' )
+ENCODING_OLD_LATIN_2 = _ENCODE( 'l', 'a', 't', '2' )
+ENCODING_APPLE_ROMAN = _ENCODE( 'a', 'r', 'm', 'n' )
     
 
 class LibraryRec(ctypes.Structure):
@@ -108,13 +133,14 @@ class BitmapSize(ctypes.Structure):
     ]
 
     
-class CharMap(ctypes.Structure):
+class CharMapRec(ctypes.Structure):
     _fields_ = [
         ('face', c_void_p),
-        ('encoding', c_uint32),
+        ('encoding', c_int),
         ('platform_id', c_ushort),
         ('encoding_id', c_ushort),
     ]
+CharMap = POINTER(CharMapRec)
 
 
 class Generic(ctypes.Structure):
@@ -233,7 +259,7 @@ class FaceRec(ctypes.Structure):
         ('available_sizes', POINTER(BitmapSize)),
         
         ('num_charmaps', c_int),
-        ('charmaps', POINTER(CharMap)),
+        ('_charmaps', POINTER(CharMap)),
         
         ('generic', Generic),
         
@@ -286,7 +312,7 @@ class FaceRec(ctypes.Structure):
     
     @property
     def charmaps(self):
-        return [ CharMap(self.charmaps[i]) for i in range( self.num_charmaps ) ]
+        return [ self._charmaps[i].contents for i in range( self.num_charmaps ) ]
     
     @property
     def size(self):

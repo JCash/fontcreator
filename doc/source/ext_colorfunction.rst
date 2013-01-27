@@ -62,6 +62,7 @@ Reference
 ---------
 
 .. autofunction:: fonteffects.ColorFunction
+	:noindex:
 
 
 .. py:function:: cls.__call__(offsetx, offsety, glyphsize, maxglyphsize, glyphimage)

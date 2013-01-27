@@ -3,7 +3,10 @@ Reference
 
 .. toctree::
     :maxdepth: 2
+    :glob:
     
-    ./colorfunctions.rst
-    ./blendfunctions.rst
+    colorfunctions*
+    blendfunctions*
+    
+    modules/*
     

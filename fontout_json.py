@@ -32,8 +32,7 @@ def _create_dict(options, info, pairkernings):
     # to make the json format more readable, let's decode the pairs
     pd = []
     for key, value in pairkernings.iteritems():
-        prevchar, char = ((key >> 16) & 0xFFFF, key & 0xFFFF)
-        #pd[ (prevchar, char) ] = value
+        prevchar, char = ((key >> 32) & 0xFFFFFFFF, key & 0xFFFFFFFF)
         pd.append( (unichr(prevchar), unichr(char), value) )
     
     d['pairkernings'] = pd

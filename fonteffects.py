@@ -1,3 +1,6 @@
+""" The fonteffects module provides commonly used base functionality for the effects.
+"""
+
 import os, logging, math
 import numpy as np
 try:
@@ -613,7 +616,7 @@ class Layer(object):
     """
     def __init__(self, *k, **kw):
         self.opacity = 1.0
-        self.blend = fb.GetBlendFunction('blendnormal')
+        self.blend = fb.blendnormal
         self.effects = []
         self.padding = (0, 0, 0, 0)
 

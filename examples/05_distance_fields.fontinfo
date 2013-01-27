@@ -13,11 +13,12 @@ letters = letters_ascii.txt
 bgcolor = (0, 0, 0)
 
 
-writer = fontout_json
+writer = fontout_font
 texturerender = fonttex_bitmap
+texturesize = 256, 256
+
 texturewriter = fonttexout_pil
 textureformat = .png
-texturesize = 256, 256
 texturechannels = R
 
 layers = [Layer(color=solid)]

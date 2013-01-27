@@ -5,7 +5,6 @@
 name = ./fonts/aardvark.ttf
 size = 42
 
-unicode = 0
 letters = letters_ascii.txt
 
 bgcolor = (0,0,0)

@@ -1,0 +1,5 @@
+freetype
+========
+
+.. automodule:: freetype
+	:members:

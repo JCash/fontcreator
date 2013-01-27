@@ -1,3 +1,9 @@
+"""
+A set of C++ functions that help out with the image processing etc.
+
+The Signed Euclidian Distance Transform functionality is taken from http://www.gbuffer.net/vector-textures
+"""
+
 import sys, os
 import numpy as np
 import ctypes

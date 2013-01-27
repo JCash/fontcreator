@@ -1,4 +1,92 @@
+""" The font info reads the .fontinfo and creates the layers, effects, and blends
 
+.. py:attribute:: name = ''
+
+    The path of the font file. Relative paths are relative to the .fontinfo file. Supports .ttf files.
+    For a complete list of supported formats, see `Freetype2 <http://www.freetype.org/freetype2/index.html>`_
+
+.. py:attribute:: size = 32
+
+    The size of the font (in pixels)
+
+.. py:attribute:: bitmapsize = None
+
+    The size (in pixels) of the font when it should be rendered.
+    This is useful when you wish to render the glyph much larger and later on scale it back down.
+    It is used when generating distance field fonts.
+    If set to None, the *size* will be used. Defaults to None.
+
+.. py:attribute:: dpi = 72
+
+    The resolution of the font when being rendered.
+
+.. py:attribute:: padding = 0
+
+    The amount of padding that is inserted between two glyphs when rendered to the bitmap.
+
+.. py:attribute:: internalpadding = 0, 0
+
+    The amount of padding (x, y) that is added *internally* for a glyph.
+    E.g. making room for manual fixup in a image editing program.
+
+.. py:attribute:: useadvanceaswidth = 0
+
+    For japanese fonts, the space in the glyph is important.
+    Therefore, this flag was introduced to respect the space of a glyph.
+    Set to 1 for Japanese fonts.
+    
+.. py:attribute:: usepairkernings = 1
+
+    Enables the collecting of the pair kernings table.
+
+.. py:attribute:: letters = 20-7e
+
+    Specifies what letters should be included in the font. It can hold these formats:
+    
+    #. A list of hexadecimal digits. The list is comma separated and can specify ranges with the '-' character::
+    
+        letters = 20-7c,7d,7e
+        
+    #. A filename. The file contains the actual letters.
+
+.. py:attribute:: bgcolor = 0, 0, 0
+
+    The background color of the texture
+
+.. py:attribute:: fgcolor = 1, 1, 1
+    
+    The color of the glyph
+        
+.. py:attribute:: antialias = normal
+
+    Enables antialiasing for the glyph rendering (the first pass).
+    Possible values are **'none', 'light' and 'normal'**.
+    
+.. py:attribute:: texturerender = fonttex_bitmap
+    
+    A path to the module that renders the glyphs to the texture. Must implement a *image = render(info)* function.
+    The default is :doc:`fonttex_bitmap`
+
+.. py:attribute:: texturewriter = fonttexout_pil
+
+    A path to the module that writes the texture to disc. Must implement a *write(options, info, image)* function.
+    The default is :doc:`fonttexout_pil`
+
+.. py:attribute:: writer = fontout_json
+    
+    A path to the module that writes the glyph info. Must implement a *write(options, info, pairkernings)* function.
+    The default is :doc:`fontout_json`
+    
+.. py:attribute:: layers = ''
+
+    A list of layers (:py:class:`fonteffects.Layer`) that will be applied in order.
+        
+.. py:attribute:: effects = ''
+
+    A list of post effects that will be applied in order, after the layers have been rendered.
+
+
+"""
 import os, sys, struct
 from ConfigParser import SafeConfigParser
 from fontutils import FontException
@@ -9,28 +97,30 @@ import fonteffects
 def GetDefaultOptions():
     defaults = dict()
     defaults['name'] = 'not set'
-    defaults['size'] = '18'
+    defaults['size'] = '32'
     defaults['bitmapsize'] = None
     defaults['dpi'] = '72'
     defaults['padding'] = '0'
     defaults['internalpadding'] = '0, 0'
     defaults['useadvanceaswidth'] = '0'  # E.g. set to 1 for japanese fonts
-    defaults['italic'] = '0'
-    defaults['bold'] = '0'
-    defaults['unicode'] = '0'
-    defaults['letters'] = '32-126'
+    defaults['usepairkernings'] = '1'
+    
+    defaults['letters'] = '20-7e'
     defaults['bgcolor'] = '0, 0, 0'
     defaults['fgcolor'] = '1, 1, 1'
+    defaults['antialias'] = 'normal'
+
+    defaults['writer'] = 'fontout_json'
+    
+    defaults['texturerender'] = 'fonttex_bitmap'
     defaults['texturesize'] = '512, 512'
-    defaults['textureoffset'] = '0,0'
+    defaults['textureoffset'] = '0, 0'
+    defaults['usepremultipliedalpha'] = '0'
+    
+    defaults['texturewriter'] = 'fonttexout_pil'
     defaults['textureformat'] = '.png'
     defaults['texturechannels'] = 'RGBA'
-    defaults['texturerender'] = 'fonttex_bitmap'
-    defaults['texturewriter'] = 'fonttexout_pil'
-    defaults['antialias'] = 'normal'
-    defaults['writer'] = 'fontout_json'
-    defaults['usepairkernings'] = '1'
-    defaults['usepremultipliedalpha'] = '0'
+    
     defaults['layers'] = ''
     defaults['posteffects'] = ''
     return defaults
@@ -39,6 +129,7 @@ def GetDefaultOptions():
 class SFontInfo(object):
     """ The input format (.fontinfo)
     """
+    
     def __init__(self, options):
         """ Reads the font info and converts the info into usable members in this struct """
         defaults = GetDefaultOptions()
@@ -74,7 +165,7 @@ class SFontInfo(object):
 
         d = dict()
         d.update( self.functionlist )
-        d.update( fontblend.blendfunctions )
+        d.update( fontblend.BLENDFUNCTIONS )
         d['Layer'] = fonteffects.Layer
 
         if not cfg.has_option('default', 'layers'):
@@ -124,16 +215,11 @@ class SFontInfo(object):
         self.useadvanceaswidth = int(self.useadvanceaswidth)
         self.usepairkernings = int(self.usepairkernings)
         self.usepremultipliedalpha = int(self.usepremultipliedalpha)
-        self.unicode = int(self.unicode)
 
         self.bgcolor = eval(self.bgcolor)
         self.fgcolor = eval(self.fgcolor)
         self.bgcolor = map( lambda x: float(x)/255.0 if isinstance(x, int) else x, self.bgcolor )
         self.fgcolor = map( lambda x: float(x)/255.0 if isinstance(x, int) else x, self.fgcolor )
-
-        #not used yet
-        self.bold = int(self.bold)
-        self.italic = int(self.italic)
 
         if os.path.exists(self.letters):
             with open(self.letters, 'rb') as f:
@@ -145,21 +231,18 @@ class SFontInfo(object):
             
             try:
                 letters = [ ord(c) for c in str(data) ]
-                self.unicode = 0
             except UnicodeEncodeError, e:
                 letters = [ ord(c) for c in unicode(data) ] 
-                self.unicode = 1
         else:
             letters = []
             for token in self.letters.split(','):
                 if not token:
                     continue
                 limits = token.split('-')
-                base = 16 if self.unicode else 0
                 if len(limits) == 1:
-                    letters.append( int(limits[0], base) )
+                    letters.append( int(limits[0], 16) )
                 else:
-                    letters += range( int(limits[0], base), int(limits[1], base) + 1 )
+                    letters += range( int(limits[0], 16), int(limits[1], 16) + 1 )
 
         self.letters = letters
         if not self.letters:
@@ -233,12 +316,12 @@ class SFontChar(object):
     def __init__(self, glyph=None):
         if glyph:
             self.x, self.y, self.width, self.height = getattr(glyph, 'bitmapbox', (0, 0, 0, 0) )
-            self.character = glyph.character
+            self.utf8 = glyph.utf8
             self.advanceX = glyph.info.advance
             self.bearingY = glyph.info.bearingY
         else:
             assert( False )
-            self.character = 0
+            self.utf8 = 0
             self.x = 0
             self.y = 0
             self.width = 0
@@ -301,7 +384,7 @@ class SFont(object):
         s = struct.pack( endian + 'IIII', pointeroffset_chars, pointeroffset_chars_glyphs, pointeroffset_kerning_chars, pointeroffset_kerning_values )
         f.write( s )
 
-        chars, glyphs = zip( *[ (c.character, c) for c in self.chars] )
+        chars, glyphs = zip( *[ (c.utf8, c) for c in self.chars] )
 
         s = ''
         for char in chars:

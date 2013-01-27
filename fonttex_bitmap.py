@@ -1,5 +1,19 @@
 """
 This is the default rendering of the fonts
+    
+.. py:attribute:: texturesize = 512, 512
+
+    The desired size of the texture. If it's too small, the creator will fail.
+  
+.. py:attribute:: textureoffset = 0, 0
+    
+    The offset from the top left corner of the texture to the top left corner of the first glyph.
+    It is used to create a border around the texture. The same border is also applied on the right/bottom sides.
+    
+.. py:attribute:: usepremultipliedalpha = 0
+
+    If set, will premultiply the alpha
+
 """
 import logging
 import numpy as np
@@ -54,8 +68,9 @@ def _glyph_cmp(a, b):
 
 def render(info):
     """ Assuming (0,0) is at the top left corner of the image.
-    @param info            The settings from the fontinfo file
-    @param[in,out] image   The destination image where all glyphs are rendered to
+    
+    :param info:    The settings from the fontinfo file
+    :return:        The image all glyphs are rendered to
     """
     
     # sort the glyphs
@@ -94,7 +109,7 @@ def render(info):
         rect.width -= padding
         rect.height -= padding
         
-        glyph.bitmapbox = (rect.x, rect.y, rect.width, rect.height )
+        glyph.bitmapbox = (rect.x, rect.y, rect.width, rect.height)
         
         # check if the glyph has been flipped
         if w != h and w == rect.height:
