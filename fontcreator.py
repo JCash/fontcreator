@@ -1,6 +1,6 @@
 """
 
-@COPYRIGHT 2012 MATHIAS WESTERDAHL
+@COPYRIGHT 2013 MATHIAS WESTERDAHL
 
 """
 
@@ -166,18 +166,10 @@ def _apply_layers(info):
         for effect in info.posteffects:
             previmage = effect.apply(previmage)
         
-        #ones = np.ones( previmage.shape, float)
-        #r = ones * info.bgcolor[0]
-        #g = ones * info.bgcolor[1]
-        #b = ones * info.bgcolor[2]
-        #bgimage = np.dstack( (r, g, b, np.zeros_like( previmage, float) ) )
         bgimage = np.ones( previmage.shape, float) * (info.bgcolor[0], info.bgcolor[1], info.bgcolor[2], 0.0)
         
         previmage = fu.alpha_blend(bgimage, previmage)
         
-        # ???
-        #glyph.alpha = previmage[:,:,3]
-
         glyph.bitmap = previmage
 
 
@@ -217,13 +209,20 @@ def _get_extra_padding(info):
 
 
 class Glyph(object):
-    def __init__(self, character, unicode):
-        """ Holds the glyph info
-        
-        :param character:    The letter character
-        :param unicode:      The utf-8 representation of the letter
-        """
-        self.character = character
+    """ Holds the glyph info.
+    For a detailed description of the glyph metrics, see http://www.freetype.org/freetype2/docs/tutorial/step2.html
+    
+    :param utf8:          The UTF-8 character code
+    :param unicode:       The unicode letter
+    :param bitmap:        The numpy array of shape (x, y, 4)
+    :param bitmapbox:     The box in the texture where the glyph is printed.
+                          A 4-tuple: (left, top, width, height)  *(In pixels)*
+    :param bearingX:      The distance from the cursor to the leftmost border of the bitmap
+    :param bearingY:      The distance from the baseline to the topmost border of the bitmap
+    :param advance:       The distance used to increment the cursor
+    """
+    def __init__(self, utf8, unicode):
+        self.utf8 = utf8
         self.unicode = unicode
         self.bitmap = None
         self.bitmapbox = None
@@ -273,13 +272,12 @@ def render(options, info, face):
 
     face.set_char_size( width=0, height=info.bitmapsize*64, hres=info.dpi, vres=info.dpi )
 
-    if info.unicode:
-        found = False
-        for charmap in face.charmaps:
-            found = found or charmap.encoding_name == 'FT_ENCODING_UNICODE'
-        if not found:
-            logging.warning("The font %s doesn't seem to support unicode!? Continuing anyway")
-
+    found = False
+    for charmap in face.charmaps:
+        found = found or charmap.encoding == ft.ENCODING_UNICODE
+    if not found:
+        logging.warning("The font %s doesn't seem to support unicode!? Continuing anyway")
+    
     if options.writetext:
         info.letters = [c for c in info.letters if unichr(c) in options.writetext]
 
@@ -325,7 +323,7 @@ def render(options, info, face):
                 glyph.bitmap /= 255.0
 
         else:
-            logging.debug("char missing bitmap %X '%s'" % (glyph.character, glyph.unicode) )
+            logging.debug("char missing bitmap %X '%s'" % (glyph.utf8, glyph.unicode) )
 
         if glyph.bitmap != None:
             # find the highest char
@@ -367,7 +365,7 @@ def render(options, info, face):
 
 
 def _get_pair_kernings(info, face):
-    characters = set([ glyph.character for glyph in info.glyphs])
+    characters = set([ glyph.utf8 for glyph in info.glyphs])
     pairkernings = dict()
     for pair in itertools.product(characters, repeat=2):
         prevc, c = pair
@@ -418,7 +416,7 @@ def compile(options):
 
 def _encode_pair(prevc, c):
     """ Encodes two 16 bit integers into 32 bits """
-    return prevc << 16 | c
+    return prevc << 32 | c
 
 
 def _calc_bbox(info, characters, pairkernings, text):
@@ -463,7 +461,7 @@ def write_text(options, info, pairkernings):
         with open(options.writetext, 'rt') as f:
             options.writetext = f.read()
 
-    cinfo = {glyph.character : glyph for glyph in info.glyphs}
+    cinfo = {glyph.utf8 : glyph for glyph in info.glyphs}
     
     texture_size = _calc_bbox(info, cinfo, pairkernings, options.writetext)
     texture_size = (texture_size[0]+info.padding*2+60, texture_size[1]+info.padding*2)
@@ -519,7 +517,7 @@ def write_text(options, info, pairkernings):
             print "bx, bw", bx, bw
             print "by, bh", by, bh
             print "lineheight", info.ascender - info.descender
-            print "c:", char.character, char.unicode
+            print "c:", char.utf8, char.unicode
             print x, by, x + bw, by + bh
             print ""
             print ""

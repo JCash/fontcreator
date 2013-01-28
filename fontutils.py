@@ -51,14 +51,15 @@ def alpha_blend(bottom, top):
 
 
 def pad_bitmap(bitmap, left, top, right, bottom, value):
-    """ Pads a bitmap with x pixels in width, and y pixels in height
-    The new elements gets the 'value'
-    @bitmap         A numpy array
-    @param left     The number of pixels that should be added to the left
-    @param top      The number of pixels that should be added to the top
-    @param right    The number of pixels that should be added to the right
-    @param bottom   The number of pixels that should be added to the bottom
-    @param value    A float
+    """ Pads a bitmap with pixels on each side. The new cells are applied the value
+    
+    :param bitmap:   A numpy array
+    :param left:     The number of pixels that should be added to the left
+    :param top:      The number of pixels that should be added to the top
+    :param right:    The number of pixels that should be added to the right
+    :param bottom:   The number of pixels that should be added to the bottom
+    :param value:    A float
+    :return:         The padded numpy array
     """
     s = bitmap.shape
     if len(s) == 2:
@@ -135,14 +136,17 @@ def blur_image_kernel1D(image, kernel):
 
 def print_ascii(bitmap, char=None, replace=['.', '@']):
     """ For debugging the contents of a numpy bitmap
-    @param bitmap    A 2-D numpy bitmap of dimensions (e.g. bitmap.shape == (X,Y))
-    @param char      A CharacterInfo
-    @param replace   A 2 element array that lets you replace the bitmap values with better suited ascii characters.
-                     Rule: replace[1] if bitmap[x,y] else replace[0]
-                     Can be None, then the original values will be printed
+    
+    :param bitmap:   A 2-D numpy bitmap of dimensions (e.g. bitmap.shape == (X,Y))
+    :param char:     A CharacterInfo
+    :param replace:  A 2 element array that lets you replace the bitmap values with better suited ascii characters.
+                     Can be None, then the original values will be printed.
+                     Rule::
+                     
+                         replace[1] if bitmap[x,y] else replace[0]
     """
     if char:
-        print "(utf-8, unicode) =", (hex(char.character), char.unicode)
+        print "(utf-8, unicode) =", (hex(char.utf8), char.unicode)
 
     bm = bitmap
 

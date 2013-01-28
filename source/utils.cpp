@@ -285,8 +285,6 @@ static void _minmax_stacked(const Image* image, const float* kernel, size_t kern
 				const int32_t xx = x - kernelwidth / 2;
 				const int32_t yy = y - kernelheight / 2;
 
-				const bool test = x == 2 && y == 0;
-
 				DTYPE extrema = maximum ? 0 : DTYPE(MAX);
 				for( size_t ky = 0; ky < kernelheight; ++ky )
 				{
@@ -306,11 +304,6 @@ static void _minmax_stacked(const Image* image, const float* kernel, size_t kern
 						const int32_t index = c * pagesize + yyy * width + xxx;
 						const DTYPE value = data[index];
 
-						if( test )
-						{
-							//printf("sample x, y, c %d, %d, %lu = %f    index = %d\n", xxx, yyy, c, value, index);
-						}
-
 						if( maximum )
 						{
 							if( value > extrema )
@@ -322,13 +315,6 @@ static void _minmax_stacked(const Image* image, const float* kernel, size_t kern
 								extrema = value;
 						}
 					}
-				}
-
-				static bool first = true;
-				if( test )
-				{
-					first = false;
-					//printf("x, y, c %lu, %lu, %lu = %d\n", x, y, c, extrema);
 				}
 
 				out[ c * pagesize + y * width + x ] = extrema;
@@ -424,3 +410,77 @@ void minimum(const Image* image, const float* kernel, size_t kernelwidth, size_t
 }
 
 
+template<typename DTYPE>
+static void _half_size(const Image* image, void* _out)
+{
+	const size_t width = image->m_Width;
+	const size_t height = image->m_Height;
+	const size_t channels = image->m_Channels;
+	const DTYPE* data = (DTYPE*)image->m_Data;
+	DTYPE* out = (DTYPE*)_out;
+
+
+	const size_t halfwidth = image->m_Width/2;
+	const size_t halfheight = image->m_Height/2;
+
+	if( image->m_Layout == E_INTERLEAVED )
+	{
+		for( uint32_t y = 0; y < halfheight; ++y)
+		{
+			for( uint32_t x = 0; y < halfwidth; ++x)
+			{
+				uint32_t xx = x*2;
+				uint32_t yy = y*2;
+				for( uint32_t c = 0; c < channels; ++c)
+				{
+					DTYPE s0 = data[ yy * channels + xx * channels + c ];
+					DTYPE s1 = data[ yy * channels + (xx+1) * channels + c ];
+					DTYPE s2 = data[ (yy+1) * channels + xx * channels + c ];
+					DTYPE s3 = data[ (yy+1) * channels + (xx+1) * channels + c ];
+					out[ y * halfwidth * channels + x * channels + c] = (s0 + s1 + s2 + s3) / DTYPE(4);
+				}
+			}
+		}
+	}
+	else
+	{
+		const size_t pagesize = halfwidth * halfheight;
+
+		for( uint32_t c = 0; c < channels; ++c)
+		{
+			for( uint32_t y = 0; y < halfheight; ++y)
+			{
+				for( uint32_t x = 0; y < halfwidth; ++x)
+				{
+					uint32_t xx = x*2;
+					uint32_t yy = y*2;
+					DTYPE s0 = data[ yy * channels + xx * channels + c ];
+					DTYPE s1 = data[ yy * channels + (xx+1) * channels + c ];
+					DTYPE s2 = data[ (yy+1) * channels + xx * channels + c ];
+					DTYPE s3 = data[ (yy+1) * channels + (xx+1) * channels + c ];
+					out[ c * pagesize + y * halfwidth + x] = (s0 + s1 + s2 + s3) / DTYPE(4);
+				}
+			}
+		}
+	}
+}
+
+void half_size(const Image* image, void* out)
+{
+	if( image->m_Type == E_UINT )
+	{
+		if( image->m_ChannelDepth == 8 )
+			_half_size<uint8_t>(image, out);
+		else if( image->m_ChannelDepth == 16 )
+			_half_size<uint16_t>(image, out);
+		else if( image->m_ChannelDepth == 32 )
+			_half_size<uint32_t>(image, out);
+	}
+	else // float
+	{
+		if( image->m_ChannelDepth == 32 )
+			_half_size<float>(image, out);
+		else if( image->m_ChannelDepth == 64 )
+			_half_size<double>(image, out);
+	}
+}

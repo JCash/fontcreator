@@ -1,3 +1,6 @@
+""" The fonteffects module provides commonly used base functionality for the effects.
+"""
+
 import os, logging, math
 import numpy as np
 try:
@@ -583,6 +586,8 @@ class Halfsize(object):
                 setattr(self, name, value )
 
     def apply(self, image):
+        return utils.half_size(image)
+        """
         shape = image.shape
         for n in xrange(self.factor):
             out = np.zeros( (image.shape[0] / 2, image.shape[1] / 2, image.shape[2]) )
@@ -593,6 +598,7 @@ class Halfsize(object):
                     out[x, y] = (image[xx, yy] + image[xx+1, yy] + image[xx, yy+1] + image[xx+1, yy+1]) / 4.0
             image = out
         return out
+        """
 
 
 #To be used as a mask for each layer
@@ -613,7 +619,7 @@ class Layer(object):
     """
     def __init__(self, *k, **kw):
         self.opacity = 1.0
-        self.blend = fb.GetBlendFunction('blendnormal')
+        self.blend = fb.blendnormal
         self.effects = []
         self.padding = (0, 0, 0, 0)
 

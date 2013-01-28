@@ -1,138 +1,125 @@
 import logging
 import numpy as np
 
-blendfunctions = dict()
+BLENDFUNCTIONS = dict()
 
 
-def BlendFunction(fun):
+def blendfunction(fun):
     """ Registers a class as a blend function
 
     :param fun: A function that takes two numpy images, blends them and then returns the resulting image.
+    
+    Example::
+    
+        @blendfunction
+        def my_blend_function(base, blend):
+            return base + blend
     """
     assert( callable(fun) )
-    blendfunctions[fun.__name__.lower()] = fun
+    BLENDFUNCTIONS[fun.__name__.lower()] = fun
     logging.info( "Registered blend function %s" % fun.__name__.lower() )
     return fun
 
 
-def GetBlendFunction(name):
-    return blendfunctions[name]
-
 # TODO: vectorize these functions
 
 
-@BlendFunction
-def blendnormal(*k, **kw):
+@blendfunction
+def blendnormal(base, blend):
     """ R = blend
 
     :param base: The base image
     :param blend: The blend image
     """
-    return kw['blend']
+    return blend
 
 
 # Darken blends
 
-@BlendFunction
-def blenddarken(*k, **kw):
+@blendfunction
+def blenddarken(base, blend):
     """ R = min( base, blend )
 
     :param base: The base image
     :param blend: The blend image
     """
-    base = kw['base']
-    blend = kw['blend']
     return np.minimum(base, blend)
 
 
-@BlendFunction
-def blendmultiply(*k, **kw):
+@blendfunction
+def blendmultiply(base, blend):
     """ R = base * blend
 
     :param base: The base image
     :param blend: The blend image
     """
-    base = kw['base']
-    blend = kw['blend']
     return base * blend
 
 
-@BlendFunction
-def blendcolorburn(*k, **kw):
+@blendfunction
+def blendcolorburn(base, blend):
     """ R = 1 - (1 - base) / blend
 
     :param base: The base image
     :param blend: The blend image
     """
-    base = kw['base']
-    blend = kw['blend']
     # 1 - (1-Base) / Blend
     ones = np.ones_like(base)
     return ones - (ones - base) / blend
 
 
-@BlendFunction
-def blendlinearburn(*k, **kw):
+@blendfunction
+def blendlinearburn(base, blend):
     """ R = base + blend - 1
 
     :param base: The base image
     :param blend: The blend image
     """
-    base = kw['base']
-    blend = kw['blend']
     # R = Base + Blend - 1
     return base + blend - np.ones_like(base)
 
 
 # Lighten blends
 
-@BlendFunction
-def blendlighten(*k, **kw):
+@blendfunction
+def blendlighten(base, blend):
     """ R = max( base, blend )
 
     :param base: The base image
     :param blend: The blend image
     """
-    base = kw['base']
-    blend = kw['blend']
     return np.maximum(base, blend)
 
 
-@BlendFunction
-def blendscreen(*k, **kw):
+@blendfunction
+def blendscreen(base, blend):
     """ R = 1 - (1 - base) * (1 - blend)
 
     :param base: The base image
     :param blend: The blend image
     """
-    base = kw['base']
-    blend = kw['blend']
     # R = 1 - (1-Base) * (1-Blend)
     ones = np.ones_like(base)
     return ones - (ones - base) * (ones - blend)
 
 
-@BlendFunction
-def blendcolordodge(*k, **kw):
+@blendfunction
+def blendcolordodge(base, blend):
     """ R = base / (1 - blend)
 
     :param base: The base image
     :param blend: The blend image
     """
-    base = kw['base']
-    blend = kw['blend']
     # R = Base / (1-Blend)
     ones = np.ones_like(base)
     return base / (ones - blend)
 
 
-@BlendFunction
-def blendlineardodge(*k, **kw):
+@blendfunction
+def blendlineardodge(base, blend):
     """ R = base + blend
 
     :param base: The base image
     :param blend: The blend image
     """
-    base = kw['base']
-    blend = kw['blend']
     return base + blend

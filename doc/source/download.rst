@@ -11,17 +11,17 @@ Prerequisites
 The FontCreator should work on any platform that supports these prerequisites:
 
 - `Python <http://www.python.org/download>`_
-- `PIL <http://www.pythonware.com/products/pil>`_
 - `numpy <http://www.scipy.org/Download>`_
 - `freetype <http://www.freetype.org/download.html>`_
+- `PIL <http://www.pythonware.com/products/pil>`_ - For writing textures with PIL
 
 Optional installations:
 
 - `sphinx <http://sphinx.pocoo.org>`_ (for the documentation)
 - `PySide <http://qt-project.org/wiki/PySideDownloads>`_ (for the Editor)
 
-Note that the PIL package is only necessary if you want to use it for saving
-to a standard image format (e.g. PNG, TGA etc)
+.. note:: Note that the PIL package is only necessary if you want to use it for saving
+	to a standard image format (e.g. PNG, TGA etc). The examples use PIL.
 
 For Linux and Mac, you can get these as regular packages. (On Mac using macports)
 
@@ -70,7 +70,7 @@ Once the code is built and the library path is set, you can test that the tool b
 
     > python fontcreator.py -i examples/00_pixel.fontinfo -o build/00_pixel.fontinfo
 
-If all goes well, you should now be able to find two files **build/00_pixel.png** and **build/00_pixel.json**
+If all goes well, you should now be able to find two files *build/00_pixel.png* and *build/00_pixel.json*
 
 
 Building Examples
@@ -83,5 +83,14 @@ You can also build the examples to test the font creator::
 The fontcreator comes with a script that also sets the path for you::
 
 	> ./build_examples.sh
+    
+
+Building Documentation
+----------------------
+
+To build the documentation::
+
+	> ./build_doc.sh
+	> open doc/build/html/index.html
     
 

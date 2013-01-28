@@ -20,20 +20,24 @@ Solid color
 -----------
 
 .. autoclass:: fonteffects.Solid
+	:noindex:
 
 Gradient color
 --------------
 
 .. autoclass:: fonteffects.Gradient
+	:noindex:
 
 
 Texture fill
 ------------
 
 .. autoclass:: fonteffects.Texture
+	:noindex:
 
 
 Stripes
 -------
 
 .. autoclass:: fonteffects.Stripes
+	:noindex:

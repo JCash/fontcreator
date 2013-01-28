@@ -15,6 +15,7 @@ g++ -O2 \
 	source/demo.cpp \
 	-L/opt/local/lib \
 	-I/opt/local/include \
+	-I/usr/local/include/ \
 	-lglfw \
 	-lpng \
 	-framework IOKit \
