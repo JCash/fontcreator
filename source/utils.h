@@ -42,6 +42,8 @@ DLL_EXPORT void maximum(const Image* image, const float* kernel, size_t kernelwi
 
 DLL_EXPORT void minimum(const Image* image, const float* kernel, size_t kernelwidth, size_t kernelheight, void* out);
 
+DLL_EXPORT void half_size(const Image* image, int factor, void* out);
+
 DLL_EXPORT void calculate_sedt(const Image* image, float radius, void* out);
 
 }

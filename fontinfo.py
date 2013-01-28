@@ -221,6 +221,9 @@ class SFontInfo(object):
         self.bgcolor = map( lambda x: float(x)/255.0 if isinstance(x, int) else x, self.bgcolor )
         self.fgcolor = map( lambda x: float(x)/255.0 if isinstance(x, int) else x, self.fgcolor )
 
+        if not os.path.isabs(self.letters):
+            self.letters = os.path.join( os.path.dirname(options.input), self.letters )
+                                      
         if os.path.exists(self.letters):
             with open(self.letters, 'rb') as f:
                 data = f.read()

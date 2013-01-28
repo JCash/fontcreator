@@ -9,6 +9,7 @@
 #include <iostream>
 
 #include <cassert>
+#include <limits>
 
 #include "ShelfBinPack.h"
 
