@@ -299,7 +299,13 @@ class FaceRec(ctypes.Structure):
     def get_char_index(self, char):
         if type(char) in (str, unicode):
             char = ord(char)
-        return _get_char_index( byref(self), char )
+        if not hasattr(self, '_cache_char_index'):
+            setattr(self, '_cache_char_index', dict())
+        if not char in self._cache_char_index:
+            index = _get_char_index( byref(self), char )
+            self._cache_char_index[char] = index
+        return self._cache_char_index[char]
+            
     
     def get_kerning(self, left, right, mode = KERNING_DEFAULT):
         lindex = self.get_char_index( left )

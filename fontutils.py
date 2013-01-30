@@ -1,10 +1,23 @@
-import math
+from math import sqrt
 import numpy as np
+import numpy.ctypeslib
 import utils
+import freetype as ft
 
 
 class FontException(Exception):
     pass
+
+
+def make_array_from_bitmap(_bitmap, bitdepth=8):
+    """ Converts a FTBitmap into a numpy array """
+    bitmap = ft.Bitmap()
+    ft.bitmap_convert(_bitmap, bitmap, bitdepth)
+
+    width, rows, pitch = bitmap.width, bitmap.rows, bitmap.pitch
+
+    a = numpy.ctypeslib.as_array(bitmap.buffer, (rows, pitch) ).transpose()
+    return a[:width,:]
 
 
 def split_channels(image):
@@ -42,12 +55,13 @@ def alpha_blend(bottom, top):
     """
     br, bg, bb, ba = split_channels(bottom)
     tr, tg, tb, ta = split_channels(top)
-
-    r = br + (tr-br) * ta
-    g = bg + (tg-bg) * ta
-    b = bb + (tb-bb) * ta
-    a = np.maximum(ba, ta)
-    return np.clip(np.dstack((r, g, b, a)), 0.0, 1.0)
+    
+    out = np.empty_like(bottom)
+    out[:, :, 0] = br + (tr-br) * ta
+    out[:, :, 1] = bg + (tg-bg) * ta
+    out[:, :, 2] = bb + (tb-bb) * ta
+    out[:, :, 3] = np.maximum(ba, ta)
+    return out
 
 
 def pad_bitmap(bitmap, left, top, right, bottom, value):
@@ -102,7 +116,7 @@ def create_1d_gaussian_kernel(radius, sigma=None):
     """
     if sigma is None:
         vert = radius + 1.0;
-        sigma = math.sqrt( -(vert * vert) / -3);
+        sigma = sqrt( -(vert * vert) / -3);
     
     f = 1.0 / ( sigma * np.sqrt(2.0 * np.pi) )
     sigma2 = sigma**2

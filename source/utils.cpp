@@ -416,18 +416,17 @@ static void _half_size(const Image* image, void* _out)
 	const size_t width = image->m_Width;
 	const size_t height = image->m_Height;
 	const size_t channels = image->m_Channels;
-	const size_t pagesize = width * height;
 	const DTYPE* data = (DTYPE*)image->m_Data;
 	DTYPE* out = (DTYPE*)_out;
 
-
 	const size_t halfwidth = image->m_Width/2;
 	const size_t halfheight = image->m_Height/2;
+
 	if( image->m_Layout == E_INTERLEAVED )
 	{
 		for( uint32_t y = 0; y < halfheight; ++y)
 		{
-			for( uint32_t x = 0; y < halfwidth; ++x)
+			for( uint32_t x = 0; x < halfwidth; ++x)
 			{
 				uint32_t xx = x*2;
 				uint32_t yy = y*2;
@@ -438,6 +437,29 @@ static void _half_size(const Image* image, void* _out)
 					DTYPE s2 = data[ (yy+1) * channels + xx * channels + c ];
 					DTYPE s3 = data[ (yy+1) * channels + (xx+1) * channels + c ];
 					out[ y * halfwidth * channels + x * channels + c] = (s0 + s1 + s2 + s3) / DTYPE(4);
+				}
+			}
+		}
+	}
+	else
+	{
+		const size_t pagesize = width * height;
+		const size_t halfpagesize = halfwidth * halfheight;
+
+		for( uint32_t c = 0; c < channels; ++c)
+		{
+			for( uint32_t y = 0; y < halfheight; ++y)
+			{
+				for( uint32_t x = 0; x < halfwidth; ++x)
+				{
+					uint32_t xx = x*2;
+					uint32_t yy = y*2;
+					DTYPE s0 = data[ c * pagesize + yy * width + xx ];
+					DTYPE s1 = data[ c * pagesize + yy * width + (xx+1) ];
+					DTYPE s2 = data[ c * pagesize + (yy+1) * width + xx ];
+					DTYPE s3 = data[ c * pagesize + (yy+1) * width + (xx+1) ];
+
+					out[ c * halfpagesize + y * halfwidth + x ] = (s0 + s1 + s2 + s3) / DTYPE(4);
 				}
 			}
 		}

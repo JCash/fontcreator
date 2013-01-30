@@ -14,13 +14,6 @@ try:
 except ImportError:
     import Image
 
-import freetype as ft
-import fontutils as fu
-
-from fontinfo import SFontInfo
-import fonteffects
-
-
 def _patch_numpy():
     """ When chasing optimizations, numpy's excessive imports actually amounted to
     times that were not insignificant compared to the other functions in the font creator.
@@ -47,16 +40,23 @@ def _patch_numpy():
 
     sys.modules['numpy.core.records'] = FooModule()
     sys.modules['numpy.core.financial'] = FooModule()
+    
+    sys.modules['numpy.lib.triu'] = FooModule()
 
 _patch_numpy()
 import numpy as np
 
+import freetype as ft
+import fontutils as fu
+
+from fontinfo import SFontInfo
+import fonteffects
+
 """
 for n in sorted(sys.modules.keys()):
     if 'numpy' in n:
-        print n
+        print n, sys.modules[n]
 """
-
 
 
 """
@@ -91,32 +91,14 @@ class LogStream(object):
         self.log.flush()
 
 
-
-
-def _make_array_from_bitmap(_bitmap, bitdepth=8):
-    """ Converts a FTBitmap into a numpy array """
-    bitmap = ft.Bitmap()
-    ft.bitmap_convert(_bitmap, bitmap, bitdepth)
-
-    width, rows, pitch = bitmap.width, bitmap.rows, bitmap.pitch
-
-    # fetch all data from C to Python
-    #buffer = bitmap.buffer[:]
-
-    data = []
-    for i in xrange(rows):
-        data.extend( bitmap.buffer[ i * pitch : i * pitch + width ] )
-
-    return np.array(data, np.float32).reshape(rows, width).transpose()
-
-
-def _apply_layer(info, layer, character, previmage, glyphimage):
+def _apply_layer(glyph, info, layer, character, previmage, glyphimage):
     # The max y should be the same for all characters in the same row
     # This is necessary for having the same "space" during calculations
     maxsize = info.maxsize
 
     starty = info.maxbearingY - character.bearingY
 
+    layer.set_info( glyph, info )
     image = layer.apply_color( 0, starty, character.bitmap.shape, maxsize, glyphimage, previmage )
     image = layer.apply_effects( image )
     image = layer.apply_mask( image )
@@ -127,16 +109,20 @@ def _apply_layer(info, layer, character, previmage, glyphimage):
 
 
 def _apply_layers(info):
-    bbox = [0.0, 0.0]
+    
+    bbox = np.array( [0, 0] )
+    max_bearing_y = 0
     for glyph in info.glyphs:
         if glyph.bitmap is None:
             continue
-        bbox[0] = max( bbox[0], glyph.bitmap.shape[0] )
-
+        bbox = np.maximum( bbox, glyph.bitmap.shape )
+        max_bearing_y = max(max_bearing_y, glyph.bearingY)
+    
     bbox[0] += info.extrapadding[0] + info.extrapadding[2]
-
-    info.maxsize = [bbox[0], info.ascender - info.descender]
-    info.maxbearingY = info.ascender
+    bbox[1] += info.extrapadding[1] + info.extrapadding[3]
+    
+    info.maxsize = bbox
+    info.maxbearingY = max_bearing_y
 
     elements = []
     for layer in info.layers:
@@ -144,7 +130,7 @@ def _apply_layers(info):
         elements.append(layer.color)
     for element in elements + info.posteffects:
         if hasattr(element, 'set_dimensions'):
-            element.set_dimensions(info.maxsize[0], info.maxsize[1] )
+            element.set_dimensions(info.maxsize[0], info.maxsize[1])
 
     for glyph in info.glyphs:
         
@@ -158,13 +144,13 @@ def _apply_layers(info):
         
         previmage = np.dstack((glyphimage, glyphimage, glyphimage, glyphimage))
 
-        previmage = _apply_layer(info, info.layers[0], glyph, previmage, glyphimage)
+        previmage = _apply_layer(glyph, info, info.layers[0], glyph, previmage, glyphimage)
 
         for layer in info.layers[1:]:
-            previmage = _apply_layer(info, layer, glyph, previmage, glyphimage)
+            previmage = _apply_layer(glyph, info, layer, glyph, previmage, glyphimage)
 
         for effect in info.posteffects:
-            previmage = effect.apply(previmage)
+            previmage = effect.apply(glyph, info, previmage)
         
         bgimage = np.ones( previmage.shape, float) * (info.bgcolor[0], info.bgcolor[1], info.bgcolor[2], 0.0)
         
@@ -197,10 +183,6 @@ def _get_extra_padding(info):
     extrapadding = (0,0,0,0)
     for layer in info.layers:
         layerpadding = layer.padding
-
-        for effect in layer.effects:
-            layerpadding = np.add(layerpadding, getattr(effect, 'padding', zero) )
-
         extrapadding = np.maximum(extrapadding, layerpadding)
         
     for effect in info.posteffects:
@@ -239,8 +221,9 @@ def _get_glyph_info(options, info, face):
     # find out the needed extra padding on each side of each glyph
     info.extrapadding = _get_extra_padding(info)
     
-    #info.ascender = face.size.ascender >> 6
-    #info.descender = face.size.descender >> 6
+    info.ascender = (face.size.ascender >> 6) + info.extrapadding[1]
+    info.descender = (face.size.descender >> 6) - info.extrapadding[3]
+    info.fontsize = face.height >> 6
     
     flags = ft.LOAD_NO_BITMAP
     
@@ -269,9 +252,7 @@ def _get_glyph_info(options, info, face):
 
 
 def render(options, info, face):
-
-    face.set_char_size( width=0, height=info.bitmapsize*64, hres=info.dpi, vres=info.dpi )
-
+    
     found = False
     for charmap in face.charmaps:
         found = found or charmap.encoding == ft.ENCODING_UNICODE
@@ -285,10 +266,8 @@ def render(options, info, face):
 
     # find out the needed extra padding on each side of each glyph
     info.extrapadding = _get_extra_padding(info)
-
-    max_bearing_y = 0 # the maximum extent above the baseline
-    min_bearing_y = 0 # the maximum extent below the baseline
-    max_width = 0
+    
+    info.face = face
 
     flags = ft.LOAD_RENDER
         
@@ -302,12 +281,17 @@ def render(options, info, face):
 
     logging.debug("RENDERING %s", unicode([g.unicode for g in info.glyphs]))
     
+    assert len(info.glyphs) > 0, "No glyphs to process!"
+    
+    # since the layers might set this, we set it back
+    face.set_char_size( width=0, height=info.bitmapsize * 64, hres=info.dpi, vres=info.dpi )
+    
     for glyph in info.glyphs:
 
         face.load_char( glyph.unicode, flags )
 
         if face.glyph.contents.bitmap.rows:
-            glyph.bitmap = _make_array_from_bitmap(face.glyph.contents.bitmap)
+            glyph.bitmap = fu.make_array_from_bitmap(face.glyph.contents.bitmap)
             shape = glyph.bitmap.shape
 
             glyph.bitmap = fu.pad_bitmap(glyph.bitmap, info.extrapadding[0], info.extrapadding[1], info.extrapadding[2], info.extrapadding[3], 0.0)
@@ -325,43 +309,29 @@ def render(options, info, face):
         else:
             logging.debug("char missing bitmap %X '%s'" % (glyph.utf8, glyph.unicode) )
 
-        if glyph.bitmap != None:
-            # find the highest char
-            max_bearing_y = max(max_bearing_y, glyph.bearingY)
-            # find the lowest char
-            min_bearing_y = min(min_bearing_y, glyph.bearingY - glyph.bitmap.shape[1])
-            # Find the widest char
-            max_width = max(max_width, glyph.bitmap.shape[0])
-    
-    info.fontsize = face.height >> 6
-    info.ascender = max_bearing_y
-    info.descender = min_bearing_y
-    info.max_height = info.ascender - info.descender
-    info.max_width = max_width
-
     # Apply all layers on all the tiny bitmaps
     _apply_layers(info)
+    
+    max_bearing_y = 0 # the maximum extent above the baseline
+    min_bearing_y = 0 # the maximum extent below the baseline
+    max_width = 0
 
-    # adjust the ascender/descender, since the layers may increased/decreased the size
+    # calculate the height/width, since the layers may increased/decreased the size
     max_width = 0
     max_height = 0
     for glyph in info.glyphs:
         if glyph.bitmap is None:
             continue
+        # find the highest char
+        max_bearing_y = max(max_bearing_y, glyph.bearingY)
+        # find the lowest char
+        min_bearing_y = min(min_bearing_y, glyph.bearingY - glyph.bitmap.shape[1])
+        
         max_width = max(max_width, glyph.bitmap.shape[0])
         max_height = max(max_height, glyph.bitmap.shape[1])
 
-    ratio = float(max_height) / float(max_bearing_y - min_bearing_y)
-    info.ascender = math.ceil( max_bearing_y * ratio )
-    info.descender = math.floor( min_bearing_y * ratio )
+    info.max_height = max(max_height, info.ascender - info.descender)
     info.max_width = max_width
-    info.max_height = max_height
-
-    # Now when we've found the new ratio, adjust the glyphs
-    for glyph in info.glyphs:
-        glyph.bearingX = math.ceil( glyph.bearingX * ratio )
-        glyph.bearingY = math.ceil( glyph.bearingY * ratio )
-        glyph.advance = math.ceil( glyph.advance * ratio )
 
 
 def _get_pair_kernings(info, face):
@@ -390,7 +360,6 @@ def compile(options):
     _get_glyph_info(options, info, face)
 
     # The actual compile step
-    #cinfo = render(options, info, face)
     render(options, info, face)
     
     # assemble into a texture
@@ -420,9 +389,10 @@ def _encode_pair(prevc, c):
 
 
 def _calc_bbox(info, characters, pairkernings, text):
+    extrapadding = _get_extra_padding(info)
     maxx = 0
     x = 0
-    lineheight = info.ascender - info.descender
+    lineheight = info.max_height + extrapadding[1] + extrapadding[3]
     y = lineheight
     prevc = 0
     for i, c in enumerate(text):
@@ -443,6 +413,7 @@ def _calc_bbox(info, characters, pairkernings, text):
 
         x += pairkernings.get( _encode_pair(prevc, c), 0)
         x += char.advance
+        x += extrapadding[0] + extrapadding[2]
         prevc = c
 
     maxx = max(x, maxx)
@@ -504,6 +475,7 @@ def write_text(options, info, pairkernings):
         if bx < 0:
             x += -char.bearingX
             bx = x
+            
         
         target = image[bx : bx + bw, by : by + bh ]
 
@@ -516,9 +488,10 @@ def write_text(options, info, pairkernings):
             print 'bitmap shape', char.bitmap.shape
             print "bx, bw", bx, bw
             print "by, bh", by, bh
-            print "lineheight", info.ascender - info.descender
+            print "y", y
+            print "bearingY", char.bearingY
+            print "lineheight", info.max_height
             print "c:", char.utf8, char.unicode
-            print x, by, x + bw, by + bh
             print ""
             print ""
             raise

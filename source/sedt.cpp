@@ -13,6 +13,7 @@
 
 #include "utils.h"
 #include <math.h>
+#include <assert.h>
 #if defined(_WIN32) || defined(_WIN64)
 #include <algorithm>
 #define fmin std::min<float>
@@ -196,6 +197,13 @@ static void _calculate_sedt(const Image* image, float radius, void* _out)
 	float* img1 = new float[pagesize * 2];
 	float* img2 = img1 + pagesize;
 
+	/*
+	printf("sizeof( DTYPE ) == %u\n", sizeof(DTYPE));
+	printf("image %d\n", image->m_Layout);
+	printf("chdepth %d\n", image->m_ChannelDepth);
+	printf("w, h, d %d, %d, %d\n", w, h, image->m_Channels);
+	*/
+
 	SEDT<DTYPE, MAX> sedt;
 	sedt.init(w, h, src, 0);
 	sedt.compute(img1);
@@ -226,6 +234,7 @@ void calculate_sedt(const Image* image, float radius, void* out)
 
 	if( image->m_Type == E_UINT )
 	{
+		assert(false && "UINT Not implemented!!");
 		/*
 		if( image->m_ChannelDepth == 8 )
 			_calculate_sedt<uint8_t, 255>( image, radius, out );

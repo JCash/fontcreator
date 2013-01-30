@@ -221,16 +221,17 @@ class SFontInfo(object):
         self.bgcolor = map( lambda x: float(x)/255.0 if isinstance(x, int) else x, self.bgcolor )
         self.fgcolor = map( lambda x: float(x)/255.0 if isinstance(x, int) else x, self.fgcolor )
 
+        letters_path = self.letters
         if not os.path.isabs(self.letters):
-            self.letters = os.path.join( os.path.dirname(options.input), self.letters )
+            letters_path = os.path.join( os.path.dirname(options.input), self.letters )
                                       
-        if os.path.exists(self.letters):
-            with open(self.letters, 'rb') as f:
+        if os.path.exists(letters_path):
+            with open(letters_path, 'rb') as f:
                 data = f.read()
             
             data = data.replace('\n', '').replace('\r', '')
             if not data:
-                raise f.FontException("The file '%s' was empty" % self.letters)
+                raise f.FontException("The file '%s' was empty" % letters_path)
             
             try:
                 letters = [ ord(c) for c in str(data) ]
@@ -238,6 +239,7 @@ class SFontInfo(object):
                 letters = [ ord(c) for c in unicode(data) ] 
         else:
             letters = []
+            
             for token in self.letters.split(','):
                 if not token:
                     continue

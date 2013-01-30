@@ -49,6 +49,9 @@ _maximum.argtypes = [POINTER(Image), c_float_p, c_size_t, c_size_t, c_void_p]
 _minimum = _utils.minimum
 _minimum.argtypes = [POINTER(Image), c_float_p, c_size_t, c_size_t, c_void_p]
 
+_half_size = _utils.half_size
+_half_size.argtypes = [POINTER(Image), c_void_p]
+
 _calculate_sedt = _utils.calculate_sedt
 _calculate_sedt.argtypes = [POINTER(Image), c_float, c_void_p]
 
@@ -113,11 +116,32 @@ def minimum(npimage, kernel, layout=LAYOUT_STACKED):
     _minimum( byref(image), kernel.ctypes.data_as(c_float_p), kernel.shape[0], kernel.shape[1], out.ctypes.data_as(c_void_p))
     return out
 
+def half_size(npimage, layout=LAYOUT_STACKED):
+    depth = 1 if len(npimage.shape) == 2 else npimage.shape[2]
+    if layout == LAYOUT_STACKED:
+        empty = np.empty( (npimage.shape[0]//2, npimage.shape[1]//2) )
+        if depth == 1:
+            out = np.dstack( (empty,) )
+        elif depth == 2:
+            out = np.dstack( (empty, empty) )
+        elif depth == 3:
+            out = np.dstack( (empty, empty, empty) )
+        elif depth == 4:
+            out = np.dstack( (empty, empty, empty, empty) )
+    else:
+        if depth == 1:
+            out = np.empty( (npimage.shape[0]//2, npimage.shape[1]//2) )
+        else:
+            out = np.empty( (npimage.shape[0]//2, npimage.shape[1]//2, depth) )
 
-def calculate_sedt(npimage, radius):
+    image = _make_image(npimage, layout)
+    _half_size(byref(image), out.ctypes.data_as(c_void_p))
+    return out
+
+def calculate_sedt(npimage, radius, layout=LAYOUT_STACKED):
     assert len(npimage.shape) == 2 or npimage.shape[2] == 1, "calculate_sed only supports 1 channel bitmaps"
     out = np.empty_like(npimage)
-    image = _make_image(npimage, LAYOUT_STACKED)
+    image = _make_image(npimage, layout)
     _calculate_sedt( byref(image), radius, out.ctypes.data_as(c_void_p))
     return out
     
