@@ -1,9 +1,10 @@
 
-import sys, os
+import sys, os, logging
 import subprocess
 from PySide import QtCore
 import model
 from ui.jobs import JobService
+import fontutils
 
 
 class Presenter(object):
@@ -42,11 +43,7 @@ class Presenter(object):
     def _compile(self, ctx, options):
         fontcreator = os.path.join(os.path.dirname(__file__), '..', 'fontcreator.py')
         cmd = '%s %s -i %s -o %s -d %s -v' % (sys.executable, fontcreator, options.input, options.output, options.datadir)
-<<<<<<< .merge_file_qtEHZ2
-        print cmd
-=======
-        #print cmd
->>>>>>> .merge_file_a2N7M7
+        print "CMD", cmd
 
         #proc = subprocess.Popen(cmd, shell=False)
         #retcode = proc.wait()
@@ -63,9 +60,12 @@ class Presenter(object):
             print 'app thread (done)', QtCore.QCoreApplication.instance().thread()
 
     def LoadFile(self, path):
-        options = self._create_options(path)
-        self.model = model.Model(options)
-        self.documents[path] = self.model
-        self.view.AddDocument(path)
+        try:
+            options = self._create_options(path)
+            self.model = model.Model(options)
+            self.documents[path] = self.model
+            self.view.AddDocument(path)
+        except fontutils.FontException, e:
+            logging.exception("The file %s failed to open", path)
 
         print 'pid main', os.getpid()

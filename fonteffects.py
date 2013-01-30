@@ -630,12 +630,20 @@ class Halfsize(object):
             except NameError:
                 setattr(self, name, value )
 
+<<<<<<< HEAD
     def apply(self, glyph, info, image):
+=======
+    def apply(self, image):
+        return utils.half_size(image)
+        """
+        shape = image.shape
+>>>>>>> de3b330fc3f9ff1b314828fed60532b8a54ff6ed
         for n in xrange(self.factor):
             out = utils.half_size(image)
             image = out
 
         return out
+        """
 
 
 #To be used as a mask for each layer

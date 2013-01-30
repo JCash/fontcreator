@@ -20,7 +20,11 @@ elif sys.platform == 'linux2':
     _prefix = 'lib'
     _suffix = '.so'
 
-_freetype = ctypes.cdll.LoadLibrary('%sfreetype%s' % (_prefix, _suffix))
+try:
+    path = '%sfreetype%s' % (_prefix, _suffix)
+    _freetype = ctypes.cdll.LoadLibrary(path)
+except (WindowsError,):
+    raise IOError("FAILED TO OPEN " + path)
 
 c_int_p = POINTER(ctypes.c_int)
 c_uint_p = POINTER(ctypes.c_uint)

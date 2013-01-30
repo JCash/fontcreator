@@ -132,6 +132,11 @@ class SFontInfo(object):
     
     def __init__(self, options):
         """ Reads the font info and converts the info into usable members in this struct """
+        
+        assert os.path.exists(options.input), "The file doesn't exist: %s\nCwd: %s" % (options.input, os.getcwd())
+        self._init(options)
+
+    def _init(self, options):
         defaults = GetDefaultOptions()
 
         cfg = SafeConfigParser()
@@ -144,7 +149,7 @@ class SFontInfo(object):
                 setattr(self, name, defaults[name] )
 
         self.functionlist = dict()
-
+        
         for section in cfg.sections():
             if section in ['default']:
                 continue

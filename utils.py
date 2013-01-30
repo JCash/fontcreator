@@ -100,6 +100,12 @@ def convolve1d(npimage, kernel, axis, layout=LAYOUT_STACKED):
     _convolve1d(byref(image), kernel.ctypes.data_as(c_float_p), len(kernel), axis, out.ctypes.data_as(c_void_p))
     return out
 
+def half_size(npimage, layout=LAYOUT_STACKED):
+    out = np.empty( (npimage.shape[0]/2, npimage.shape[1]/2, npimage.shape[2]) )
+    image = _make_image(npimage, layout)
+    _half_size(byref(image), out.ctypes.data_as(c_void_p))
+    return out
+
 
 def maximum(npimage, kernel, layout=LAYOUT_STACKED):
     out = np.empty_like(npimage)
