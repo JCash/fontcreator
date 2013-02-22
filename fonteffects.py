@@ -527,11 +527,11 @@ class KernelBlur(object):
         return fu.blur_image_kernel1D(image, self.kernel)
 
 @ColorFunction
-class DistanceField2(object):
+class DistanceField(object):
     """ Calculates a distance field for each glyph
     """
-    size = 4
-    factor = 2
+    size = 16
+    factor = 4
 
     def __init__(self, *k, **kw):
         """
@@ -575,8 +575,9 @@ class DistanceField2(object):
             i = i[:previmage.shape[0], :]
         if extra_h < 0:
             i = i[:, previmage.shape[1]]
-            
-        i = i[:, :, 0]
+        
+        if len(i.shape) == 3:
+            i = i[:, :, 0]
         
         image = np.empty_like(previmage)
         previmage[:, :, 0] = i
@@ -585,57 +586,6 @@ class DistanceField2(object):
         previmage[:, :, 3][i > 0] = 1.0
         return previmage
 
-
-@EffectFunction
-class DistanceField(object):
-    """ Calculates a distance field for each glyph
-    """
-    size = 1
-
-    def __init__(self, *k, **kw):
-        """
-        @param size
-        """
-        self.size = self.__class__.size
-
-        for name, value in kw.iteritems():
-            try:
-                setattr(self, name, eval(value) )
-            except NameError:
-                setattr(self, name, value )
-        
-        self.padding = (self.size, self.size, self.size, self.size)
-
-    def apply(self, info, glyph, image):
-        i = image[:, :, 0]
-        i = utils.calculate_sedt(i, self.size)
-        image[:, :, 0] = i
-        image[:, :, 1] = i
-        image[:, :, 2] = i
-        image[:, :, 3][i > 0] = 1.0
-        return image
-        
-
-
-@EffectFunction
-class Halfsize(object):
-    """ Down scales the glyph by a factor, using bilinear factoring
-    """
-    factor = prop.IntProperty( 1, help='The number of times the image should be minified' )
-    
-    def __init__(self, *k, **kw):
-        for name, value in kw.iteritems():
-            try:
-                setattr(self, name, eval(value) )
-            except NameError:
-                setattr(self, name, value )
-
-    def apply(self, glyph, info, image):
-        for n in xrange(self.factor):
-            out = utils.half_size(image)
-            image = out
-
-        return out
 
 
 #To be used as a mask for each layer

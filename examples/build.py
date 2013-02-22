@@ -11,7 +11,7 @@ EXT='.png'
 
 DEBUG = False
 if DEBUG:
-    TEXT = 'H'
+    TEXT = 'World'
 
 header = """
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
@@ -228,10 +228,11 @@ if __name__ == '__main__':
         docs = []
         fontinfos = sorted(os.listdir(EXAMPLEDIR)) 
         if DEBUG:
-            fontinfos = ['00_pixel.fontinfo']
+            #fontinfos = ['00_pixel.fontinfo']
             #fontinfos = ['01_outline.fontinfo']
             #fontinfos = ['03_layers_effects.fontinfo']
             #fontinfos = ['05_distance_fields.fontinfo']
+            fontinfos = ['01_outline.fontinfo', '05_distance_fields.fontinfo']
             
         fontinfos = [ os.path.join(EXAMPLEDIR, x) for x in fontinfos if x.endswith('.fontinfo') ]
 

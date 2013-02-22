@@ -344,6 +344,8 @@ def _get_pair_kernings(info, face):
             assert c < 0xFFFFFFFF
             assert prevc < 0xFFFFFFFF
             pairkernings[ _encode_pair(prevc, c) ] = kerning.x>>6
+            
+            #print "kerning %s, %s: %d" % (chr(prevc), chr(c), kerning.x>>6), '\t', '0x%016x' % _encode_pair(prevc, c)
     return pairkernings
 
 
@@ -359,15 +361,15 @@ def compile(options):
     # gather the glyph info
     _get_glyph_info(options, info, face)
 
+    pairkernings = None
+    if info.usepairkernings:
+        pairkernings = _get_pair_kernings(info, face)
+    
     # The actual compile step
     render(options, info, face)
     
     # assemble into a texture
     image = info.texturerender( info )
-
-    pairkernings = None
-    if info.usepairkernings:
-        pairkernings = _get_pair_kernings(info, face)
 
     if not options.writetext:
         if not os.path.exists( os.path.dirname(options.output) ):

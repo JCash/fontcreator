@@ -3,7 +3,7 @@
 
 [default]
 name = ./fonts/verdana.ttf
-size = 42
+size = 32
 
 letters = letters_ascii.txt
 
