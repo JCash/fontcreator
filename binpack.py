@@ -1,6 +1,6 @@
 import sys, os
 import ctypes
-from ctypes import POINTER, byref, c_void_p, c_float, c_int32, c_bool
+from ctypes import c_void_p, c_float, c_int32, c_bool
 
 
 if sys.platform == 'darwin':

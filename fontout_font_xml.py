@@ -1,124 +1,154 @@
-import os, struct, logging
-from PIL import image
-
-def ReadFormat(f, format):
-    return struct.unpack(format, f.read( struct.calcsize(format) ) )
-
-        
-def _save_glyph_texture(texturename, info, glyphs):
-    im = Image.new('RGBA', info.texturesize, (0,0,0,0) )
+"""
+This is the default rendering of the fonts
     
-    offx = info.internalpadding[0]
-    offy = info.internalpadding[1]
-    #for code, char in glyphs.iteritems():
+.. py:attribute:: texturesize = 512, 512
+
+    The desired size of the texture. If it's too small, the creator will fail.
+  
+.. py:attribute:: textureoffset = 0, 0
+    
+    The offset from the top left corner of the texture to the top left corner of the first glyph.
+    It is used to create a border around the texture. The same border is also applied on the right/bottom sides.
+    
+.. py:attribute:: usepremultipliedalpha = 0
+
+    If set, will premultiply the alpha
+
+"""
+import logging
+import numpy as np
+from fontutils import FontException
+import binpack
+
+DEBUG=False
+
+
+def _guess_dimensions(glyphs):
+    area = 0
     for glyph in glyphs:
-        if glyph.info.bitmap is None:
-            # TODO: Add glyphs 
+        if glyph.bitmap is None:
+            continue
+        w, h, d = glyph.bitmap.shape
+        area += w*h
+    
+    #area += area / 1
+    
+    gw = 512
+    gh = 64
+    guess = gw * gh
+    while guess < area:
+        if gh >= gw:
+            gw *= 2
+            gh /= 2
+        else:
+            gh *= 2
+        guess = gw * gh
+    return (gw, gh)
+        
+
+def _create_image(info, w, h):
+    ones = np.ones( (w, h), float)
+    zeros = np.zeros( (w, h), float)
+    r = ones * info.bgcolor[0]
+    g = ones * info.bgcolor[1]
+    b = ones * info.bgcolor[2]
+    return np.dstack( (r, g, b, zeros) )
+
+
+def _glyph_cmp(a, b):
+    if a.bitmap is None and b.bitmap is not None:
+        return 1
+    elif b.bitmap is None and a.bitmap is not None:
+        return -1
+    elif b.bitmap is None and a.bitmap is None:
+        return cmp(a, b)
+    
+    return a.bitmap.shape[1] - b.bitmap.shape[1]
+
+
+def render(info):
+    """ Assuming (0,0) is at the top left corner of the image.
+    
+    :param info:    The settings from the fontinfo file
+    :return:        The image all glyphs are rendered to
+    """
+    
+    # sort the glyphs
+    info.glyphs.sort(cmp=_glyph_cmp)
+    
+    # Work in progress
+    #iw, ih = _guess_dimensions(info.glyphs)
+    iw, ih = info.texturesize
+    #ih /= 2
+    #print "guessed image size", iw, ih
+    image = _create_image(info, iw, ih)
+    
+    textureoffset = info.textureoffset
+    padding = info.padding
+    packer = binpack.create_packer(binpack.SKYLINE_BL, iw - textureoffset[0], ih - textureoffset[1], False)
+    
+    # DEBUG PACK RENDERING
+    if DEBUG:
+        image[:, :, 0] = 1.0
+        image[:, :, 3] = 1.0
+    
+    for glyph in info.glyphs:
+        if glyph.bitmap is None:
             continue
         
-        x,y,w,h = glyph.bitmapbox
-        x -= offx
-        y -= offy
-        w += offx*2
-        h += offy*2
-        im.paste( (255,255,255,255), map(int, (x, y, x + w, y + h)) )
-    
-    texturename = texturename.replace('_dif', '_org')
-    im.save(texturename)
-    logging.debug("Wrote %s" % texturename)
-
-
-def _save_font_xml(options, output, info, glyphs):
-    
-    basename, ext = os.path.splitext(output)
-    texturedif = basename + info.textureformat
-    textureglyphs = basename.replace('_dif', '') + '_org' + info.textureformat
-    
-    lowerdatadir = options.datadir.lower()
-    
-    if texturedif.lower().startswith(lowerdatadir):
-        texturedif = texturedif[len(lowerdatadir)+1:]
+        bitmap = glyph.bitmap
         
-    if textureglyphs.lower().startswith(lowerdatadir):
-        textureglyphs = textureglyphs[len(lowerdatadir)+1:]
-    
-    texturedif = texturedif.replace('\\', '/')
-    textureglyphs = textureglyphs.replace('\\', '/')
-    
-    compiledtexturedif = texturedif.replace(info.textureformat, '.ddsc')
-    
+        w, h, d = bitmap.shape
+        
+        rect = binpack.pack_rect(packer, w + padding, h + padding)
+        if rect.height == 0:
+            raise FontException("The texture size is too small: (%d, %d) Increase the 'texturesize' property in the font info" % (info.texturesize[0], info.texturesize[1]) )
+        
+        rect.x += textureoffset[0]
+        rect.y += textureoffset[1]
+        rect.width -= padding
+        rect.height -= padding
+        
+        glyph.bitmapbox = (rect.x, rect.y, rect.width, rect.height)
+        
+        # check if the glyph has been flipped
+        if w != h and w == rect.height:
+            bitmap = np.rot90(bitmap)
+        
+        try:
+            image[ rect.x : rect.x + rect.width, rect.y : rect.y + rect.height ] = bitmap
 
-    header = """<?xml version="1.0" encoding="UTF-8"?>
-<adf>
-    <instances>
-        <instance root="font">
-            <struct type="Font" name="font">
-                <member name="Dependencies">#1</member>
-                <member name="MaskTexture">"%s" </member>
-                <member name="Texture">"%s" </member>
-                <member name="Leading">-1.0 </member>
-                <member name="Tracking">1.0 </member>
-                <member name="Ranges">#2</member>
-            </struct>
-            <array id="#1">"%s" "%s" </array>
-            <array id="#2">
+            # DEBUG PACK RENDERING
+            if DEBUG:
+                import fontutils
+                top = image[ rect.x : rect.x + rect.width, rect.y : rect.y + rect.height ]
+                ones = np.ones( (top.shape[0], top.shape[1]) )
+                
+                from random import random
+                r = random() * 0.4 + 0.6
+                g = random() * 0.4 + 0.6
+                b = random() * 0.4 + 0.6
+                a = 1.0
+                bottom = np.dstack( (ones * r, ones * g, ones * b, ones * a) )
             
-                <!-- Add your changes here. ID number should start at %d -->
+                result = fontutils.alpha_blend(bottom, top)
+                image[ rect.x : rect.x + rect.width, rect.y : rect.y + rect.height ] = result
+        except Exception, e:
+            print "ERROR", e
+            print "RECT", rect
+            
+            #print "bmshape", (bx,by,w,h)
+            print "image.shape", image.shape
+            print "char.bitmap.shape", glyph.bitmap.shape
+            raise
 
-                <!-- Here starts all the generated glyphs -->
-    """
+        #x += max(w, w2) + info.padding + info.internalpadding[0]*2
     
-    footer = """
-            </array>
-        </instance>
-    </instances>
-</adf>
-    """
+    logging.debug('Used %f %% of the texture', (binpack.get_occupancy(packer) * 100))
+    binpack.destroy_packer(packer)
     
-    runningnumber = 3
-    template = """
-                <struct type="GlyphRange" id="#%d">
-                    <member name="UnicodeStart" type="int">%d</member>
-                    <member name="Left" type="int">%d</member>
-                    <member name="Top" type="int">%d</member>
-                    <member name="Right" type="int">%d</member>
-                    <member name="Bottom" type="int">%d</member>
-                    <member name="Baseline" type="int">%d</member>
-                </struct>"""
-    
-    offx = info.internalpadding[0]
-    offy = info.internalpadding[1]
-    
-    s = ''
-    #for code, char in items:
-    for glyph in glyphs:
-        if glyph.info.bitmap is None:
-            continue
+    if info.usepremultipliedalpha:
+        image = fontutils.pre_multiply_alpha(image)
         
-        x,y,w,h = glyph.bitmapbox
-        x -= offx
-        y -= offy
-        w += offx*2
-        h += offy*2
+    return image
         
-        s += template % ( runningnumber, ord(glyph.info.unicode), x, y, x+w, y+h, glyph.baseline )
-        runningnumber += 1
-    
-    s = header % (textureglyphs, compiledtexturedif, textureglyphs, texturedif, runningnumber) + s
-    s += footer
-    
-    with open(output, 'wb') as f:
-        f.write(s)
-    logging.debug("Wrote %s" % output)
-
-
-def write(options, info, glyphs, pairkernings):
-    _save_glyph_texture(options.texturename, info, glyphs)
-    
-    fontxml = os.path.splitext(options.texturename)[0] + '.font_xml'
-    _save_font_xml(options, fontxml, info, glyphs)
-    return 0
-
-
-
-

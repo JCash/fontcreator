@@ -1,7 +1,7 @@
 """ The fonteffects module provides commonly used base functionality for the effects.
 """
 
-import os, logging, math
+import os, logging
 import numpy as np
 
 try:
@@ -266,8 +266,8 @@ class Stripes(object):
         maxextents = np.sqrt( np.dot( origin, origin ) )
         maxextents = np.round(maxextents)
 
-        invsizex = 1.0 / width
-        invsizey = 1.0 / height
+        #invsizex = 1.0 / width
+        #invsizey = 1.0 / height
 
         data = np.empty((width,height,4), dtype=np.float32)
         for x in xrange(0, width):
@@ -277,7 +277,7 @@ class Stripes(object):
                 v -= origin
 
                 lengthsq = np.dot(v,v)
-                nv = v / np.sqrt(lengthsq)
+                #nv = v / np.sqrt(lengthsq)
 
                 d = (np.dot( v, normal ) / maxextents) / 2.0 + 0.5
 
@@ -527,7 +527,7 @@ class KernelBlur(object):
         return fu.blur_image_kernel1D(image, self.kernel)
 
 @ColorFunction
-class DistanceField2(object):
+class DistanceField(object):
     """ Calculates a distance field for each glyph
     """
     size = 4
@@ -574,11 +574,10 @@ class DistanceField2(object):
         if extra_w < 0:
             i = i[:previmage.shape[0], :]
         if extra_h < 0:
-            i = i[:, previmage.shape[1]]
+            i = i[:, :previmage.shape[1]]
             
         i = i[:, :, 0]
         
-        image = np.empty_like(previmage)
         previmage[:, :, 0] = i
         previmage[:, :, 1] = i
         previmage[:, :, 2] = i
@@ -587,7 +586,7 @@ class DistanceField2(object):
 
 
 @EffectFunction
-class DistanceField(object):
+class DistanceFieldOld(object):
     """ Calculates a distance field for each glyph
     """
     size = 1
@@ -664,7 +663,7 @@ class Layer(object):
         for name, value in kw.iteritems():
             try:
                 setattr(self, name, eval(value) )
-            except (TypeError, NameError), e:
+            except (TypeError, NameError):
                 setattr(self, name, value )
 
         if isinstance(self.opacity, int):

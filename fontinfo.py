@@ -240,7 +240,7 @@ class SFontInfo(object):
             
             try:
                 letters = [ ord(c) for c in str(data) ]
-            except UnicodeEncodeError, e:
+            except UnicodeEncodeError:
                 letters = [ ord(c) for c in unicode(data) ] 
         else:
             letters = []

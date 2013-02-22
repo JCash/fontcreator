@@ -194,7 +194,6 @@ bool SkylineBinPack::RectangleFits(int skylineNodeIndex, int width, int height, 
 
 void SkylineBinPack::AddWasteMapArea(int skylineNodeIndex, int width, int height, int y)
 {
-	int wastedArea = 0;
 	const int rectLeft = skyLine[skylineNodeIndex].x;
 	const int rectRight = rectLeft + width;
 	for(; skylineNodeIndex < (int)skyLine.size() && skyLine[skylineNodeIndex].x < rectRight; ++skylineNodeIndex)

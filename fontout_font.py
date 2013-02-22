@@ -5,7 +5,7 @@ http://sv.wikipedia.org/wiki/UTF-8
 
 """
 
-import sys, os, struct
+import os, struct
 from cStringIO import StringIO
 
 def _write_u16(f, endian, value):

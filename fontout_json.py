@@ -2,7 +2,7 @@
 Generates a .json file given a set of glyphs
 """
 
-import sys, os, json
+import os, json
 
 def _create_dict(options, info, pairkernings):
     d = dict()
