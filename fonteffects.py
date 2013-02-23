@@ -262,12 +262,8 @@ class Stripes(object):
         # onto the normal. Then we can find out the max extents of the blend
         #origin = np.array([width/2.0, height/2.0])
         origin = np.array( [np.round(width/2.0), np.round(height/2.0)], float)
-        #maxextents = np.sqrt( halfextents[0]*halfextents[0]*np.abs(normal[0]) + halfextents[1]*halfextents[1]*np.abs(normal[1]) )
         maxextents = np.sqrt( np.dot( origin, origin ) )
         maxextents = np.round(maxextents)
-
-        #invsizex = 1.0 / width
-        #invsizey = 1.0 / height
 
         data = np.empty((width,height,4), dtype=np.float32)
         for x in xrange(0, width):
@@ -277,7 +273,6 @@ class Stripes(object):
                 v -= origin
 
                 lengthsq = np.dot(v,v)
-                #nv = v / np.sqrt(lengthsq)
 
                 d = (np.dot( v, normal ) / maxextents) / 2.0 + 0.5
 
@@ -574,16 +569,9 @@ class DistanceField(object):
         if extra_w < 0:
             i = i[:previmage.shape[0], :]
         if extra_h < 0:
-<<<<<<< HEAD
-            i = i[:, previmage.shape[1]]
-        
-        if len(i.shape) == 3:
-            i = i[:, :, 0]
-=======
             i = i[:, :previmage.shape[1]]
             
         i = i[:, :, 0]
->>>>>>> 3eeb00c02e840fb3ffe6d0facbf7d03948aeb3f8
         
         previmage[:, :, 0] = i
         previmage[:, :, 1] = i
@@ -592,8 +580,6 @@ class DistanceField(object):
         return previmage
 
 
-<<<<<<< HEAD
-=======
 @EffectFunction
 class DistanceFieldOld(object):
     """ Calculates a distance field for each glyph
@@ -645,7 +631,6 @@ class Halfsize(object):
 
         return out
 
->>>>>>> 3eeb00c02e840fb3ffe6d0facbf7d03948aeb3f8
 
 #To be used as a mask for each layer
 class DefaultMask(object):
