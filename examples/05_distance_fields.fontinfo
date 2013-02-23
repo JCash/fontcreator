@@ -26,3 +26,7 @@ antialias = none
 
 [distance_field]
 type = distancefield
+<<<<<<< HEAD
+=======
+size = 8
+>>>>>>> 3eeb00c02e840fb3ffe6d0facbf7d03948aeb3f8

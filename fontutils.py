@@ -100,7 +100,7 @@ def pad_bitmap(bitmap, left, top, right, bottom, value):
 
 def create_1d_lanczos_kernel(radius):
     # formula taken from http://en.wikipedia.org/wiki/Gaussian_blur
-    def calc(x): return 0 if abs(x) > radius else (1 if x == 0 else sin(x*np.pi)/x)
+    def calc(x): return 0 if abs(x) > radius else (1 if x == 0 else np.sin(x*np.pi)/x)
     k = np.array( map(calc, range(-radius,radius+1)) )
     return k / np.sum(k)
 

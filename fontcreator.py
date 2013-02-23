@@ -5,9 +5,9 @@
 """
 
 
-import sys, os, logging, math
+import sys, os, logging
 from optparse import OptionParser
-import ctypes, itertools
+import itertools
 
 try:
     from PIL import Image
@@ -371,6 +371,13 @@ def compile(options):
     # assemble into a texture
     image = info.texturerender( info )
 
+<<<<<<< HEAD
+=======
+    pairkernings = dict()
+    if info.usepairkernings:
+        pairkernings = _get_pair_kernings(info, face)
+
+>>>>>>> 3eeb00c02e840fb3ffe6d0facbf7d03948aeb3f8
     if not options.writetext:
         if not os.path.exists( os.path.dirname(options.output) ):
             os.makedirs(os.path.dirname(options.output))

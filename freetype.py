@@ -6,7 +6,7 @@ https://github.com/leovitch/python-ft2/
 
 """
 
-import sys, os
+import sys
 import ctypes
 from ctypes import POINTER, byref, c_void_p, c_char_p, c_long, c_ulong, c_int, c_uint, c_uint32, c_short, c_ushort, c_ubyte, c_char
 

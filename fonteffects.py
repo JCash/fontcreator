@@ -1,7 +1,7 @@
 """ The fonteffects module provides commonly used base functionality for the effects.
 """
 
-import os, logging, math
+import os, logging
 import numpy as np
 
 try:
@@ -266,8 +266,8 @@ class Stripes(object):
         maxextents = np.sqrt( np.dot( origin, origin ) )
         maxextents = np.round(maxextents)
 
-        invsizex = 1.0 / width
-        invsizey = 1.0 / height
+        #invsizex = 1.0 / width
+        #invsizey = 1.0 / height
 
         data = np.empty((width,height,4), dtype=np.float32)
         for x in xrange(0, width):
@@ -277,7 +277,7 @@ class Stripes(object):
                 v -= origin
 
                 lengthsq = np.dot(v,v)
-                nv = v / np.sqrt(lengthsq)
+                #nv = v / np.sqrt(lengthsq)
 
                 d = (np.dot( v, normal ) / maxextents) / 2.0 + 0.5
 
@@ -574,12 +574,17 @@ class DistanceField(object):
         if extra_w < 0:
             i = i[:previmage.shape[0], :]
         if extra_h < 0:
+<<<<<<< HEAD
             i = i[:, previmage.shape[1]]
         
         if len(i.shape) == 3:
             i = i[:, :, 0]
+=======
+            i = i[:, :previmage.shape[1]]
+            
+        i = i[:, :, 0]
+>>>>>>> 3eeb00c02e840fb3ffe6d0facbf7d03948aeb3f8
         
-        image = np.empty_like(previmage)
         previmage[:, :, 0] = i
         previmage[:, :, 1] = i
         previmage[:, :, 2] = i
@@ -587,6 +592,60 @@ class DistanceField(object):
         return previmage
 
 
+<<<<<<< HEAD
+=======
+@EffectFunction
+class DistanceFieldOld(object):
+    """ Calculates a distance field for each glyph
+    """
+    size = 1
+
+    def __init__(self, *k, **kw):
+        """
+        @param size
+        """
+        self.size = self.__class__.size
+
+        for name, value in kw.iteritems():
+            try:
+                setattr(self, name, eval(value) )
+            except NameError:
+                setattr(self, name, value )
+        
+        self.padding = (self.size, self.size, self.size, self.size)
+
+    def apply(self, info, glyph, image):
+        i = image[:, :, 0]
+        i = utils.calculate_sedt(i, self.size)
+        image[:, :, 0] = i
+        image[:, :, 1] = i
+        image[:, :, 2] = i
+        image[:, :, 3][i > 0] = 1.0
+        return image
+        
+
+
+@EffectFunction
+class Halfsize(object):
+    """ Down scales the glyph by a factor, using bilinear factoring
+    """
+    factor = prop.IntProperty( 1, help='The number of times the image should be minified' )
+    
+    def __init__(self, *k, **kw):
+        for name, value in kw.iteritems():
+            try:
+                setattr(self, name, eval(value) )
+            except NameError:
+                setattr(self, name, value )
+
+    def apply(self, glyph, info, image):
+        for n in xrange(self.factor):
+            out = utils.half_size(image)
+            image = out
+
+        return out
+
+>>>>>>> 3eeb00c02e840fb3ffe6d0facbf7d03948aeb3f8
 
 #To be used as a mask for each layer
 class DefaultMask(object):
@@ -614,7 +673,7 @@ class Layer(object):
         for name, value in kw.iteritems():
             try:
                 setattr(self, name, eval(value) )
-            except (TypeError, NameError), e:
+            except (TypeError, NameError):
                 setattr(self, name, value )
 
         if isinstance(self.opacity, int):

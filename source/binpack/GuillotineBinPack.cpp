@@ -10,6 +10,7 @@
 
 #include <cassert>
 #include <limits>
+#include <stdlib.h> // abs
 
 #include "GuillotineBinPack.h"
 
