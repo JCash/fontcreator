@@ -1,0 +1,2270 @@
+{
+    "ascender": 42, 
+    "descender": -9, 
+    "glyphs": [
+        {
+            "advance": 27, 
+            "bearing": [
+                0, 
+                -4
+            ], 
+            "bitmapbox": [
+                0, 
+                0, 
+                27, 
+                2
+            ], 
+            "character": "_"
+        }, 
+        {
+            "advance": 19, 
+            "bearing": [
+                3, 
+                15
+            ], 
+            "bitmapbox": [
+                27, 
+                0, 
+                13, 
+                4
+            ], 
+            "character": "-"
+        }, 
+        {
+            "advance": 15, 
+            "bearing": [
+                5, 
+                6
+            ], 
+            "bitmapbox": [
+                40, 
+                0, 
+                5, 
+                6
+            ], 
+            "character": "."
+        }, 
+        {
+            "advance": 27, 
+            "bearing": [
+                7, 
+                35
+            ], 
+            "bitmapbox": [
+                45, 
+                0, 
+                9, 
+                8
+            ], 
+            "character": "`"
+        }, 
+        {
+            "advance": 19, 
+            "bearing": [
+                3, 
+                32
+            ], 
+            "bitmapbox": [
+                54, 
+                0, 
+                12, 
+                12
+            ], 
+            "character": "\""
+        }, 
+        {
+            "advance": 11, 
+            "bearing": [
+                3, 
+                32
+            ], 
+            "bitmapbox": [
+                66, 
+                0, 
+                4, 
+                12
+            ], 
+            "character": "'"
+        }, 
+        {
+            "advance": 34, 
+            "bearing": [
+                5, 
+                19
+            ], 
+            "bitmapbox": [
+                70, 
+                0, 
+                24, 
+                12
+            ], 
+            "character": "="
+        }, 
+        {
+            "advance": 15, 
+            "bearing": [
+                3, 
+                6
+            ], 
+            "bitmapbox": [
+                94, 
+                0, 
+                9, 
+                13
+            ], 
+            "character": ","
+        }, 
+        {
+            "advance": 34, 
+            "bearing": [
+                4, 
+                20
+            ], 
+            "bitmapbox": [
+                103, 
+                0, 
+                27, 
+                13
+            ], 
+            "character": "~"
+        }, 
+        {
+            "advance": 34, 
+            "bearing": [
+                4, 
+                31
+            ], 
+            "bitmapbox": [
+                130, 
+                0, 
+                27, 
+                17
+            ], 
+            "character": "^"
+        }, 
+        {
+            "advance": 27, 
+            "bearing": [
+                3, 
+                32
+            ], 
+            "bitmapbox": [
+                157, 
+                0, 
+                21, 
+                19
+            ], 
+            "character": "*"
+        }, 
+        {
+            "advance": 19, 
+            "bearing": [
+                7, 
+                23
+            ], 
+            "bitmapbox": [
+                178, 
+                0, 
+                5, 
+                23
+            ], 
+            "character": ":"
+        }, 
+        {
+            "advance": 18, 
+            "bearing": [
+                4, 
+                23
+            ], 
+            "bitmapbox": [
+                183, 
+                0, 
+                14, 
+                23
+            ], 
+            "character": "r"
+        }, 
+        {
+            "advance": 25, 
+            "bearing": [
+                1, 
+                23
+            ], 
+            "bitmapbox": [
+                197, 
+                0, 
+                23, 
+                23
+            ], 
+            "character": "v"
+        }, 
+        {
+            "advance": 34, 
+            "bearing": [
+                2, 
+                23
+            ], 
+            "bitmapbox": [
+                220, 
+                0, 
+                30, 
+                23
+            ], 
+            "character": "w"
+        }, 
+        {
+            "advance": 25, 
+            "bearing": [
+                1, 
+                23
+            ], 
+            "bitmapbox": [
+                250, 
+                0, 
+                23, 
+                23
+            ], 
+            "character": "x"
+        }, 
+        {
+            "advance": 22, 
+            "bearing": [
+                2, 
+                23
+            ], 
+            "bitmapbox": [
+                273, 
+                0, 
+                18, 
+                23
+            ], 
+            "character": "z"
+        }, 
+        {
+            "advance": 34, 
+            "bearing": [
+                5, 
+                26
+            ], 
+            "bitmapbox": [
+                291, 
+                0, 
+                24, 
+                24
+            ], 
+            "character": "<"
+        }, 
+        {
+            "advance": 34, 
+            "bearing": [
+                6, 
+                26
+            ], 
+            "bitmapbox": [
+                315, 
+                0, 
+                24, 
+                24
+            ], 
+            "character": ">"
+        }, 
+        {
+            "advance": 41, 
+            "bearing": [
+                4, 
+                24
+            ], 
+            "bitmapbox": [
+                339, 
+                0, 
+                34, 
+                24
+            ], 
+            "character": "m"
+        }, 
+        {
+            "advance": 27, 
+            "bearing": [
+                4, 
+                24
+            ], 
+            "bitmapbox": [
+                373, 
+                0, 
+                19, 
+                24
+            ], 
+            "character": "n"
+        }, 
+        {
+            "advance": 27, 
+            "bearing": [
+                4, 
+                23
+            ], 
+            "bitmapbox": [
+                392, 
+                0, 
+                19, 
+                24
+            ], 
+            "character": "u"
+        }, 
+        {
+            "advance": 34, 
+            "bearing": [
+                4, 
+                26
+            ], 
+            "bitmapbox": [
+                411, 
+                0, 
+                25, 
+                25
+            ], 
+            "character": "+"
+        }, 
+        {
+            "advance": 25, 
+            "bearing": [
+                2, 
+                24
+            ], 
+            "bitmapbox": [
+                436, 
+                0, 
+                19, 
+                25
+            ], 
+            "character": "a"
+        }, 
+        {
+            "advance": 22, 
+            "bearing": [
+                2, 
+                24
+            ], 
+            "bitmapbox": [
+                455, 
+                0, 
+                19, 
+                25
+            ], 
+            "character": "c"
+        }, 
+        {
+            "advance": 25, 
+            "bearing": [
+                2, 
+                24
+            ], 
+            "bitmapbox": [
+                474, 
+                0, 
+                21, 
+                25
+            ], 
+            "character": "e"
+        }, 
+        {
+            "advance": 25, 
+            "bearing": [
+                2, 
+                24
+            ], 
+            "bitmapbox": [
+                0, 
+                2, 
+                21, 
+                25
+            ], 
+            "character": "o"
+        }, 
+        {
+            "advance": 22, 
+            "bearing": [
+                2, 
+                24
+            ], 
+            "bitmapbox": [
+                21, 
+                4, 
+                18, 
+                25
+            ], 
+            "character": "s"
+        }, 
+        {
+            "advance": 19, 
+            "bearing": [
+                5, 
+                23
+            ], 
+            "bitmapbox": [
+                495, 
+                0, 
+                9, 
+                30
+            ], 
+            "character": ";"
+        }, 
+        {
+            "advance": 17, 
+            "bearing": [
+                6, 
+                31
+            ], 
+            "bitmapbox": [
+                504, 
+                0, 
+                4, 
+                31
+            ], 
+            "character": "!"
+        }, 
+        {
+            "advance": 34, 
+            "bearing": [
+                4, 
+                31
+            ], 
+            "bitmapbox": [
+                39, 
+                12, 
+                26, 
+                31
+            ], 
+            "character": "#"
+        }, 
+        {
+            "advance": 27, 
+            "bearing": [
+                6, 
+                31
+            ], 
+            "bitmapbox": [
+                65, 
+                12, 
+                16, 
+                31
+            ], 
+            "character": "1"
+        }, 
+        {
+            "advance": 27, 
+            "bearing": [
+                2, 
+                31
+            ], 
+            "bitmapbox": [
+                81, 
+                13, 
+                24, 
+                31
+            ], 
+            "character": "4"
+        }, 
+        {
+            "advance": 27, 
+            "bearing": [
+                3, 
+                31
+            ], 
+            "bitmapbox": [
+                105, 
+                13, 
+                21, 
+                31
+            ], 
+            "character": "7"
+        }, 
+        {
+            "advance": 29, 
+            "bearing": [
+                1, 
+                31
+            ], 
+            "bitmapbox": [
+                126, 
+                17, 
+                27, 
+                31
+            ], 
+            "character": "A"
+        }, 
+        {
+            "advance": 29, 
+            "bearing": [
+                4, 
+                31
+            ], 
+            "bitmapbox": [
+                153, 
+                19, 
+                23, 
+                31
+            ], 
+            "character": "B"
+        }, 
+        {
+            "advance": 32, 
+            "bearing": [
+                4, 
+                31
+            ], 
+            "bitmapbox": [
+                176, 
+                23, 
+                26, 
+                31
+            ], 
+            "character": "D"
+        }, 
+        {
+            "advance": 27, 
+            "bearing": [
+                4, 
+                31
+            ], 
+            "bitmapbox": [
+                202, 
+                23, 
+                21, 
+                31
+            ], 
+            "character": "E"
+        }, 
+        {
+            "advance": 24, 
+            "bearing": [
+                4, 
+                31
+            ], 
+            "bitmapbox": [
+                223, 
+                23, 
+                19, 
+                31
+            ], 
+            "character": "F"
+        }, 
+        {
+            "advance": 32, 
+            "bearing": [
+                4, 
+                31
+            ], 
+            "bitmapbox": [
+                242, 
+                23, 
+                24, 
+                31
+            ], 
+            "character": "H"
+        }, 
+        {
+            "advance": 18, 
+            "bearing": [
+                3, 
+                31
+            ], 
+            "bitmapbox": [
+                266, 
+                23, 
+                12, 
+                31
+            ], 
+            "character": "I"
+        }, 
+        {
+            "advance": 29, 
+            "bearing": [
+                4, 
+                31
+            ], 
+            "bitmapbox": [
+                278, 
+                24, 
+                24, 
+                31
+            ], 
+            "character": "K"
+        }, 
+        {
+            "advance": 23, 
+            "bearing": [
+                4, 
+                31
+            ], 
+            "bitmapbox": [
+                302, 
+                24, 
+                19, 
+                31
+            ], 
+            "character": "L"
+        }, 
+        {
+            "advance": 35, 
+            "bearing": [
+                4, 
+                31
+            ], 
+            "bitmapbox": [
+                321, 
+                24, 
+                27, 
+                31
+            ], 
+            "character": "M"
+        }, 
+        {
+            "advance": 31, 
+            "bearing": [
+                4, 
+                31
+            ], 
+            "bitmapbox": [
+                348, 
+                24, 
+                23, 
+                31
+            ], 
+            "character": "N"
+        }, 
+        {
+            "advance": 25, 
+            "bearing": [
+                4, 
+                31
+            ], 
+            "bitmapbox": [
+                371, 
+                24, 
+                20, 
+                31
+            ], 
+            "character": "P"
+        }, 
+        {
+            "advance": 29, 
+            "bearing": [
+                4, 
+                31
+            ], 
+            "bitmapbox": [
+                391, 
+                25, 
+                25, 
+                31
+            ], 
+            "character": "R"
+        }, 
+        {
+            "advance": 26, 
+            "bearing": [
+                0, 
+                31
+            ], 
+            "bitmapbox": [
+                416, 
+                25, 
+                26, 
+                31
+            ], 
+            "character": "T"
+        }, 
+        {
+            "advance": 29, 
+            "bearing": [
+                1, 
+                31
+            ], 
+            "bitmapbox": [
+                442, 
+                25, 
+                27, 
+                31
+            ], 
+            "character": "V"
+        }, 
+        {
+            "advance": 42, 
+            "bearing": [
+                2, 
+                31
+            ], 
+            "bitmapbox": [
+                0, 
+                29, 
+                38, 
+                31
+            ], 
+            "character": "W"
+        }, 
+        {
+            "advance": 29, 
+            "bearing": [
+                1, 
+                31
+            ], 
+            "bitmapbox": [
+                469, 
+                30, 
+                27, 
+                31
+            ], 
+            "character": "X"
+        }, 
+        {
+            "advance": 26, 
+            "bearing": [
+                0, 
+                31
+            ], 
+            "bitmapbox": [
+                38, 
+                43, 
+                26, 
+                31
+            ], 
+            "character": "Y"
+        }, 
+        {
+            "advance": 29, 
+            "bearing": [
+                3, 
+                31
+            ], 
+            "bitmapbox": [
+                64, 
+                44, 
+                24, 
+                31
+            ], 
+            "character": "Z"
+        }, 
+        {
+            "advance": 12, 
+            "bearing": [
+                4, 
+                31
+            ], 
+            "bitmapbox": [
+                508, 
+                0, 
+                4, 
+                31
+            ], 
+            "character": "i"
+        }, 
+        {
+            "advance": 17, 
+            "bearing": [
+                1, 
+                30
+            ], 
+            "bitmapbox": [
+                496, 
+                31, 
+                15, 
+                31
+            ], 
+            "character": "t"
+        }, 
+        {
+            "advance": 25, 
+            "bearing": [
+                1, 
+                23
+            ], 
+            "bitmapbox": [
+                88, 
+                44, 
+                23, 
+                31
+            ], 
+            "character": "y"
+        }, 
+        {
+            "advance": 27, 
+            "bearing": [
+                3, 
+                32
+            ], 
+            "bitmapbox": [
+                111, 
+                48, 
+                21, 
+                32
+            ], 
+            "character": "2"
+        }, 
+        {
+            "advance": 23, 
+            "bearing": [
+                3, 
+                32
+            ], 
+            "bitmapbox": [
+                132, 
+                48, 
+                17, 
+                32
+            ], 
+            "character": "?"
+        }, 
+        {
+            "advance": 19, 
+            "bearing": [
+                1, 
+                31
+            ], 
+            "bitmapbox": [
+                149, 
+                50, 
+                14, 
+                32
+            ], 
+            "character": "J"
+        }, 
+        {
+            "advance": 31, 
+            "bearing": [
+                4, 
+                31
+            ], 
+            "bitmapbox": [
+                163, 
+                54, 
+                23, 
+                32
+            ], 
+            "character": "U"
+        }, 
+        {
+            "advance": 15, 
+            "bearing": [
+                1, 
+                32
+            ], 
+            "bitmapbox": [
+                186, 
+                54, 
+                15, 
+                32
+            ], 
+            "character": "f"
+        }, 
+        {
+            "advance": 26, 
+            "bearing": [
+                2, 
+                24
+            ], 
+            "bitmapbox": [
+                201, 
+                54, 
+                20, 
+                32
+            ], 
+            "character": "g"
+        }, 
+        {
+            "advance": 27, 
+            "bearing": [
+                4, 
+                32
+            ], 
+            "bitmapbox": [
+                221, 
+                54, 
+                19, 
+                32
+            ], 
+            "character": "h"
+        }, 
+        {
+            "advance": 25, 
+            "bearing": [
+                4, 
+                32
+            ], 
+            "bitmapbox": [
+                240, 
+                54, 
+                21, 
+                32
+            ], 
+            "character": "k"
+        }, 
+        {
+            "advance": 12, 
+            "bearing": [
+                4, 
+                32
+            ], 
+            "bitmapbox": [
+                261, 
+                54, 
+                4, 
+                32
+            ], 
+            "character": "l"
+        }, 
+        {
+            "advance": 26, 
+            "bearing": [
+                4, 
+                24
+            ], 
+            "bitmapbox": [
+                265, 
+                55, 
+                20, 
+                32
+            ], 
+            "character": "p"
+        }, 
+        {
+            "advance": 26, 
+            "bearing": [
+                2, 
+                24
+            ], 
+            "bitmapbox": [
+                285, 
+                55, 
+                20, 
+                32
+            ], 
+            "character": "q"
+        }, 
+        {
+            "advance": 45, 
+            "bearing": [
+                3, 
+                32
+            ], 
+            "bitmapbox": [
+                305, 
+                55, 
+                39, 
+                33
+            ], 
+            "character": "%"
+        }, 
+        {
+            "advance": 31, 
+            "bearing": [
+                2, 
+                32
+            ], 
+            "bitmapbox": [
+                344, 
+                55, 
+                30, 
+                33
+            ], 
+            "character": "&"
+        }, 
+        {
+            "advance": 27, 
+            "bearing": [
+                3, 
+                32
+            ], 
+            "bitmapbox": [
+                374, 
+                56, 
+                21, 
+                33
+            ], 
+            "character": "0"
+        }, 
+        {
+            "advance": 27, 
+            "bearing": [
+                3, 
+                32
+            ], 
+            "bitmapbox": [
+                395, 
+                56, 
+                21, 
+                33
+            ], 
+            "character": "3"
+        }, 
+        {
+            "advance": 27, 
+            "bearing": [
+                4, 
+                32
+            ], 
+            "bitmapbox": [
+                416, 
+                56, 
+                20, 
+                33
+            ], 
+            "character": "5"
+        }, 
+        {
+            "advance": 27, 
+            "bearing": [
+                3, 
+                32
+            ], 
+            "bitmapbox": [
+                436, 
+                56, 
+                22, 
+                33
+            ], 
+            "character": "6"
+        }, 
+        {
+            "advance": 27, 
+            "bearing": [
+                3, 
+                32
+            ], 
+            "bitmapbox": [
+                0, 
+                60, 
+                21, 
+                33
+            ], 
+            "character": "8"
+        }, 
+        {
+            "advance": 27, 
+            "bearing": [
+                2, 
+                32
+            ], 
+            "bitmapbox": [
+                458, 
+                61, 
+                22, 
+                33
+            ], 
+            "character": "9"
+        }, 
+        {
+            "advance": 29, 
+            "bearing": [
+                2, 
+                32
+            ], 
+            "bitmapbox": [
+                480, 
+                62, 
+                25, 
+                33
+            ], 
+            "character": "C"
+        }, 
+        {
+            "advance": 33, 
+            "bearing": [
+                2, 
+                32
+            ], 
+            "bitmapbox": [
+                21, 
+                74, 
+                28, 
+                33
+            ], 
+            "character": "G"
+        }, 
+        {
+            "advance": 33, 
+            "bearing": [
+                2, 
+                32
+            ], 
+            "bitmapbox": [
+                49, 
+                75, 
+                29, 
+                33
+            ], 
+            "character": "O"
+        }, 
+        {
+            "advance": 29, 
+            "bearing": [
+                3, 
+                32
+            ], 
+            "bitmapbox": [
+                78, 
+                75, 
+                24, 
+                33
+            ], 
+            "character": "S"
+        }, 
+        {
+            "advance": 26, 
+            "bearing": [
+                4, 
+                32
+            ], 
+            "bitmapbox": [
+                102, 
+                80, 
+                20, 
+                33
+            ], 
+            "character": "b"
+        }, 
+        {
+            "advance": 26, 
+            "bearing": [
+                2, 
+                32
+            ], 
+            "bitmapbox": [
+                122, 
+                80, 
+                20, 
+                33
+            ], 
+            "character": "d"
+        }, 
+        {
+            "advance": 42, 
+            "bearing": [
+                4, 
+                32
+            ], 
+            "bitmapbox": [
+                142, 
+                86, 
+                35, 
+                36
+            ], 
+            "character": "@"
+        }, 
+        {
+            "advance": 19, 
+            "bearing": [
+                -1, 
+                32
+            ], 
+            "bitmapbox": [
+                177, 
+                86, 
+                18, 
+                38
+            ], 
+            "character": "/"
+        }, 
+        {
+            "advance": 19, 
+            "bearing": [
+                1, 
+                32
+            ], 
+            "bitmapbox": [
+                195, 
+                86, 
+                18, 
+                38
+            ], 
+            "character": "\\"
+        }, 
+        {
+            "advance": 14, 
+            "bearing": [
+                -2, 
+                31
+            ], 
+            "bitmapbox": [
+                213, 
+                86, 
+                12, 
+                39
+            ], 
+            "character": "j"
+        }, 
+        {
+            "advance": 27, 
+            "bearing": [
+                3, 
+                33
+            ], 
+            "bitmapbox": [
+                225, 
+                86, 
+                20, 
+                40
+            ], 
+            "character": "$"
+        }, 
+        {
+            "advance": 19, 
+            "bearing": [
+                4, 
+                32
+            ], 
+            "bitmapbox": [
+                245, 
+                86, 
+                12, 
+                40
+            ], 
+            "character": "("
+        }, 
+        {
+            "advance": 19, 
+            "bearing": [
+                3, 
+                32
+            ], 
+            "bitmapbox": [
+                257, 
+                87, 
+                12, 
+                40
+            ], 
+            "character": ")"
+        }, 
+        {
+            "advance": 33, 
+            "bearing": [
+                2, 
+                32
+            ], 
+            "bitmapbox": [
+                269, 
+                87, 
+                30, 
+                40
+            ], 
+            "character": "Q"
+        }, 
+        {
+            "advance": 19, 
+            "bearing": [
+                5, 
+                32
+            ], 
+            "bitmapbox": [
+                299, 
+                88, 
+                11, 
+                40
+            ], 
+            "character": "["
+        }, 
+        {
+            "advance": 19, 
+            "bearing": [
+                4, 
+                32
+            ], 
+            "bitmapbox": [
+                310, 
+                88, 
+                11, 
+                40
+            ], 
+            "character": "]"
+        }, 
+        {
+            "advance": 27, 
+            "bearing": [
+                4, 
+                32
+            ], 
+            "bitmapbox": [
+                321, 
+                88, 
+                19, 
+                40
+            ], 
+            "character": "{"
+        }, 
+        {
+            "advance": 19, 
+            "bearing": [
+                8, 
+                32
+            ], 
+            "bitmapbox": [
+                505, 
+                62, 
+                4, 
+                40
+            ], 
+            "character": "|"
+        }, 
+        {
+            "advance": 27, 
+            "bearing": [
+                4, 
+                32
+            ], 
+            "bitmapbox": [
+                340, 
+                88, 
+                19, 
+                40
+            ], 
+            "character": "}"
+        }, 
+        {
+            "advance": 15, 
+            "bearing": [
+                0, 
+                0
+            ], 
+            "bitmapbox": [
+                0, 
+                0, 
+                0, 
+                0
+            ], 
+            "character": " "
+        }
+    ], 
+    "name": "00_simple.fontinfo", 
+    "pairkernings": [
+        [
+            "V", 
+            "e", 
+            -2
+        ], 
+        [
+            "L", 
+            "V", 
+            -2
+        ], 
+        [
+            "L", 
+            "W", 
+            -2
+        ], 
+        [
+            "T", 
+            ",", 
+            -6
+        ], 
+        [
+            "V", 
+            "a", 
+            -2
+        ], 
+        [
+            "L", 
+            "Y", 
+            -3
+        ], 
+        [
+            "T", 
+            "o", 
+            -5
+        ], 
+        [
+            "Y", 
+            "g", 
+            -3
+        ], 
+        [
+            "-", 
+            "V", 
+            -1
+        ], 
+        [
+            "W", 
+            ":", 
+            -2
+        ], 
+        [
+            "f", 
+            "\"", 
+            1
+        ], 
+        [
+            "L", 
+            "'", 
+            -2
+        ], 
+        [
+            "r", 
+            "a", 
+            -1
+        ], 
+        [
+            "f", 
+            ")", 
+            2
+        ], 
+        [
+            "f", 
+            "*", 
+            1
+        ], 
+        [
+            "D", 
+            ",", 
+            -1
+        ], 
+        [
+            "I", 
+            "-", 
+            -1
+        ], 
+        [
+            "F", 
+            ".", 
+            -6
+        ], 
+        [
+            "A", 
+            "y", 
+            -1
+        ], 
+        [
+            "v", 
+            "a", 
+            -1
+        ], 
+        [
+            "F", 
+            ":", 
+            -1
+        ], 
+        [
+            "F", 
+            ";", 
+            -1
+        ], 
+        [
+            "F", 
+            "?", 
+            1
+        ], 
+        [
+            "-", 
+            "A", 
+            -1
+        ], 
+        [
+            "T", 
+            "C", 
+            -1
+        ], 
+        [
+            "T", 
+            "G", 
+            -1
+        ], 
+        [
+            "-", 
+            "I", 
+            -1
+        ], 
+        [
+            "L", 
+            "J", 
+            2
+        ], 
+        [
+            "A", 
+            "Y", 
+            -2
+        ], 
+        [
+            "b", 
+            ",", 
+            -1
+        ], 
+        [
+            "O", 
+            "T", 
+            -1
+        ], 
+        [
+            "A", 
+            "V", 
+            -1
+        ], 
+        [
+            "-", 
+            "W", 
+            -1
+        ], 
+        [
+            "-", 
+            "X", 
+            -2
+        ], 
+        [
+            "-", 
+            "Y", 
+            -3
+        ], 
+        [
+            "-", 
+            "Z", 
+            -1
+        ], 
+        [
+            "p", 
+            ",", 
+            -1
+        ], 
+        [
+            "f", 
+            "\\", 
+            2
+        ], 
+        [
+            "f", 
+            "]", 
+            2
+        ], 
+        [
+            "P", 
+            "e", 
+            -1
+        ], 
+        [
+            "f", 
+            ",", 
+            -3
+        ], 
+        [
+            "P", 
+            "a", 
+            -1
+        ], 
+        [
+            "W", 
+            "A", 
+            -1
+        ], 
+        [
+            "T", 
+            "c", 
+            -5
+        ], 
+        [
+            "Y", 
+            "d", 
+            -2
+        ], 
+        [
+            "R", 
+            "e", 
+            -1
+        ], 
+        [
+            "Z", 
+            "-", 
+            -1
+        ], 
+        [
+            "T", 
+            "g", 
+            -4
+        ], 
+        [
+            "X", 
+            "-", 
+            -2
+        ], 
+        [
+            "Y", 
+            "m", 
+            -2
+        ], 
+        [
+            "Y", 
+            "n", 
+            -2
+        ], 
+        [
+            "K", 
+            "o", 
+            -1
+        ], 
+        [
+            "Y", 
+            "p", 
+            -2
+        ], 
+        [
+            "Y", 
+            "q", 
+            -3
+        ], 
+        [
+            "T", 
+            "r", 
+            -4
+        ], 
+        [
+            "T", 
+            "s", 
+            -4
+        ], 
+        [
+            "K", 
+            "u", 
+            -1
+        ], 
+        [
+            "S", 
+            "v", 
+            -1
+        ], 
+        [
+            "K", 
+            "w", 
+            -1
+        ], 
+        [
+            "-", 
+            "x", 
+            -1
+        ], 
+        [
+            "K", 
+            "y", 
+            -2
+        ], 
+        [
+            "-", 
+            "z", 
+            -1
+        ], 
+        [
+            "L", 
+            "T", 
+            -3
+        ], 
+        [
+            "f", 
+            "}", 
+            2
+        ], 
+        [
+            "V", 
+            "o", 
+            -2
+        ], 
+        [
+            "D", 
+            "T", 
+            -1
+        ], 
+        [
+            ".", 
+            "-", 
+            -3
+        ], 
+        [
+            "K", 
+            "-", 
+            -2
+        ], 
+        [
+            "r", 
+            ",", 
+            -6
+        ], 
+        [
+            "W", 
+            "a", 
+            -2
+        ], 
+        [
+            "f", 
+            "-", 
+            -1
+        ], 
+        [
+            "Y", 
+            "e", 
+            -3
+        ], 
+        [
+            "V", 
+            "-", 
+            -1
+        ], 
+        [
+            "F", 
+            "o", 
+            -1
+        ], 
+        [
+            "Z", 
+            "e", 
+            -1
+        ], 
+        [
+            "Y", 
+            ":", 
+            -4
+        ], 
+        [
+            "W", 
+            ",", 
+            -6
+        ], 
+        [
+            "W", 
+            "r", 
+            -1
+        ], 
+        [
+            "Y", 
+            "r", 
+            -2
+        ], 
+        [
+            "Y", 
+            "s", 
+            -2
+        ], 
+        [
+            "W", 
+            ";", 
+            -2
+        ], 
+        [
+            "R", 
+            "-", 
+            -2
+        ], 
+        [
+            "T", 
+            "T", 
+            -1
+        ], 
+        [
+            "T", 
+            "u", 
+            -4
+        ], 
+        [
+            "X", 
+            "a", 
+            -1
+        ], 
+        [
+            "A", 
+            "v", 
+            -1
+        ], 
+        [
+            "A", 
+            "w", 
+            -1
+        ], 
+        [
+            "f", 
+            ".", 
+            -2
+        ], 
+        [
+            "T", 
+            "e", 
+            -5
+        ], 
+        [
+            "V", 
+            ":", 
+            -2
+        ], 
+        [
+            "v", 
+            "-", 
+            -1
+        ], 
+        [
+            "R", 
+            "y", 
+            -1
+        ], 
+        [
+            "Z", 
+            "y", 
+            -1
+        ], 
+        [
+            "W", 
+            "-", 
+            -1
+        ], 
+        [
+            "Y", 
+            ",", 
+            -6
+        ], 
+        [
+            "T", 
+            "z", 
+            -3
+        ], 
+        [
+            "T", 
+            "A", 
+            -2
+        ], 
+        [
+            "T", 
+            "y", 
+            -4
+        ], 
+        [
+            "B", 
+            "T", 
+            -1
+        ], 
+        [
+            "v", 
+            ",", 
+            -4
+        ], 
+        [
+            "f", 
+            "'", 
+            1
+        ], 
+        [
+            "y", 
+            ",", 
+            -4
+        ], 
+        [
+            "V", 
+            ";", 
+            -2
+        ], 
+        [
+            "Y", 
+            "o", 
+            -3
+        ], 
+        [
+            "-", 
+            "y", 
+            -1
+        ], 
+        [
+            "r", 
+            ".", 
+            -6
+        ], 
+        [
+            "e", 
+            "T", 
+            -3
+        ], 
+        [
+            "K", 
+            "a", 
+            -1
+        ], 
+        [
+            "y", 
+            ".", 
+            -4
+        ], 
+        [
+            "-", 
+            "v", 
+            -1
+        ], 
+        [
+            "Q", 
+            ",", 
+            -1
+        ], 
+        [
+            "R", 
+            "o", 
+            -1
+        ], 
+        [
+            "v", 
+            ".", 
+            -4
+        ], 
+        [
+            "A", 
+            "-", 
+            -1
+        ], 
+        [
+            "W", 
+            ".", 
+            -5
+        ], 
+        [
+            "T", 
+            "a", 
+            -5
+        ], 
+        [
+            "L", 
+            "y", 
+            -2
+        ], 
+        [
+            "P", 
+            ".", 
+            -6
+        ], 
+        [
+            "D", 
+            ".", 
+            -1
+        ], 
+        [
+            "C", 
+            "-", 
+            -1
+        ], 
+        [
+            "o", 
+            ",", 
+            -1
+        ], 
+        [
+            "A", 
+            "W", 
+            -1
+        ], 
+        [
+            "w", 
+            ",", 
+            -1
+        ], 
+        [
+            "T", 
+            "v", 
+            -4
+        ], 
+        [
+            "k", 
+            "-", 
+            -2
+        ], 
+        [
+            "P", 
+            ",", 
+            -6
+        ], 
+        [
+            "P", 
+            "o", 
+            -1
+        ], 
+        [
+            "'", 
+            "A", 
+            -2
+        ], 
+        [
+            "T", 
+            "O", 
+            -1
+        ], 
+        [
+            "W", 
+            "y", 
+            -1
+        ], 
+        [
+            "L", 
+            "-", 
+            -3
+        ], 
+        [
+            "K", 
+            "v", 
+            -2
+        ], 
+        [
+            "Y", 
+            ".", 
+            -6
+        ], 
+        [
+            "V", 
+            ",", 
+            -6
+        ], 
+        [
+            "F", 
+            "e", 
+            -1
+        ], 
+        [
+            "T", 
+            ":", 
+            -4
+        ], 
+        [
+            "O", 
+            ".", 
+            -1
+        ], 
+        [
+            "-", 
+            "T", 
+            -3
+        ], 
+        [
+            "Y", 
+            "A", 
+            -2
+        ], 
+        [
+            "T", 
+            ";", 
+            -4
+        ], 
+        [
+            "S", 
+            "y", 
+            -1
+        ], 
+        [
+            "F", 
+            "a", 
+            -2
+        ], 
+        [
+            "f", 
+            "?", 
+            2
+        ], 
+        [
+            "R", 
+            "a", 
+            -1
+        ], 
+        [
+            "T", 
+            ".", 
+            -6
+        ], 
+        [
+            "Y", 
+            "-", 
+            -3
+        ], 
+        [
+            "Z", 
+            "o", 
+            -1
+        ], 
+        [
+            "Y", 
+            "u", 
+            -2
+        ], 
+        [
+            "Q", 
+            ".", 
+            -1
+        ], 
+        [
+            "T", 
+            "?", 
+            1
+        ], 
+        [
+            "F", 
+            "T", 
+            1
+        ], 
+        [
+            "F", 
+            "A", 
+            -2
+        ], 
+        [
+            "W", 
+            "e", 
+            -2
+        ], 
+        [
+            "Y", 
+            ";", 
+            -4
+        ], 
+        [
+            "w", 
+            ".", 
+            -1
+        ], 
+        [
+            "Y", 
+            "a", 
+            -3
+        ], 
+        [
+            "X", 
+            "e", 
+            -1
+        ], 
+        [
+            "T", 
+            "-", 
+            -3
+        ], 
+        [
+            "F", 
+            ",", 
+            -6
+        ], 
+        [
+            "P", 
+            "A", 
+            -1
+        ], 
+        [
+            "Y", 
+            "v", 
+            -2
+        ], 
+        [
+            "W", 
+            "u", 
+            -1
+        ], 
+        [
+            "X", 
+            "o", 
+            -1
+        ], 
+        [
+            "-", 
+            "J", 
+            -2
+        ], 
+        [
+            "V", 
+            "u", 
+            -1
+        ], 
+        [
+            "y", 
+            "a", 
+            -1
+        ], 
+        [
+            "Z", 
+            "a", 
+            -1
+        ], 
+        [
+            "t", 
+            "-", 
+            -1
+        ], 
+        [
+            "X", 
+            "y", 
+            -2
+        ], 
+        [
+            "V", 
+            ".", 
+            -6
+        ], 
+        [
+            "O", 
+            ",", 
+            -1
+        ], 
+        [
+            "L", 
+            "v", 
+            -2
+        ], 
+        [
+            "x", 
+            "-", 
+            -1
+        ], 
+        [
+            "K", 
+            "e", 
+            -1
+        ], 
+        [
+            "A", 
+            "T", 
+            -2
+        ], 
+        [
+            "V", 
+            "A", 
+            -1
+        ], 
+        [
+            "V", 
+            "y", 
+            -1
+        ], 
+        [
+            "Z", 
+            "w", 
+            -1
+        ], 
+        [
+            "X", 
+            "u", 
+            -1
+        ], 
+        [
+            ".", 
+            ",", 
+            -3
+        ], 
+        [
+            "W", 
+            "o", 
+            -2
+        ], 
+        [
+            "R", 
+            "T", 
+            -1
+        ], 
+        [
+            "y", 
+            "-", 
+            -1
+        ], 
+        [
+            "T", 
+            "w", 
+            -4
+        ], 
+        [
+            "c", 
+            "T", 
+            -1
+        ]
+    ], 
+    "size": 42, 
+    "texturename": "/Users/mawe/Documents/work/fontcreator/doc/source/examples/00_simple.png", 
+    "texturesize": [
+        512, 
+        256
+    ]
+}

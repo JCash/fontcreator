@@ -52,7 +52,7 @@ Uses: Distance Field.
 Results
 =======
 
-`.json file <./05_distance_fields.json>`_
+The JSON file :download:`.json <./05_distance_fields.json>`
 
 .. image:: 05_distance_fields.png
 

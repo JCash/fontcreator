@@ -74,7 +74,7 @@ Uses: Texture, Outline, Shadow.
 Results
 =======
 
-`.json file <./03_layers_effects.json>`_
+The JSON file :download:`.json <./03_layers_effects.json>`
 
 .. image:: 03_layers_effects.png
 

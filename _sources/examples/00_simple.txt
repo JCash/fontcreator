@@ -49,7 +49,7 @@ Uses: Solid.
 Results
 =======
 
-`.json file <./00_simple.json>`_
+The JSON file :download:`.json <./00_simple.json>`
 
 .. image:: 00_simple.png
 

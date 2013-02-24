@@ -56,7 +56,7 @@ Uses: Solid, Outline.
 Results
 =======
 
-`.json file <./01_outline.json>`_
+The JSON file :download:`.json <./01_outline.json>`
 
 .. image:: 01_outline.png
 

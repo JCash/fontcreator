@@ -52,7 +52,7 @@ Uses: Solid.
 Results
 =======
 
-`.json file <./00_pixel.json>`_
+The JSON file :download:`.json <./00_pixel.json>`
 
 .. image:: 00_pixel.png
 
