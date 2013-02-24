@@ -1,9 +1,6 @@
 """
-
-@COPYRIGHT 2013 MATHIAS WESTERDAHL
-
+Copyright @ 2013 Mathias Westerdahl
 """
-
 
 import sys, os, logging
 from optparse import OptionParser

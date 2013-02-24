@@ -1,4 +1,6 @@
 """
+Copyright @ 2013 Mathias Westerdahl
+
 This module lets you choose the PIL package as texture writer.
 PIL supports a range of formats such as bmp, jpg, tga, png.
 PIL also allows for custom file formats. 

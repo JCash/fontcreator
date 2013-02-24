@@ -1,4 +1,6 @@
 """
+Copyright @ 2013 Mathias Westerdahl
+
 Generates a .json file given a set of glyphs
 """
 

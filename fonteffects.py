@@ -1,4 +1,7 @@
-""" The fonteffects module provides commonly used base functionality for the effects.
+"""
+Copyright @ 2013 Mathias Westerdahl
+
+The fonteffects module provides commonly used base functionality for the effects.
 """
 
 import os, logging

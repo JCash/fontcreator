@@ -1,3 +1,7 @@
+"""
+Copyright @ 2013 Mathias Westerdahl
+"""
+
 import sys, os
 import ctypes
 from ctypes import c_void_p, c_float, c_int32, c_bool
