@@ -1,0 +1,58 @@
+
+=================
+00_pixel.fontinfo
+=================
+
+.. image:: 00_pixel_text.png
+
+.. contents::
+    :local:
+    :backlinks: top
+    
+Brief
+=====
+
+The simplest example. A non aliased pixel font..
+Uses: Solid.
+
+
+.fontinfo
+=========
+
+.. code-block:: python
+
+    [default]
+    name = ./fonts/minecraft/minecraft.ttf
+    size = 8
+    
+    letters = letters_ascii.txt
+    
+    bgcolor = (0, 0, 0)
+    
+    padding = 1
+    
+    textureoffset = 1, 1
+    
+    writer = fontout_json
+    texturerender = fonttex_bitmap
+    texturewriter = fonttexout_pil
+    textureformat = .png
+    texturesize = 128, 64
+    
+    layers = [Layer(color=solid_fill)]
+    
+    # modes: none, light, normal. Default is 'normal'
+    antialias = none
+    
+    [solid_fill]
+    type = solid
+    color = (255, 255, 255)
+
+
+Results
+=======
+
+`.json file <./00_pixel.json>`_
+
+.. image:: 00_pixel.png
+

@@ -1,0 +1,178 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>5.8. fonttex_bitmap &mdash; FontCreator</title>
+    
+    <link rel="stylesheet" href="../_static/agogo.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="FontCreator" href="../index.html" />
+    <link rel="up" title="5. Reference" href="../reference.html" />
+    <link rel="next" title="5.9. fonttexout_pil" href="fonttexout_pil.html" />
+    <link rel="prev" title="5.7. fontout_json" href="fontout_json.html" /> 
+  </head>
+  <body>
+    <div class="header-wrapper">
+      <div class="header">
+          <p class="logo"><a href="../index.html">
+            <img class="logo" src="../_static/headertext.png" alt="Logo"/>
+          </a></p>
+        <div class="headertitle"><a
+          href="../index.html">FontCreator</a></div>
+        <div class="rel">
+          <a href="fontout_json.html" title="5.7. fontout_json"
+             accesskey="P">previous</a> |
+          <a href="fonttexout_pil.html" title="5.9. fonttexout_pil"
+             accesskey="N">next</a> |
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a>
+        </div>
+       </div>
+    </div>
+
+    <div class="content-wrapper">
+      <div class="content">
+        <div class="document">
+            
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-fonttex_bitmap">
+<span id="fonttex-bitmap"></span><h1>5.8. fonttex_bitmap<a class="headerlink" href="#module-fonttex_bitmap" title="Permalink to this headline">¶</a></h1>
+<p>Copyright &#64; 2013 Mathias Westerdahl</p>
+<p>This is the default rendering of the fonts</p>
+<dl class="attribute">
+<dt>
+<tt class="descname">texturesize = 512, 512</tt></dt>
+<dd><p>The desired size of the texture. If it&#8217;s too small, the creator will fail.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<tt class="descname">textureoffset = 0, 0</tt></dt>
+<dd><p>The offset from the top left corner of the texture to the top left corner of the first glyph.
+It is used to create a border around the texture. The same border is also applied on the right/bottom sides.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<tt class="descname">usepremultipliedalpha = 0</tt></dt>
+<dd><p>If set, will premultiply the alpha</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="fonttex_bitmap.render">
+<tt class="descclassname">fonttex_bitmap.</tt><tt class="descname">render</tt><big>(</big><em>info</em><big>)</big><a class="reference internal" href="../_modules/fonttex_bitmap.html#render"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fonttex_bitmap.render" title="Permalink to this definition">¶</a></dt>
+<dd><p>Assuming (0,0) is at the top left corner of the image.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>info</strong> &#8211; The settings from the fontinfo file</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The image all glyphs are rendered to</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+        </div>
+        <div class="sidebar">
+          <h3>Table Of Contents</h3>
+          <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../overview.html">1. Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../structure.html">2. The structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../extensions.html">3. Extending the framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../download.html">4. Download &amp; Installation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../reference.html">5. Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../colorfunctions.html">5.1. Color Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../blendfunctions.html">5.2. Blend functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fontblend.html">5.3. fontblend</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fontcreator.html">5.4. fontcreator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fonteffects.html">5.5. fonteffects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fontinfo.html">5.6. fontinfo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fontout_json.html">5.7. fontout_json</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="">5.8. fonttex_bitmap</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fonttexout_pil.html">5.9. fonttexout_pil</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fontutils.html">5.10. fontutils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="freetype.html">5.11. freetype</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils.html">5.12. utils</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/examples.html">6. Examples</a></li>
+</ul>
+
+          <h3 style="margin-top: 1.5em;">Search</h3>
+          <form class="search" action="../search.html" method="get">
+            <input type="text" name="q" />
+            <input type="submit" value="Go" />
+            <input type="hidden" name="check_keywords" value="yes" />
+            <input type="hidden" name="area" value="default" />
+          </form>
+          <p class="searchtip" style="font-size: 90%">
+            Enter search terms or a module, class or function name.
+          </p>
+        </div>
+        <div class="clearer"></div>
+      </div>
+    </div>
+
+    <div class="footer-wrapper">
+      <div class="footer">
+        <div class="left">
+          <a href="fontout_json.html" title="5.7. fontout_json"
+             >previous</a> |
+          <a href="fonttexout_pil.html" title="5.9. fonttexout_pil"
+             >next</a> |
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |
+          <a href="../genindex.html" title="General Index"
+             >index</a>
+            <br/>
+            <a href="../_sources/modules/fonttex_bitmap.txt"
+               rel="nofollow">Show Source</a>
+        </div>
+
+        <div class="right">
+          
+    <div class="footer">
+        &copy; Copyright 2013, Mathias Westerdahl.
+      Last updated on Feb 24, 2013.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+        </div>
+        <div class="clearer"></div>
+      </div>
+    </div>
+
+  </body>
+</html>

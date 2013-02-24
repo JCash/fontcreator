@@ -1,0 +1,5 @@
+fontinfo
+========
+
+.. automodule:: fontinfo
+	:members:

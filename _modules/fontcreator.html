@@ -1,0 +1,680 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>fontcreator &mdash; FontCreator</title>
+    
+    <link rel="stylesheet" href="../_static/agogo.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="FontCreator" href="../index.html" />
+    <link rel="up" title="Module code" href="index.html" /> 
+  </head>
+  <body>
+    <div class="header-wrapper">
+      <div class="header">
+          <p class="logo"><a href="../index.html">
+            <img class="logo" src="../_static/headertext.png" alt="Logo"/>
+          </a></p>
+        <div class="headertitle"><a
+          href="../index.html">FontCreator</a></div>
+        <div class="rel">
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a>
+        </div>
+       </div>
+    </div>
+
+    <div class="content-wrapper">
+      <div class="content">
+        <div class="document">
+            
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for fontcreator</h1><div class="highlight"><pre>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Copyright @ 2013 Mathias Westerdahl</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">sys</span><span class="o">,</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">optparse</span> <span class="kn">import</span> <span class="n">OptionParser</span>
+<span class="kn">import</span> <span class="nn">itertools</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">Image</span>
+
+<span class="k">def</span> <span class="nf">_patch_numpy</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot; When chasing optimizations, numpy&#39;s excessive imports actually amounted to</span>
+<span class="sd">    times that were not insignificant compared to the other functions in the font creator.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">class</span> <span class="nc">FooModule</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+        <span class="n">__all__</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">class</span> <span class="nc">FooObject</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+        <span class="k">def</span> <span class="nf">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="o">*</span><span class="n">k</span><span class="p">,</span><span class="o">**</span><span class="n">kw</span><span class="p">):</span> <span class="k">pass</span>
+
+    <span class="c"># Timings went from 0.675 to 0.609 (~9.5%)</span>
+    <span class="c"># Saved 0.01s out of 0.067s by not including all the documentation</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="s">&#39;numpy.add_newdocs&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">True</span>
+    <span class="c"># Saved 0.002s out of 0,066s</span>
+    <span class="c">#sys.modules[&#39;numpy.fft&#39;] = True # needed by numpy.numarray</span>
+    <span class="c"># Saved 0.016s from 0.658s</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="s">&#39;numpy.polynomial&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">True</span>
+    <span class="c"># Saved 0.01s from 0.064s</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="s">&#39;numpy.ma&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">True</span>
+    <span class="c"># Saved 0,01s from 0.63s</span>
+    <span class="c">#sys.modules[&#39;numpy.random&#39;] = True # needed by numpy.numarray</span>
+    <span class="c"># Save 0.016s from 0.625s</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="s">&#39;numpy.testing&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">FooModule</span><span class="p">()</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="s">&#39;numpy.testing&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">__dict__</span><span class="p">[</span><span class="s">&#39;Tester&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">FooObject</span>
+
+    <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="s">&#39;numpy.core.records&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">FooModule</span><span class="p">()</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="s">&#39;numpy.core.financial&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">FooModule</span><span class="p">()</span>
+    
+    <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="s">&#39;numpy.lib.triu&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">FooModule</span><span class="p">()</span>
+
+<span class="n">_patch_numpy</span><span class="p">()</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+
+<span class="kn">import</span> <span class="nn">freetype</span> <span class="kn">as</span> <span class="nn">ft</span>
+<span class="kn">import</span> <span class="nn">fontutils</span> <span class="kn">as</span> <span class="nn">fu</span>
+
+<span class="kn">from</span> <span class="nn">fontinfo</span> <span class="kn">import</span> <span class="n">SFontInfo</span>
+<span class="kn">import</span> <span class="nn">fonteffects</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">for n in sorted(sys.modules.keys()):</span>
+<span class="sd">    if &#39;numpy&#39; in n:</span>
+<span class="sd">        print n, sys.modules[n]</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">http://www.freetype.org/freetype2/docs/reference/ft2-index.html</span>
+<span class="sd">http://www.freetype.org/freetype2/docs/glyphs/glyphs-3.html</span>
+<span class="sd">http://code.google.com/p/freetype-py/source/browse/trunk/</span>
+<span class="sd">http://dunnbypaul.net/blends/</span>
+<span class="sd">http://www.catenary.com/howto/emboss.html</span>
+<span class="sd">http://www.scipy.org/Numpy_Example_List#head-6a18109f2befe2d8e7bdc599e1834a8b3453f5ef</span>
+
+<span class="sd">http://www.russellcottrell.com/greek/utilities/UnicodeRanges.htm</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+
+
+
+<span class="k">class</span> <span class="nc">LogStream</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s">&#39;wb&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span>
+
+    <span class="k">def</span> <span class="nf">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log</span> <span class="o">=</span> <span class="bp">None</span>
+
+    <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">flush</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+
+
+<span class="k">def</span> <span class="nf">_apply_layer</span><span class="p">(</span><span class="n">glyph</span><span class="p">,</span> <span class="n">info</span><span class="p">,</span> <span class="n">layer</span><span class="p">,</span> <span class="n">character</span><span class="p">,</span> <span class="n">previmage</span><span class="p">,</span> <span class="n">glyphimage</span><span class="p">):</span>
+    <span class="c"># The max y should be the same for all characters in the same row</span>
+    <span class="c"># This is necessary for having the same &quot;space&quot; during calculations</span>
+    <span class="n">maxsize</span> <span class="o">=</span> <span class="n">info</span><span class="o">.</span><span class="n">maxsize</span>
+
+    <span class="n">starty</span> <span class="o">=</span> <span class="n">info</span><span class="o">.</span><span class="n">maxbearingY</span> <span class="o">-</span> <span class="n">character</span><span class="o">.</span><span class="n">bearingY</span>
+
+    <span class="n">layer</span><span class="o">.</span><span class="n">set_info</span><span class="p">(</span> <span class="n">glyph</span><span class="p">,</span> <span class="n">info</span> <span class="p">)</span>
+    <span class="n">image</span> <span class="o">=</span> <span class="n">layer</span><span class="o">.</span><span class="n">apply_color</span><span class="p">(</span> <span class="mi">0</span><span class="p">,</span> <span class="n">starty</span><span class="p">,</span> <span class="n">character</span><span class="o">.</span><span class="n">bitmap</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">maxsize</span><span class="p">,</span> <span class="n">glyphimage</span><span class="p">,</span> <span class="n">previmage</span> <span class="p">)</span>
+    <span class="n">image</span> <span class="o">=</span> <span class="n">layer</span><span class="o">.</span><span class="n">apply_effects</span><span class="p">(</span> <span class="n">image</span> <span class="p">)</span>
+    <span class="n">image</span> <span class="o">=</span> <span class="n">layer</span><span class="o">.</span><span class="n">apply_mask</span><span class="p">(</span> <span class="n">image</span> <span class="p">)</span>
+    <span class="n">image</span> <span class="o">=</span> <span class="n">layer</span><span class="o">.</span><span class="n">apply_blend</span><span class="p">(</span> <span class="n">glyphimage</span><span class="p">,</span> <span class="n">previmage</span><span class="p">,</span> <span class="n">image</span> <span class="p">)</span>
+
+    <span class="k">assert</span> <span class="n">image</span> <span class="o">!=</span> <span class="bp">None</span>
+    <span class="k">return</span> <span class="n">image</span>
+
+
+<span class="k">def</span> <span class="nf">_apply_layers</span><span class="p">(</span><span class="n">info</span><span class="p">):</span>
+    
+    <span class="n">bbox</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="p">)</span>
+    <span class="n">max_bearing_y</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">glyph</span> <span class="ow">in</span> <span class="n">info</span><span class="o">.</span><span class="n">glyphs</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">glyph</span><span class="o">.</span><span class="n">bitmap</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="n">bbox</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span> <span class="n">bbox</span><span class="p">,</span> <span class="n">glyph</span><span class="o">.</span><span class="n">bitmap</span><span class="o">.</span><span class="n">shape</span> <span class="p">)</span>
+        <span class="n">max_bearing_y</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">max_bearing_y</span><span class="p">,</span> <span class="n">glyph</span><span class="o">.</span><span class="n">bearingY</span><span class="p">)</span>
+    
+    <span class="n">bbox</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="n">info</span><span class="o">.</span><span class="n">extrapadding</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">info</span><span class="o">.</span><span class="n">extrapadding</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+    <span class="n">bbox</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+=</span> <span class="n">info</span><span class="o">.</span><span class="n">extrapadding</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">info</span><span class="o">.</span><span class="n">extrapadding</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+    
+    <span class="n">info</span><span class="o">.</span><span class="n">maxsize</span> <span class="o">=</span> <span class="n">bbox</span>
+    <span class="n">info</span><span class="o">.</span><span class="n">maxbearingY</span> <span class="o">=</span> <span class="n">max_bearing_y</span>
+
+    <span class="n">elements</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">layer</span> <span class="ow">in</span> <span class="n">info</span><span class="o">.</span><span class="n">layers</span><span class="p">:</span>
+        <span class="n">elements</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">layer</span><span class="p">)</span>
+        <span class="n">elements</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">layer</span><span class="o">.</span><span class="n">color</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">elements</span> <span class="o">+</span> <span class="n">info</span><span class="o">.</span><span class="n">posteffects</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">element</span><span class="p">,</span> <span class="s">&#39;set_dimensions&#39;</span><span class="p">):</span>
+            <span class="n">element</span><span class="o">.</span><span class="n">set_dimensions</span><span class="p">(</span><span class="n">info</span><span class="o">.</span><span class="n">maxsize</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">info</span><span class="o">.</span><span class="n">maxsize</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+    <span class="k">for</span> <span class="n">glyph</span> <span class="ow">in</span> <span class="n">info</span><span class="o">.</span><span class="n">glyphs</span><span class="p">:</span>
+        
+        <span class="k">if</span> <span class="n">glyph</span><span class="o">.</span><span class="n">bitmap</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">continue</span>
+
+        <span class="n">glyphimage</span> <span class="o">=</span> <span class="n">glyph</span><span class="o">.</span><span class="n">bitmap</span>
+
+        <span class="c"># ????</span>
+        <span class="n">fonteffects</span><span class="o">.</span><span class="n">DefaultMask</span><span class="o">.</span><span class="n">idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">glyphimage</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+        
+        <span class="n">previmage</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dstack</span><span class="p">((</span><span class="n">glyphimage</span><span class="p">,</span> <span class="n">glyphimage</span><span class="p">,</span> <span class="n">glyphimage</span><span class="p">,</span> <span class="n">glyphimage</span><span class="p">))</span>
+
+        <span class="n">previmage</span> <span class="o">=</span> <span class="n">_apply_layer</span><span class="p">(</span><span class="n">glyph</span><span class="p">,</span> <span class="n">info</span><span class="p">,</span> <span class="n">info</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">glyph</span><span class="p">,</span> <span class="n">previmage</span><span class="p">,</span> <span class="n">glyphimage</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">layer</span> <span class="ow">in</span> <span class="n">info</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
+            <span class="n">previmage</span> <span class="o">=</span> <span class="n">_apply_layer</span><span class="p">(</span><span class="n">glyph</span><span class="p">,</span> <span class="n">info</span><span class="p">,</span> <span class="n">layer</span><span class="p">,</span> <span class="n">glyph</span><span class="p">,</span> <span class="n">previmage</span><span class="p">,</span> <span class="n">glyphimage</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">effect</span> <span class="ow">in</span> <span class="n">info</span><span class="o">.</span><span class="n">posteffects</span><span class="p">:</span>
+            <span class="n">previmage</span> <span class="o">=</span> <span class="n">effect</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">glyph</span><span class="p">,</span> <span class="n">info</span><span class="p">,</span> <span class="n">previmage</span><span class="p">)</span>
+        
+        <span class="n">bgimage</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span> <span class="n">previmage</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">info</span><span class="o">.</span><span class="n">bgcolor</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">info</span><span class="o">.</span><span class="n">bgcolor</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">info</span><span class="o">.</span><span class="n">bgcolor</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="mf">0.0</span><span class="p">)</span>
+        
+        <span class="n">previmage</span> <span class="o">=</span> <span class="n">fu</span><span class="o">.</span><span class="n">alpha_blend</span><span class="p">(</span><span class="n">bgimage</span><span class="p">,</span> <span class="n">previmage</span><span class="p">)</span>
+        
+        <span class="n">glyph</span><span class="o">.</span><span class="n">bitmap</span> <span class="o">=</span> <span class="n">previmage</span>
+
+
+<span class="k">def</span> <span class="nf">_convert_int_to_unicode</span><span class="p">(</span><span class="n">char</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Converts an UTF-8 encoded integer and converts it back to a unicode character</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">char</span> <span class="o">&lt;=</span> <span class="mi">255</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">chr</span><span class="p">(</span><span class="n">char</span><span class="p">)</span>
+
+    <span class="n">s</span> <span class="o">=</span> <span class="s">&#39;&#39;</span>
+    <span class="k">if</span> <span class="n">char</span> <span class="o">&amp;</span> <span class="mh">0xFF000000</span><span class="p">:</span>
+        <span class="n">s</span> <span class="o">+=</span> <span class="s">&#39;</span><span class="si">%x</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">char</span> <span class="o">&gt;&gt;</span> <span class="mi">24</span> <span class="o">&amp;</span> <span class="mh">0xFF</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">char</span> <span class="o">&amp;</span> <span class="mh">0x00FF0000</span><span class="p">:</span>
+        <span class="n">s</span> <span class="o">+=</span> <span class="s">&#39;</span><span class="si">%x</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">char</span> <span class="o">&gt;&gt;</span> <span class="mi">16</span> <span class="o">&amp;</span> <span class="mh">0xFF</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">char</span> <span class="o">&amp;</span> <span class="mh">0x0000FF00</span><span class="p">:</span>
+        <span class="n">s</span> <span class="o">+=</span> <span class="s">&#39;</span><span class="si">%x</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">char</span> <span class="o">&gt;&gt;</span> <span class="mi">8</span> <span class="o">&amp;</span> <span class="mh">0xFF</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">char</span> <span class="o">&amp;</span> <span class="mh">0x000000FF</span><span class="p">:</span>
+        <span class="n">s</span> <span class="o">+=</span> <span class="s">&#39;</span><span class="si">%x</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">char</span> <span class="o">&gt;&gt;</span> <span class="mi">0</span> <span class="o">&amp;</span> <span class="mh">0xFF</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">s</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s">&#39;hex&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s">&#39;utf-8&#39;</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_get_extra_padding</span><span class="p">(</span><span class="n">info</span><span class="p">):</span>
+    <span class="n">zero</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">extrapadding</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">layer</span> <span class="ow">in</span> <span class="n">info</span><span class="o">.</span><span class="n">layers</span><span class="p">:</span>
+        <span class="n">layerpadding</span> <span class="o">=</span> <span class="n">layer</span><span class="o">.</span><span class="n">padding</span>
+        <span class="n">extrapadding</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">extrapadding</span><span class="p">,</span> <span class="n">layerpadding</span><span class="p">)</span>
+        
+    <span class="k">for</span> <span class="n">effect</span> <span class="ow">in</span> <span class="n">info</span><span class="o">.</span><span class="n">posteffects</span><span class="p">:</span>
+        <span class="n">extrapadding</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">extrapadding</span><span class="p">,</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">effect</span><span class="p">,</span> <span class="s">&#39;padding&#39;</span><span class="p">,</span> <span class="n">zero</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">extrapadding</span>
+
+
+<div class="viewcode-block" id="Glyph"><a class="viewcode-back" href="../modules/fontcreator.html#fontcreator.Glyph">[docs]</a><span class="k">class</span> <span class="nc">Glyph</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Holds the glyph info.</span>
+<span class="sd">    For a detailed description of the glyph metrics, see http://www.freetype.org/freetype2/docs/tutorial/step2.html</span>
+<span class="sd">    </span>
+<span class="sd">    :param utf8:          The UTF-8 character code</span>
+<span class="sd">    :param unicode:       The unicode letter</span>
+<span class="sd">    :param bitmap:        The numpy array of shape (x, y, 4)</span>
+<span class="sd">    :param bitmapbox:     The box in the texture where the glyph is printed.</span>
+<span class="sd">                          A 4-tuple: (left, top, width, height)  *(In pixels)*</span>
+<span class="sd">    :param bearingX:      The distance from the cursor to the leftmost border of the bitmap</span>
+<span class="sd">    :param bearingY:      The distance from the baseline to the topmost border of the bitmap</span>
+<span class="sd">    :param advance:       The distance used to increment the cursor</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">utf8</span><span class="p">,</span> <span class="nb">unicode</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">utf8</span> <span class="o">=</span> <span class="n">utf8</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">unicode</span> <span class="o">=</span> <span class="nb">unicode</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bitmap</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bitmapbox</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bearingX</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bearingY</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">advance</span> <span class="o">=</span> <span class="mi">0</span>
+
+</div>
+<span class="k">def</span> <span class="nf">_get_glyph_info</span><span class="p">(</span><span class="n">options</span><span class="p">,</span> <span class="n">info</span><span class="p">,</span> <span class="n">face</span><span class="p">):</span>
+    <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;Fetching glyph info&quot;</span><span class="p">)</span>
+    
+    <span class="n">face</span><span class="o">.</span><span class="n">set_char_size</span><span class="p">(</span> <span class="n">width</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="n">info</span><span class="o">.</span><span class="n">size</span><span class="o">*</span><span class="mi">64</span><span class="p">,</span> <span class="n">hres</span><span class="o">=</span><span class="n">info</span><span class="o">.</span><span class="n">dpi</span><span class="p">,</span> <span class="n">vres</span><span class="o">=</span><span class="n">info</span><span class="o">.</span><span class="n">dpi</span> <span class="p">)</span>
+    
+    <span class="c"># find out the needed extra padding on each side of each glyph</span>
+    <span class="n">info</span><span class="o">.</span><span class="n">extrapadding</span> <span class="o">=</span> <span class="n">_get_extra_padding</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
+    
+    <span class="n">info</span><span class="o">.</span><span class="n">ascender</span> <span class="o">=</span> <span class="p">(</span><span class="n">face</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">ascender</span> <span class="o">&gt;&gt;</span> <span class="mi">6</span><span class="p">)</span> <span class="o">+</span> <span class="n">info</span><span class="o">.</span><span class="n">extrapadding</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">info</span><span class="o">.</span><span class="n">descender</span> <span class="o">=</span> <span class="p">(</span><span class="n">face</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">descender</span> <span class="o">&gt;&gt;</span> <span class="mi">6</span><span class="p">)</span> <span class="o">-</span> <span class="n">info</span><span class="o">.</span><span class="n">extrapadding</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+    <span class="n">info</span><span class="o">.</span><span class="n">fontsize</span> <span class="o">=</span> <span class="n">face</span><span class="o">.</span><span class="n">height</span> <span class="o">&gt;&gt;</span> <span class="mi">6</span>
+    
+    <span class="n">flags</span> <span class="o">=</span> <span class="n">ft</span><span class="o">.</span><span class="n">LOAD_NO_BITMAP</span>
+    
+    <span class="n">all_letters</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    
+    <span class="n">info</span><span class="o">.</span><span class="n">glyphs</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">info</span><span class="o">.</span><span class="n">letters</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">all_letters</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="k">if</span> <span class="n">options</span><span class="o">.</span><span class="n">writetext</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">unichr</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="ow">in</span> <span class="n">options</span><span class="o">.</span><span class="n">writetext</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="n">all_letters</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+        
+        <span class="nb">unicode</span> <span class="o">=</span> <span class="n">_convert_int_to_unicode</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+
+        <span class="n">face</span><span class="o">.</span><span class="n">load_char</span><span class="p">(</span> <span class="nb">unicode</span><span class="p">,</span> <span class="n">flags</span> <span class="p">)</span>
+
+        <span class="n">metrics</span> <span class="o">=</span> <span class="n">face</span><span class="o">.</span><span class="n">glyph</span><span class="o">.</span><span class="n">contents</span><span class="o">.</span><span class="n">metrics</span>
+
+        <span class="n">glyph</span> <span class="o">=</span> <span class="n">Glyph</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="nb">unicode</span><span class="p">)</span>
+        <span class="n">glyph</span><span class="o">.</span><span class="n">bearingX</span> <span class="o">=</span> <span class="p">(</span><span class="n">metrics</span><span class="o">.</span><span class="n">horiBearingX</span> <span class="o">&gt;&gt;</span> <span class="mi">6</span><span class="p">)</span> <span class="o">+</span> <span class="n">info</span><span class="o">.</span><span class="n">extrapadding</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">glyph</span><span class="o">.</span><span class="n">bearingY</span> <span class="o">=</span> <span class="p">(</span><span class="n">metrics</span><span class="o">.</span><span class="n">horiBearingY</span> <span class="o">&gt;&gt;</span> <span class="mi">6</span><span class="p">)</span> <span class="o">+</span> <span class="n">info</span><span class="o">.</span><span class="n">internalpadding</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">info</span><span class="o">.</span><span class="n">extrapadding</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">glyph</span><span class="o">.</span><span class="n">advance</span> <span class="o">=</span> <span class="p">(</span><span class="n">metrics</span><span class="o">.</span><span class="n">horiAdvance</span> <span class="o">&gt;&gt;</span> <span class="mi">6</span><span class="p">)</span> <span class="o">+</span> <span class="n">info</span><span class="o">.</span><span class="n">extrapadding</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+        
+        <span class="n">info</span><span class="o">.</span><span class="n">glyphs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">glyph</span> <span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">render</span><span class="p">(</span><span class="n">options</span><span class="p">,</span> <span class="n">info</span><span class="p">,</span> <span class="n">face</span><span class="p">):</span>
+    
+    <span class="n">found</span> <span class="o">=</span> <span class="bp">False</span>
+    <span class="k">for</span> <span class="n">charmap</span> <span class="ow">in</span> <span class="n">face</span><span class="o">.</span><span class="n">charmaps</span><span class="p">:</span>
+        <span class="n">found</span> <span class="o">=</span> <span class="n">found</span> <span class="ow">or</span> <span class="n">charmap</span><span class="o">.</span><span class="n">encoding</span> <span class="o">==</span> <span class="n">ft</span><span class="o">.</span><span class="n">ENCODING_UNICODE</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">found</span><span class="p">:</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s">&quot;The font </span><span class="si">%s</span><span class="s"> doesn&#39;t seem to support unicode!? Continuing anyway&quot;</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="n">options</span><span class="o">.</span><span class="n">writetext</span><span class="p">:</span>
+        <span class="n">info</span><span class="o">.</span><span class="n">letters</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">info</span><span class="o">.</span><span class="n">letters</span> <span class="k">if</span> <span class="nb">unichr</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="ow">in</span> <span class="n">options</span><span class="o">.</span><span class="n">writetext</span><span class="p">]</span>
+
+    <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;Rendering </span><span class="si">%d</span><span class="s"> characters&quot;</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">info</span><span class="o">.</span><span class="n">letters</span><span class="p">))</span>
+
+    <span class="c"># find out the needed extra padding on each side of each glyph</span>
+    <span class="n">info</span><span class="o">.</span><span class="n">extrapadding</span> <span class="o">=</span> <span class="n">_get_extra_padding</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
+    
+    <span class="n">info</span><span class="o">.</span><span class="n">face</span> <span class="o">=</span> <span class="n">face</span>
+
+    <span class="n">flags</span> <span class="o">=</span> <span class="n">ft</span><span class="o">.</span><span class="n">LOAD_RENDER</span>
+        
+    <span class="n">antialias</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">info</span><span class="p">,</span> <span class="s">&#39;antialias&#39;</span><span class="p">,</span> <span class="s">&#39;normal&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">antialias</span> <span class="o">==</span> <span class="s">&#39;none&#39;</span><span class="p">:</span>
+        <span class="n">flags</span> <span class="o">|=</span> <span class="n">ft</span><span class="o">.</span><span class="n">LOAD_TARGET_MONO</span>
+    <span class="k">elif</span> <span class="n">antialias</span> <span class="o">==</span> <span class="s">&#39;light&#39;</span><span class="p">:</span>
+        <span class="n">flags</span> <span class="o">|=</span> <span class="n">ft</span><span class="o">.</span><span class="n">LOAD_TARGET_LIGHT</span>
+    <span class="k">elif</span> <span class="n">antialias</span> <span class="o">==</span> <span class="s">&#39;normal&#39;</span><span class="p">:</span>
+        <span class="n">flags</span> <span class="o">|=</span> <span class="n">ft</span><span class="o">.</span><span class="n">LOAD_TARGET_NORMAL</span>
+
+    <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;RENDERING </span><span class="si">%s</span><span class="s">&quot;</span><span class="p">,</span> <span class="nb">unicode</span><span class="p">([</span><span class="n">g</span><span class="o">.</span><span class="n">unicode</span> <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">info</span><span class="o">.</span><span class="n">glyphs</span><span class="p">]))</span>
+    
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">info</span><span class="o">.</span><span class="n">glyphs</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s">&quot;No glyphs to process!&quot;</span>
+    
+    <span class="c"># since the layers might set this, we set it back</span>
+    <span class="n">face</span><span class="o">.</span><span class="n">set_char_size</span><span class="p">(</span> <span class="n">width</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="n">info</span><span class="o">.</span><span class="n">bitmapsize</span> <span class="o">*</span> <span class="mi">64</span><span class="p">,</span> <span class="n">hres</span><span class="o">=</span><span class="n">info</span><span class="o">.</span><span class="n">dpi</span><span class="p">,</span> <span class="n">vres</span><span class="o">=</span><span class="n">info</span><span class="o">.</span><span class="n">dpi</span> <span class="p">)</span>
+    
+    <span class="k">for</span> <span class="n">glyph</span> <span class="ow">in</span> <span class="n">info</span><span class="o">.</span><span class="n">glyphs</span><span class="p">:</span>
+
+        <span class="n">face</span><span class="o">.</span><span class="n">load_char</span><span class="p">(</span> <span class="n">glyph</span><span class="o">.</span><span class="n">unicode</span><span class="p">,</span> <span class="n">flags</span> <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">face</span><span class="o">.</span><span class="n">glyph</span><span class="o">.</span><span class="n">contents</span><span class="o">.</span><span class="n">bitmap</span><span class="o">.</span><span class="n">rows</span><span class="p">:</span>
+            <span class="n">glyph</span><span class="o">.</span><span class="n">bitmap</span> <span class="o">=</span> <span class="n">fu</span><span class="o">.</span><span class="n">make_array_from_bitmap</span><span class="p">(</span><span class="n">face</span><span class="o">.</span><span class="n">glyph</span><span class="o">.</span><span class="n">contents</span><span class="o">.</span><span class="n">bitmap</span><span class="p">)</span>
+            <span class="n">shape</span> <span class="o">=</span> <span class="n">glyph</span><span class="o">.</span><span class="n">bitmap</span><span class="o">.</span><span class="n">shape</span>
+
+            <span class="n">glyph</span><span class="o">.</span><span class="n">bitmap</span> <span class="o">=</span> <span class="n">fu</span><span class="o">.</span><span class="n">pad_bitmap</span><span class="p">(</span><span class="n">glyph</span><span class="o">.</span><span class="n">bitmap</span><span class="p">,</span> <span class="n">info</span><span class="o">.</span><span class="n">extrapadding</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">info</span><span class="o">.</span><span class="n">extrapadding</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">info</span><span class="o">.</span><span class="n">extrapadding</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">info</span><span class="o">.</span><span class="n">extrapadding</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="mf">0.0</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">info</span><span class="o">.</span><span class="n">useadvanceaswidth</span><span class="p">:</span>
+                <span class="c"># Pad the bitmap with the bearing width on each side</span>
+                <span class="c"># This is useful for file formats that doesn&#39;t carry all the glyph info into it</span>
+                <span class="n">padleft</span> <span class="o">=</span> <span class="n">glyph</span><span class="o">.</span><span class="n">bearingX</span>
+                <span class="n">padright</span> <span class="o">=</span> <span class="n">glyph</span><span class="o">.</span><span class="n">advance</span> <span class="o">-</span> <span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">padleft</span>
+                <span class="n">glyph</span><span class="o">.</span><span class="n">bitmap</span> <span class="o">=</span> <span class="n">fu</span><span class="o">.</span><span class="n">pad_bitmap</span><span class="p">(</span><span class="n">glyph</span><span class="o">.</span><span class="n">bitmap</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">padright</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">antialias</span> <span class="o">!=</span> <span class="s">&#39;none&#39;</span><span class="p">:</span>
+                <span class="n">glyph</span><span class="o">.</span><span class="n">bitmap</span> <span class="o">/=</span> <span class="mf">255.0</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;char missing bitmap </span><span class="si">%X</span><span class="s"> &#39;</span><span class="si">%s</span><span class="s">&#39;&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">glyph</span><span class="o">.</span><span class="n">utf8</span><span class="p">,</span> <span class="n">glyph</span><span class="o">.</span><span class="n">unicode</span><span class="p">)</span> <span class="p">)</span>
+
+    <span class="c"># Apply all layers on all the tiny bitmaps</span>
+    <span class="n">_apply_layers</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
+    
+    <span class="n">max_bearing_y</span> <span class="o">=</span> <span class="mi">0</span> <span class="c"># the maximum extent above the baseline</span>
+    <span class="n">min_bearing_y</span> <span class="o">=</span> <span class="mi">0</span> <span class="c"># the maximum extent below the baseline</span>
+    <span class="n">max_width</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="c"># calculate the height/width, since the layers may increased/decreased the size</span>
+    <span class="n">max_width</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">max_height</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">glyph</span> <span class="ow">in</span> <span class="n">info</span><span class="o">.</span><span class="n">glyphs</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">glyph</span><span class="o">.</span><span class="n">bitmap</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="c"># find the highest char</span>
+        <span class="n">max_bearing_y</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">max_bearing_y</span><span class="p">,</span> <span class="n">glyph</span><span class="o">.</span><span class="n">bearingY</span><span class="p">)</span>
+        <span class="c"># find the lowest char</span>
+        <span class="n">min_bearing_y</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">min_bearing_y</span><span class="p">,</span> <span class="n">glyph</span><span class="o">.</span><span class="n">bearingY</span> <span class="o">-</span> <span class="n">glyph</span><span class="o">.</span><span class="n">bitmap</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        
+        <span class="n">max_width</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">max_width</span><span class="p">,</span> <span class="n">glyph</span><span class="o">.</span><span class="n">bitmap</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">max_height</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">max_height</span><span class="p">,</span> <span class="n">glyph</span><span class="o">.</span><span class="n">bitmap</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+    <span class="n">info</span><span class="o">.</span><span class="n">max_height</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">max_height</span><span class="p">,</span> <span class="n">info</span><span class="o">.</span><span class="n">ascender</span> <span class="o">-</span> <span class="n">info</span><span class="o">.</span><span class="n">descender</span><span class="p">)</span>
+    <span class="n">info</span><span class="o">.</span><span class="n">max_width</span> <span class="o">=</span> <span class="n">max_width</span>
+
+
+<span class="k">def</span> <span class="nf">_get_pair_kernings</span><span class="p">(</span><span class="n">info</span><span class="p">,</span> <span class="n">face</span><span class="p">):</span>
+    <span class="n">characters</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span> <span class="n">glyph</span><span class="o">.</span><span class="n">utf8</span> <span class="k">for</span> <span class="n">glyph</span> <span class="ow">in</span> <span class="n">info</span><span class="o">.</span><span class="n">glyphs</span><span class="p">])</span>
+    <span class="n">pairkernings</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">pair</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">product</span><span class="p">(</span><span class="n">characters</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+        <span class="n">prevc</span><span class="p">,</span> <span class="n">c</span> <span class="o">=</span> <span class="n">pair</span>
+        <span class="n">kerning</span> <span class="o">=</span> <span class="n">face</span><span class="o">.</span><span class="n">get_kerning</span><span class="p">(</span><span class="n">prevc</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">kerning</span><span class="o">.</span><span class="n">x</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="n">c</span> <span class="o">&lt;</span> <span class="mh">0xFFFFFFFF</span>
+            <span class="k">assert</span> <span class="n">prevc</span> <span class="o">&lt;</span> <span class="mh">0xFFFFFFFF</span>
+            <span class="n">pairkernings</span><span class="p">[</span> <span class="n">_encode_pair</span><span class="p">(</span><span class="n">prevc</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span> <span class="p">]</span> <span class="o">=</span> <span class="n">kerning</span><span class="o">.</span><span class="n">x</span><span class="o">&gt;&gt;</span><span class="mi">6</span>
+            
+            <span class="c">#print &quot;kerning %s, %s: %d&quot; % (chr(prevc), chr(c), kerning.x&gt;&gt;6), &#39;\t&#39;, &#39;0x%016x&#39; % _encode_pair(prevc, c)</span>
+    <span class="k">return</span> <span class="n">pairkernings</span>
+
+
+<span class="k">def</span> <span class="nf">compile</span><span class="p">(</span><span class="n">options</span><span class="p">):</span>
+
+    <span class="n">info</span> <span class="o">=</span> <span class="n">SFontInfo</span><span class="p">(</span><span class="n">options</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span> <span class="n">info</span><span class="o">.</span><span class="n">name</span> <span class="p">):</span>
+        <span class="k">raise</span> <span class="n">fu</span><span class="o">.</span><span class="n">FontException</span><span class="p">(</span><span class="s">&quot;Failed to find font: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">info</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+    <span class="n">face</span> <span class="o">=</span> <span class="n">ft</span><span class="o">.</span><span class="n">new_face</span><span class="p">(</span> <span class="n">info</span><span class="o">.</span><span class="n">name</span> <span class="p">)</span>
+
+    <span class="c"># gather the glyph info</span>
+    <span class="n">_get_glyph_info</span><span class="p">(</span><span class="n">options</span><span class="p">,</span> <span class="n">info</span><span class="p">,</span> <span class="n">face</span><span class="p">)</span>
+
+    <span class="n">pairkernings</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="k">if</span> <span class="n">info</span><span class="o">.</span><span class="n">usepairkernings</span><span class="p">:</span>
+        <span class="n">pairkernings</span> <span class="o">=</span> <span class="n">_get_pair_kernings</span><span class="p">(</span><span class="n">info</span><span class="p">,</span> <span class="n">face</span><span class="p">)</span>
+    
+    <span class="c"># The actual compile step</span>
+    <span class="n">render</span><span class="p">(</span><span class="n">options</span><span class="p">,</span> <span class="n">info</span><span class="p">,</span> <span class="n">face</span><span class="p">)</span>
+    
+    <span class="c"># assemble into a texture</span>
+    <span class="n">image</span> <span class="o">=</span> <span class="n">info</span><span class="o">.</span><span class="n">texturerender</span><span class="p">(</span> <span class="n">info</span> <span class="p">)</span>
+
+    <span class="n">pairkernings</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">info</span><span class="o">.</span><span class="n">usepairkernings</span><span class="p">:</span>
+        <span class="n">pairkernings</span> <span class="o">=</span> <span class="n">_get_pair_kernings</span><span class="p">(</span><span class="n">info</span><span class="p">,</span> <span class="n">face</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">options</span><span class="o">.</span><span class="n">writetext</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">output</span><span class="p">)</span> <span class="p">):</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">output</span><span class="p">))</span>
+            
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">info</span><span class="o">.</span><span class="n">texturewriter</span><span class="p">(</span> <span class="n">options</span><span class="p">,</span> <span class="n">info</span><span class="p">,</span> <span class="n">image</span> <span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">fu</span><span class="o">.</span><span class="n">FontException</span><span class="p">(</span><span class="s">&#39;Failed to write texture: </span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span> <span class="p">)</span>
+
+        <span class="n">info</span><span class="o">.</span><span class="n">writer</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">options</span><span class="p">,</span> <span class="n">info</span><span class="p">,</span> <span class="n">pairkernings</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="p">(</span><span class="n">info</span><span class="p">,</span> <span class="n">pairkernings</span><span class="p">,</span> <span class="n">image</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_encode_pair</span><span class="p">(</span><span class="n">prevc</span><span class="p">,</span> <span class="n">c</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Encodes two 16 bit integers into 32 bits &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">prevc</span> <span class="o">&lt;&lt;</span> <span class="mi">32</span> <span class="o">|</span> <span class="n">c</span>
+
+
+<span class="k">def</span> <span class="nf">_calc_bbox</span><span class="p">(</span><span class="n">info</span><span class="p">,</span> <span class="n">characters</span><span class="p">,</span> <span class="n">pairkernings</span><span class="p">,</span> <span class="n">text</span><span class="p">):</span>
+    <span class="n">extrapadding</span> <span class="o">=</span> <span class="n">_get_extra_padding</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
+    <span class="n">maxx</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">lineheight</span> <span class="o">=</span> <span class="n">info</span><span class="o">.</span><span class="n">max_height</span> <span class="o">+</span> <span class="n">extrapadding</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">extrapadding</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">lineheight</span>
+    <span class="n">prevc</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="nb">ord</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">c</span> <span class="o">==</span> <span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span> <span class="ow">and</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">text</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+            <span class="n">maxx</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">maxx</span><span class="p">)</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">y</span> <span class="o">+=</span> <span class="n">lineheight</span>
+            <span class="k">continue</span>
+
+        <span class="n">char</span> <span class="o">=</span> <span class="n">characters</span><span class="o">.</span><span class="n">get</span><span class="p">(</span> <span class="n">c</span><span class="p">,</span> <span class="bp">None</span> <span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">char</span><span class="p">:</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s">&quot;Character not in info.letters: &#39;</span><span class="si">%s</span><span class="s">&#39;&quot;</span> <span class="o">%</span> <span class="nb">unichr</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="p">)</span>
+            <span class="k">continue</span>
+            <span class="n">x</span> <span class="o">+=</span> <span class="n">char</span><span class="o">.</span><span class="n">advance</span>
+            <span class="n">prevc</span> <span class="o">=</span> <span class="n">c</span>
+            <span class="k">continue</span>
+
+        <span class="n">x</span> <span class="o">+=</span> <span class="n">pairkernings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span> <span class="n">_encode_pair</span><span class="p">(</span><span class="n">prevc</span><span class="p">,</span> <span class="n">c</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">+=</span> <span class="n">char</span><span class="o">.</span><span class="n">advance</span>
+        <span class="n">x</span> <span class="o">+=</span> <span class="n">extrapadding</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">extrapadding</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+        <span class="n">prevc</span> <span class="o">=</span> <span class="n">c</span>
+
+    <span class="n">maxx</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">maxx</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">maxx</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="write_text"><a class="viewcode-back" href="../modules/fontcreator.html#fontcreator.write_text">[docs]</a><span class="k">def</span> <span class="nf">write_text</span><span class="p">(</span><span class="n">options</span><span class="p">,</span> <span class="n">info</span><span class="p">,</span> <span class="n">pairkernings</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Writes the given text to an image</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">pairkernings</span> <span class="o">=</span> <span class="n">pairkernings</span> <span class="ow">or</span> <span class="nb">dict</span><span class="p">()</span>
+
+    <span class="c"># first, calculate the texture size</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">writetext</span><span class="p">):</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">writetext</span><span class="p">,</span> <span class="s">&#39;rt&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">options</span><span class="o">.</span><span class="n">writetext</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+
+    <span class="n">cinfo</span> <span class="o">=</span> <span class="p">{</span><span class="n">glyph</span><span class="o">.</span><span class="n">utf8</span> <span class="p">:</span> <span class="n">glyph</span> <span class="k">for</span> <span class="n">glyph</span> <span class="ow">in</span> <span class="n">info</span><span class="o">.</span><span class="n">glyphs</span><span class="p">}</span>
+    
+    <span class="n">texture_size</span> <span class="o">=</span> <span class="n">_calc_bbox</span><span class="p">(</span><span class="n">info</span><span class="p">,</span> <span class="n">cinfo</span><span class="p">,</span> <span class="n">pairkernings</span><span class="p">,</span> <span class="n">options</span><span class="o">.</span><span class="n">writetext</span><span class="p">)</span>
+    <span class="n">texture_size</span> <span class="o">=</span> <span class="p">(</span><span class="n">texture_size</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="n">info</span><span class="o">.</span><span class="n">padding</span><span class="o">*</span><span class="mi">2</span><span class="o">+</span><span class="mi">60</span><span class="p">,</span> <span class="n">texture_size</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="n">info</span><span class="o">.</span><span class="n">padding</span><span class="o">*</span><span class="mi">2</span><span class="p">)</span>
+
+    <span class="n">ones</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">texture_size</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">ones</span> <span class="o">*</span> <span class="n">info</span><span class="o">.</span><span class="n">bgcolor</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">g</span> <span class="o">=</span> <span class="n">ones</span> <span class="o">*</span> <span class="n">info</span><span class="o">.</span><span class="n">bgcolor</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="n">ones</span> <span class="o">*</span> <span class="n">info</span><span class="o">.</span><span class="n">bgcolor</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+
+    <span class="n">zeros</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">texture_size</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span>
+    <span class="n">image</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dstack</span><span class="p">(</span> <span class="p">(</span><span class="n">r</span><span class="p">,</span><span class="n">g</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">zeros</span><span class="p">)</span> <span class="p">)</span>
+
+    <span class="n">x</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">info</span><span class="o">.</span><span class="n">ascender</span>
+    <span class="n">prevc</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="n">found</span> <span class="o">=</span> <span class="bp">False</span>
+    <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">options</span><span class="o">.</span><span class="n">writetext</span><span class="p">:</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="nb">ord</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+
+        <span class="n">char</span> <span class="o">=</span> <span class="n">cinfo</span><span class="o">.</span><span class="n">get</span><span class="p">(</span> <span class="n">c</span><span class="p">,</span> <span class="bp">None</span> <span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">char</span><span class="p">:</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s">&quot;Character not in info.letters: &#39;</span><span class="si">%s</span><span class="s">&#39;&quot;</span> <span class="o">%</span> <span class="nb">unichr</span><span class="p">(</span><span class="n">c</span><span class="p">))</span>
+            <span class="k">continue</span>
+
+        <span class="k">if</span> <span class="n">char</span><span class="o">.</span><span class="n">bitmap</span> <span class="o">==</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">x</span> <span class="o">+=</span> <span class="n">char</span><span class="o">.</span><span class="n">advance</span>
+            <span class="n">prevc</span> <span class="o">=</span> <span class="n">c</span>
+            <span class="k">continue</span>
+
+        <span class="n">found</span> <span class="o">=</span> <span class="bp">True</span>
+
+        <span class="n">x</span> <span class="o">+=</span> <span class="n">pairkernings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span> <span class="n">_encode_pair</span><span class="p">(</span><span class="n">prevc</span><span class="p">,</span> <span class="n">c</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span>
+
+        <span class="n">bw</span><span class="p">,</span> <span class="n">bh</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">char</span><span class="o">.</span><span class="n">bitmap</span><span class="o">.</span><span class="n">shape</span>
+        <span class="n">bx</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">char</span><span class="o">.</span><span class="n">bearingX</span>
+        <span class="n">by</span> <span class="o">=</span> <span class="n">y</span> <span class="o">-</span> <span class="n">char</span><span class="o">.</span><span class="n">bearingY</span>
+        
+        <span class="c"># we must make sure that the first pixel is within range</span>
+        <span class="k">if</span> <span class="n">bx</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">x</span> <span class="o">+=</span> <span class="o">-</span><span class="n">char</span><span class="o">.</span><span class="n">bearingX</span>
+            <span class="n">bx</span> <span class="o">=</span> <span class="n">x</span>
+            
+        
+        <span class="n">target</span> <span class="o">=</span> <span class="n">image</span><span class="p">[</span><span class="n">bx</span> <span class="p">:</span> <span class="n">bx</span> <span class="o">+</span> <span class="n">bw</span><span class="p">,</span> <span class="n">by</span> <span class="p">:</span> <span class="n">by</span> <span class="o">+</span> <span class="n">bh</span> <span class="p">]</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">image</span><span class="p">[</span><span class="n">bx</span> <span class="p">:</span> <span class="n">bx</span> <span class="o">+</span> <span class="n">bw</span><span class="p">,</span> <span class="n">by</span> <span class="p">:</span> <span class="n">by</span> <span class="o">+</span> <span class="n">bh</span> <span class="p">]</span> <span class="o">=</span> <span class="n">fu</span><span class="o">.</span><span class="n">alpha_blend</span><span class="p">(</span> <span class="n">target</span><span class="p">,</span> <span class="n">char</span><span class="o">.</span><span class="n">bitmap</span> <span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">print</span> <span class="n">e</span>
+            <span class="k">print</span> <span class="s">&#39;image shape&#39;</span><span class="p">,</span> <span class="n">image</span><span class="o">.</span><span class="n">shape</span>
+            <span class="k">print</span> <span class="s">&#39;target shape&#39;</span><span class="p">,</span> <span class="n">target</span><span class="o">.</span><span class="n">shape</span>
+            <span class="k">print</span> <span class="s">&#39;bitmap shape&#39;</span><span class="p">,</span> <span class="n">char</span><span class="o">.</span><span class="n">bitmap</span><span class="o">.</span><span class="n">shape</span>
+            <span class="k">print</span> <span class="s">&quot;bx, bw&quot;</span><span class="p">,</span> <span class="n">bx</span><span class="p">,</span> <span class="n">bw</span>
+            <span class="k">print</span> <span class="s">&quot;by, bh&quot;</span><span class="p">,</span> <span class="n">by</span><span class="p">,</span> <span class="n">bh</span>
+            <span class="k">print</span> <span class="s">&quot;y&quot;</span><span class="p">,</span> <span class="n">y</span>
+            <span class="k">print</span> <span class="s">&quot;bearingY&quot;</span><span class="p">,</span> <span class="n">char</span><span class="o">.</span><span class="n">bearingY</span>
+            <span class="k">print</span> <span class="s">&quot;lineheight&quot;</span><span class="p">,</span> <span class="n">info</span><span class="o">.</span><span class="n">max_height</span>
+            <span class="k">print</span> <span class="s">&quot;c:&quot;</span><span class="p">,</span> <span class="n">char</span><span class="o">.</span><span class="n">utf8</span><span class="p">,</span> <span class="n">char</span><span class="o">.</span><span class="n">unicode</span>
+            <span class="k">print</span> <span class="s">&quot;&quot;</span>
+            <span class="k">print</span> <span class="s">&quot;&quot;</span>
+            <span class="k">raise</span>
+
+        <span class="n">x</span> <span class="o">+=</span> <span class="n">char</span><span class="o">.</span><span class="n">advance</span>
+        <span class="n">prevc</span> <span class="o">=</span> <span class="n">c</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">found</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">fu</span><span class="o">.</span><span class="n">FontException</span><span class="p">(</span><span class="s">&quot;No characters found in font: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">options</span><span class="o">.</span><span class="n">writetext</span><span class="p">)</span>
+
+    <span class="n">image</span> <span class="o">=</span> <span class="p">(</span><span class="n">image</span> <span class="o">*</span> <span class="mf">255.0</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span>
+
+    <span class="n">r</span><span class="p">,</span><span class="n">g</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">a</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">T</span>
+    <span class="n">image</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dstack</span><span class="p">((</span><span class="n">r</span><span class="p">,</span><span class="n">g</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">a</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">output</span><span class="p">)</span> <span class="p">):</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">output</span><span class="p">))</span>
+
+    <span class="n">Image</span><span class="o">.</span><span class="n">fromarray</span><span class="p">(</span> <span class="n">image</span> <span class="p">)</span><span class="o">.</span><span class="n">save</span><span class="p">(</span> <span class="n">options</span><span class="o">.</span><span class="n">output</span> <span class="p">)</span>
+    <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;Wrote </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">options</span><span class="o">.</span><span class="n">output</span><span class="p">)</span>
+
+</div>
+<span class="k">def</span> <span class="nf">init</span><span class="p">():</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">OptionParser</span><span class="p">()</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="s">&#39;-i&#39;</span><span class="p">,</span> <span class="s">&#39;--input&#39;</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s">&#39;FILE&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s">&#39;The input font (.fontinfo)&#39;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="s">&#39;-o&#39;</span><span class="p">,</span> <span class="s">&#39;--output&#39;</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s">&#39;FILE&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s">&#39;The output font (.fntb)&#39;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="s">&#39;-d&#39;</span><span class="p">,</span> <span class="s">&#39;--datadir&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s">&#39;&#39;</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s">&#39;DIRECTORY&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s">&#39;The data directory that all resource paths should be relative to&#39;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="s">&#39;-e&#39;</span><span class="p">,</span> <span class="s">&#39;--endian&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s">&#39;little&#39;</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;little&#39;</span><span class="p">,</span> <span class="s">&#39;big&#39;</span><span class="p">],</span> <span class="n">help</span><span class="o">=</span><span class="s">&#39;The endianess of the output file.&#39;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="s">&#39;-v&#39;</span><span class="p">,</span> <span class="s">&#39;--verbose&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s">&#39;store_true&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s">&#39;Specifies verbose mode&#39;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="s">&#39;-l&#39;</span><span class="p">,</span> <span class="s">&#39;--log&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s">&#39;&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s">&#39;A log file where the stdout is saved logged to.&#39;</span> <span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="s">&#39;-w&#39;</span><span class="p">,</span> <span class="s">&#39;--writetext&#39;</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s">&#39;TEXT&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s">&#39;When used, a .fontinfo file is used as input and the text is written into the output texture.&#39;</span><span class="p">)</span>
+
+    <span class="n">options</span><span class="p">,</span> <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">options</span><span class="o">.</span><span class="n">log</span><span class="p">:</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span> <span class="o">=</span> <span class="n">LogStream</span><span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">log</span><span class="p">)</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">options</span><span class="o">.</span><span class="n">input</span><span class="p">:</span>
+        <span class="n">parser</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s">&quot;You must specify an input file&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">options</span><span class="o">.</span><span class="n">output</span><span class="p">:</span>
+        <span class="n">parser</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s">&quot;You must specify an output file&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">input</span><span class="p">):</span>
+        <span class="n">parser</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s">&quot;The input file doesn&#39;t exist: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">options</span><span class="o">.</span><span class="n">input</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">options</span><span class="o">.</span><span class="n">endian</span> <span class="ow">in</span> <span class="p">[</span><span class="s">&#39;little&#39;</span><span class="p">,</span> <span class="s">&#39;big&#39;</span><span class="p">]:</span>
+        <span class="n">parser</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s">&quot;Invalid endianess: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">options</span><span class="o">.</span><span class="n">endian</span><span class="p">)</span>
+
+    <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span> <span class="k">if</span> <span class="n">options</span><span class="o">.</span><span class="n">verbose</span> <span class="k">else</span> <span class="n">logging</span><span class="o">.</span><span class="n">WARN</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">options</span>
+
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">options</span> <span class="o">=</span> <span class="n">init</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">options</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Using freetype-</span><span class="si">%d</span><span class="s">.</span><span class="si">%d</span><span class="s">.</span><span class="si">%d</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">ft</span><span class="o">.</span><span class="n">version</span><span class="p">()</span> <span class="p">)</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">options</span><span class="o">.</span><span class="n">endian</span> <span class="o">=</span> <span class="s">&#39;&lt;&#39;</span> <span class="k">if</span> <span class="n">options</span><span class="o">.</span><span class="n">endian</span> <span class="o">==</span> <span class="s">&#39;little&#39;</span> <span class="k">else</span> <span class="s">&#39;&gt;&#39;</span>
+
+        <span class="p">(</span><span class="n">info</span><span class="p">,</span> <span class="n">pairkernings</span><span class="p">,</span> <span class="n">image</span><span class="p">)</span> <span class="o">=</span> <span class="nb">compile</span><span class="p">(</span><span class="n">options</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">options</span><span class="o">.</span><span class="n">writetext</span><span class="p">:</span>
+            <span class="n">write_text</span><span class="p">(</span><span class="n">options</span><span class="p">,</span> <span class="n">info</span><span class="p">,</span> <span class="n">pairkernings</span><span class="p">)</span>
+
+    <span class="k">except</span> <span class="n">fu</span><span class="o">.</span><span class="n">FontException</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s">&#39;-v&#39;</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">:</span>
+            <span class="k">raise</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span> <span class="s">&quot;</span><span class="si">%s</span><span class="s">: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">input</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span> <span class="p">)</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+        </div>
+        <div class="sidebar">
+          <h3>Table Of Contents</h3>
+          <ul>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html">1. Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../structure.html">2. The structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../extensions.html">3. Extending the framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../download.html">4. Download &amp; Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reference.html">5. Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/examples.html">6. Examples</a></li>
+</ul>
+
+          <h3 style="margin-top: 1.5em;">Search</h3>
+          <form class="search" action="../search.html" method="get">
+            <input type="text" name="q" />
+            <input type="submit" value="Go" />
+            <input type="hidden" name="check_keywords" value="yes" />
+            <input type="hidden" name="area" value="default" />
+          </form>
+          <p class="searchtip" style="font-size: 90%">
+            Enter search terms or a module, class or function name.
+          </p>
+        </div>
+        <div class="clearer"></div>
+      </div>
+    </div>
+
+    <div class="footer-wrapper">
+      <div class="footer">
+        <div class="left">
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |
+          <a href="../genindex.html" title="General Index"
+             >index</a>
+        </div>
+
+        <div class="right">
+          
+    <div class="footer">
+        &copy; Copyright 2013, Mathias Westerdahl.
+      Last updated on Feb 24, 2013.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+        </div>
+        <div class="clearer"></div>
+      </div>
+    </div>
+
+  </body>
+</html>

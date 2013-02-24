@@ -1,0 +1,58 @@
+
+===========================
+05_distance_fields.fontinfo
+===========================
+
+.. image:: 05_distance_fields_text.png
+
+.. contents::
+    :local:
+    :backlinks: top
+    
+Brief
+=====
+
+A more advanced use is distance fields. Note that the original size is a lot larger than.
+the final result.
+Uses: Distance Field.
+
+
+.fontinfo
+=========
+
+.. code-block:: python
+
+    [default]
+    name = ./fonts/verdana.ttf
+    size = 32
+    
+    letters = letters_ascii.txt
+    
+    bgcolor = (0, 0, 0)
+    
+    
+    writer = fontout_json
+    texturerender = fonttex_bitmap
+    texturesize = 512, 256
+    
+    texturewriter = fonttexout_pil
+    textureformat = .png
+    texturechannels = R
+    
+    layers = [Layer(color=distance_field)]
+    
+    # modes: none, light, normal. Default is 'normal'
+    antialias = none
+    
+    [distance_field]
+    type = distancefield
+    size = 8
+
+
+Results
+=======
+
+`.json file <./05_distance_fields.json>`_
+
+.. image:: 05_distance_fields.png
+

@@ -1,0 +1,5 @@
+fonteffects
+===========
+
+.. automodule:: fonteffects
+	:members:

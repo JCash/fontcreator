@@ -1,0 +1,268 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>fonttex_bitmap &mdash; FontCreator</title>
+    
+    <link rel="stylesheet" href="../_static/agogo.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="FontCreator" href="../index.html" />
+    <link rel="up" title="Module code" href="index.html" /> 
+  </head>
+  <body>
+    <div class="header-wrapper">
+      <div class="header">
+          <p class="logo"><a href="../index.html">
+            <img class="logo" src="../_static/headertext.png" alt="Logo"/>
+          </a></p>
+        <div class="headertitle"><a
+          href="../index.html">FontCreator</a></div>
+        <div class="rel">
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a>
+        </div>
+       </div>
+    </div>
+
+    <div class="content-wrapper">
+      <div class="content">
+        <div class="document">
+            
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for fonttex_bitmap</h1><div class="highlight"><pre>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Copyright @ 2013 Mathias Westerdahl</span>
+
+<span class="sd">This is the default rendering of the fonts</span>
+<span class="sd">    </span>
+<span class="sd">.. py:attribute:: texturesize = 512, 512</span>
+
+<span class="sd">    The desired size of the texture. If it&#39;s too small, the creator will fail.</span>
+<span class="sd">  </span>
+<span class="sd">.. py:attribute:: textureoffset = 0, 0</span>
+<span class="sd">    </span>
+<span class="sd">    The offset from the top left corner of the texture to the top left corner of the first glyph.</span>
+<span class="sd">    It is used to create a border around the texture. The same border is also applied on the right/bottom sides.</span>
+<span class="sd">    </span>
+<span class="sd">.. py:attribute:: usepremultipliedalpha = 0</span>
+
+<span class="sd">    If set, will premultiply the alpha</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">fontutils</span> <span class="kn">import</span> <span class="n">FontException</span>
+<span class="kn">import</span> <span class="nn">binpack</span>
+
+<span class="n">DEBUG</span><span class="o">=</span><span class="bp">False</span>
+
+
+<span class="k">def</span> <span class="nf">_guess_dimensions</span><span class="p">(</span><span class="n">glyphs</span><span class="p">):</span>
+    <span class="n">area</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">glyph</span> <span class="ow">in</span> <span class="n">glyphs</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">glyph</span><span class="o">.</span><span class="n">bitmap</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">d</span> <span class="o">=</span> <span class="n">glyph</span><span class="o">.</span><span class="n">bitmap</span><span class="o">.</span><span class="n">shape</span>
+        <span class="n">area</span> <span class="o">+=</span> <span class="n">w</span><span class="o">*</span><span class="n">h</span>
+    
+    <span class="c">#area += area / 1</span>
+    
+    <span class="n">gw</span> <span class="o">=</span> <span class="mi">512</span>
+    <span class="n">gh</span> <span class="o">=</span> <span class="mi">64</span>
+    <span class="n">guess</span> <span class="o">=</span> <span class="n">gw</span> <span class="o">*</span> <span class="n">gh</span>
+    <span class="k">while</span> <span class="n">guess</span> <span class="o">&lt;</span> <span class="n">area</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">gh</span> <span class="o">&gt;=</span> <span class="n">gw</span><span class="p">:</span>
+            <span class="n">gw</span> <span class="o">*=</span> <span class="mi">2</span>
+            <span class="n">gh</span> <span class="o">/=</span> <span class="mi">2</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">gh</span> <span class="o">*=</span> <span class="mi">2</span>
+        <span class="n">guess</span> <span class="o">=</span> <span class="n">gw</span> <span class="o">*</span> <span class="n">gh</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">gw</span><span class="p">,</span> <span class="n">gh</span><span class="p">)</span>
+        
+
+<span class="k">def</span> <span class="nf">_create_image</span><span class="p">(</span><span class="n">info</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">):</span>
+    <span class="n">ones</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span> <span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">),</span> <span class="nb">float</span><span class="p">)</span>
+    <span class="n">zeros</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span> <span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">),</span> <span class="nb">float</span><span class="p">)</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">ones</span> <span class="o">*</span> <span class="n">info</span><span class="o">.</span><span class="n">bgcolor</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">g</span> <span class="o">=</span> <span class="n">ones</span> <span class="o">*</span> <span class="n">info</span><span class="o">.</span><span class="n">bgcolor</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="n">ones</span> <span class="o">*</span> <span class="n">info</span><span class="o">.</span><span class="n">bgcolor</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">dstack</span><span class="p">(</span> <span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">zeros</span><span class="p">)</span> <span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_glyph_cmp</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">a</span><span class="o">.</span><span class="n">bitmap</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">and</span> <span class="n">b</span><span class="o">.</span><span class="n">bitmap</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">1</span>
+    <span class="k">elif</span> <span class="n">b</span><span class="o">.</span><span class="n">bitmap</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">and</span> <span class="n">a</span><span class="o">.</span><span class="n">bitmap</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="o">-</span><span class="mi">1</span>
+    <span class="k">elif</span> <span class="n">b</span><span class="o">.</span><span class="n">bitmap</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">and</span> <span class="n">a</span><span class="o">.</span><span class="n">bitmap</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">cmp</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">a</span><span class="o">.</span><span class="n">bitmap</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">b</span><span class="o">.</span><span class="n">bitmap</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+
+<div class="viewcode-block" id="render"><a class="viewcode-back" href="../modules/fonttex_bitmap.html#fonttex_bitmap.render">[docs]</a><span class="k">def</span> <span class="nf">render</span><span class="p">(</span><span class="n">info</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Assuming (0,0) is at the top left corner of the image.</span>
+<span class="sd">    </span>
+<span class="sd">    :param info:    The settings from the fontinfo file</span>
+<span class="sd">    :return:        The image all glyphs are rendered to</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="c"># sort the glyphs</span>
+    <span class="n">info</span><span class="o">.</span><span class="n">glyphs</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="nb">cmp</span><span class="o">=</span><span class="n">_glyph_cmp</span><span class="p">)</span>
+    
+    <span class="c"># Work in progress</span>
+    <span class="c">#iw, ih = _guess_dimensions(info.glyphs)</span>
+    <span class="n">iw</span><span class="p">,</span> <span class="n">ih</span> <span class="o">=</span> <span class="n">info</span><span class="o">.</span><span class="n">texturesize</span>
+    <span class="c">#ih /= 2</span>
+    <span class="c">#print &quot;guessed image size&quot;, iw, ih</span>
+    <span class="n">image</span> <span class="o">=</span> <span class="n">_create_image</span><span class="p">(</span><span class="n">info</span><span class="p">,</span> <span class="n">iw</span><span class="p">,</span> <span class="n">ih</span><span class="p">)</span>
+    
+    <span class="n">textureoffset</span> <span class="o">=</span> <span class="n">info</span><span class="o">.</span><span class="n">textureoffset</span>
+    <span class="n">padding</span> <span class="o">=</span> <span class="n">info</span><span class="o">.</span><span class="n">padding</span>
+    <span class="n">packer</span> <span class="o">=</span> <span class="n">binpack</span><span class="o">.</span><span class="n">create_packer</span><span class="p">(</span><span class="n">binpack</span><span class="o">.</span><span class="n">SKYLINE_BL</span><span class="p">,</span> <span class="n">iw</span> <span class="o">-</span> <span class="n">textureoffset</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">ih</span> <span class="o">-</span> <span class="n">textureoffset</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="bp">False</span><span class="p">)</span>
+    
+    <span class="c"># DEBUG PACK RENDERING</span>
+    <span class="k">if</span> <span class="n">DEBUG</span><span class="p">:</span>
+        <span class="n">image</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>
+        <span class="n">image</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>
+    
+    <span class="k">for</span> <span class="n">glyph</span> <span class="ow">in</span> <span class="n">info</span><span class="o">.</span><span class="n">glyphs</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">glyph</span><span class="o">.</span><span class="n">bitmap</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">continue</span>
+        
+        <span class="n">bitmap</span> <span class="o">=</span> <span class="n">glyph</span><span class="o">.</span><span class="n">bitmap</span>
+        
+        <span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">d</span> <span class="o">=</span> <span class="n">bitmap</span><span class="o">.</span><span class="n">shape</span>
+        
+        <span class="n">rect</span> <span class="o">=</span> <span class="n">binpack</span><span class="o">.</span><span class="n">pack_rect</span><span class="p">(</span><span class="n">packer</span><span class="p">,</span> <span class="n">w</span> <span class="o">+</span> <span class="n">padding</span><span class="p">,</span> <span class="n">h</span> <span class="o">+</span> <span class="n">padding</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">rect</span><span class="o">.</span><span class="n">height</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">FontException</span><span class="p">(</span><span class="s">&quot;The texture size is too small: (</span><span class="si">%d</span><span class="s">, </span><span class="si">%d</span><span class="s">) Increase the &#39;texturesize&#39; property in the font info&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">info</span><span class="o">.</span><span class="n">texturesize</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">info</span><span class="o">.</span><span class="n">texturesize</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="p">)</span>
+        
+        <span class="n">rect</span><span class="o">.</span><span class="n">x</span> <span class="o">+=</span> <span class="n">textureoffset</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">rect</span><span class="o">.</span><span class="n">y</span> <span class="o">+=</span> <span class="n">textureoffset</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">rect</span><span class="o">.</span><span class="n">width</span> <span class="o">-=</span> <span class="n">padding</span>
+        <span class="n">rect</span><span class="o">.</span><span class="n">height</span> <span class="o">-=</span> <span class="n">padding</span>
+        
+        <span class="n">glyph</span><span class="o">.</span><span class="n">bitmapbox</span> <span class="o">=</span> <span class="p">(</span><span class="n">rect</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">rect</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">rect</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="n">rect</span><span class="o">.</span><span class="n">height</span><span class="p">)</span>
+        
+        <span class="c"># check if the glyph has been flipped</span>
+        <span class="k">if</span> <span class="n">w</span> <span class="o">!=</span> <span class="n">h</span> <span class="ow">and</span> <span class="n">w</span> <span class="o">==</span> <span class="n">rect</span><span class="o">.</span><span class="n">height</span><span class="p">:</span>
+            <span class="n">bitmap</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">rot90</span><span class="p">(</span><span class="n">bitmap</span><span class="p">)</span>
+        
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">image</span><span class="p">[</span> <span class="n">rect</span><span class="o">.</span><span class="n">x</span> <span class="p">:</span> <span class="n">rect</span><span class="o">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">rect</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="n">rect</span><span class="o">.</span><span class="n">y</span> <span class="p">:</span> <span class="n">rect</span><span class="o">.</span><span class="n">y</span> <span class="o">+</span> <span class="n">rect</span><span class="o">.</span><span class="n">height</span> <span class="p">]</span> <span class="o">=</span> <span class="n">bitmap</span>
+
+            <span class="c"># DEBUG PACK RENDERING</span>
+            <span class="k">if</span> <span class="n">DEBUG</span><span class="p">:</span>
+                <span class="kn">import</span> <span class="nn">fontutils</span>
+                <span class="n">top</span> <span class="o">=</span> <span class="n">image</span><span class="p">[</span> <span class="n">rect</span><span class="o">.</span><span class="n">x</span> <span class="p">:</span> <span class="n">rect</span><span class="o">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">rect</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="n">rect</span><span class="o">.</span><span class="n">y</span> <span class="p">:</span> <span class="n">rect</span><span class="o">.</span><span class="n">y</span> <span class="o">+</span> <span class="n">rect</span><span class="o">.</span><span class="n">height</span> <span class="p">]</span>
+                <span class="n">ones</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span> <span class="p">(</span><span class="n">top</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">top</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="p">)</span>
+                
+                <span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">random</span>
+                <span class="n">r</span> <span class="o">=</span> <span class="n">random</span><span class="p">()</span> <span class="o">*</span> <span class="mf">0.4</span> <span class="o">+</span> <span class="mf">0.6</span>
+                <span class="n">g</span> <span class="o">=</span> <span class="n">random</span><span class="p">()</span> <span class="o">*</span> <span class="mf">0.4</span> <span class="o">+</span> <span class="mf">0.6</span>
+                <span class="n">b</span> <span class="o">=</span> <span class="n">random</span><span class="p">()</span> <span class="o">*</span> <span class="mf">0.4</span> <span class="o">+</span> <span class="mf">0.6</span>
+                <span class="n">a</span> <span class="o">=</span> <span class="mf">1.0</span>
+                <span class="n">bottom</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dstack</span><span class="p">(</span> <span class="p">(</span><span class="n">ones</span> <span class="o">*</span> <span class="n">r</span><span class="p">,</span> <span class="n">ones</span> <span class="o">*</span> <span class="n">g</span><span class="p">,</span> <span class="n">ones</span> <span class="o">*</span> <span class="n">b</span><span class="p">,</span> <span class="n">ones</span> <span class="o">*</span> <span class="n">a</span><span class="p">)</span> <span class="p">)</span>
+            
+                <span class="n">result</span> <span class="o">=</span> <span class="n">fontutils</span><span class="o">.</span><span class="n">alpha_blend</span><span class="p">(</span><span class="n">bottom</span><span class="p">,</span> <span class="n">top</span><span class="p">)</span>
+                <span class="n">image</span><span class="p">[</span> <span class="n">rect</span><span class="o">.</span><span class="n">x</span> <span class="p">:</span> <span class="n">rect</span><span class="o">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">rect</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="n">rect</span><span class="o">.</span><span class="n">y</span> <span class="p">:</span> <span class="n">rect</span><span class="o">.</span><span class="n">y</span> <span class="o">+</span> <span class="n">rect</span><span class="o">.</span><span class="n">height</span> <span class="p">]</span> <span class="o">=</span> <span class="n">result</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">print</span> <span class="s">&quot;ERROR&quot;</span><span class="p">,</span> <span class="n">e</span>
+            <span class="k">print</span> <span class="s">&quot;RECT&quot;</span><span class="p">,</span> <span class="n">rect</span>
+            
+            <span class="c">#print &quot;bmshape&quot;, (bx,by,w,h)</span>
+            <span class="k">print</span> <span class="s">&quot;image.shape&quot;</span><span class="p">,</span> <span class="n">image</span><span class="o">.</span><span class="n">shape</span>
+            <span class="k">print</span> <span class="s">&quot;char.bitmap.shape&quot;</span><span class="p">,</span> <span class="n">glyph</span><span class="o">.</span><span class="n">bitmap</span><span class="o">.</span><span class="n">shape</span>
+            <span class="k">raise</span>
+
+        <span class="c">#x += max(w, w2) + info.padding + info.internalpadding[0]*2</span>
+    
+    <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&#39;Used </span><span class="si">%f</span><span class="s"> </span><span class="si">%%</span><span class="s"> of the texture&#39;</span><span class="p">,</span> <span class="p">(</span><span class="n">binpack</span><span class="o">.</span><span class="n">get_occupancy</span><span class="p">(</span><span class="n">packer</span><span class="p">)</span> <span class="o">*</span> <span class="mi">100</span><span class="p">))</span>
+    <span class="n">binpack</span><span class="o">.</span><span class="n">destroy_packer</span><span class="p">(</span><span class="n">packer</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="n">info</span><span class="o">.</span><span class="n">usepremultipliedalpha</span><span class="p">:</span>
+        <span class="n">image</span> <span class="o">=</span> <span class="n">fontutils</span><span class="o">.</span><span class="n">pre_multiply_alpha</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+        
+    <span class="k">return</span> <span class="n">image</span>
+        </div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+        </div>
+        <div class="sidebar">
+          <h3>Table Of Contents</h3>
+          <ul>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html">1. Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../structure.html">2. The structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../extensions.html">3. Extending the framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../download.html">4. Download &amp; Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reference.html">5. Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/examples.html">6. Examples</a></li>
+</ul>
+
+          <h3 style="margin-top: 1.5em;">Search</h3>
+          <form class="search" action="../search.html" method="get">
+            <input type="text" name="q" />
+            <input type="submit" value="Go" />
+            <input type="hidden" name="check_keywords" value="yes" />
+            <input type="hidden" name="area" value="default" />
+          </form>
+          <p class="searchtip" style="font-size: 90%">
+            Enter search terms or a module, class or function name.
+          </p>
+        </div>
+        <div class="clearer"></div>
+      </div>
+    </div>
+
+    <div class="footer-wrapper">
+      <div class="footer">
+        <div class="left">
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |
+          <a href="../genindex.html" title="General Index"
+             >index</a>
+        </div>
+
+        <div class="right">
+          
+    <div class="footer">
+        &copy; Copyright 2013, Mathias Westerdahl.
+      Last updated on Feb 24, 2013.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+        </div>
+        <div class="clearer"></div>
+      </div>
+    </div>
+
+  </body>
+</html>

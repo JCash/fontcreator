@@ -1,0 +1,326 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>5.3. fontblend &mdash; FontCreator</title>
+    
+    <link rel="stylesheet" href="../_static/agogo.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="FontCreator" href="../index.html" />
+    <link rel="up" title="5. Reference" href="../reference.html" />
+    <link rel="next" title="5.4. fontcreator" href="fontcreator.html" />
+    <link rel="prev" title="5.2. Blend functions" href="../blendfunctions.html" /> 
+  </head>
+  <body>
+    <div class="header-wrapper">
+      <div class="header">
+          <p class="logo"><a href="../index.html">
+            <img class="logo" src="../_static/headertext.png" alt="Logo"/>
+          </a></p>
+        <div class="headertitle"><a
+          href="../index.html">FontCreator</a></div>
+        <div class="rel">
+          <a href="../blendfunctions.html" title="5.2. Blend functions"
+             accesskey="P">previous</a> |
+          <a href="fontcreator.html" title="5.4. fontcreator"
+             accesskey="N">next</a> |
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a>
+        </div>
+       </div>
+    </div>
+
+    <div class="content-wrapper">
+      <div class="content">
+        <div class="document">
+            
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="fontblend">
+<h1>5.3. fontblend<a class="headerlink" href="#fontblend" title="Permalink to this headline">¶</a></h1>
+<p>The register function</p>
+<dl class="function">
+<dt id="fontblend.blendfunction">
+<tt class="descclassname">fontblend.</tt><tt class="descname">blendfunction</tt><big>(</big><em>fun</em><big>)</big><a class="reference internal" href="../_modules/fontblend.html#blendfunction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fontblend.blendfunction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Registers a class as a blend function</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>fun</strong> &#8211; A function that takes two numpy images, blends them and then returns the resulting image.</td>
+</tr>
+</tbody>
+</table>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="nd">@blendfunction</span>
+<span class="k">def</span> <span class="nf">my_blend_function</span><span class="p">(</span><span class="n">base</span><span class="p">,</span> <span class="n">blend</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">base</span> <span class="o">+</span> <span class="n">blend</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<p>The rest of the functions</p>
+<span class="target" id="module-fontblend"></span><p>Copyright &#64; 2013 Mathias Westerdahl</p>
+<dl class="function">
+<dt id="fontblend.blendcolorburn">
+<tt class="descclassname">fontblend.</tt><tt class="descname">blendcolorburn</tt><big>(</big><em>base</em>, <em>blend</em><big>)</big><a class="reference internal" href="../_modules/fontblend.html#blendcolorburn"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fontblend.blendcolorburn" title="Permalink to this definition">¶</a></dt>
+<dd><p>R = 1 - (1 - base) / blend</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>base</strong> &#8211; The base image</li>
+<li><strong>blend</strong> &#8211; The blend image</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="fontblend.blendcolordodge">
+<tt class="descclassname">fontblend.</tt><tt class="descname">blendcolordodge</tt><big>(</big><em>base</em>, <em>blend</em><big>)</big><a class="reference internal" href="../_modules/fontblend.html#blendcolordodge"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fontblend.blendcolordodge" title="Permalink to this definition">¶</a></dt>
+<dd><p>R = base / (1 - blend)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>base</strong> &#8211; The base image</li>
+<li><strong>blend</strong> &#8211; The blend image</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="fontblend.blenddarken">
+<tt class="descclassname">fontblend.</tt><tt class="descname">blenddarken</tt><big>(</big><em>base</em>, <em>blend</em><big>)</big><a class="reference internal" href="../_modules/fontblend.html#blenddarken"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fontblend.blenddarken" title="Permalink to this definition">¶</a></dt>
+<dd><p>R = min( base, blend )</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>base</strong> &#8211; The base image</li>
+<li><strong>blend</strong> &#8211; The blend image</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="fontblend.blendlighten">
+<tt class="descclassname">fontblend.</tt><tt class="descname">blendlighten</tt><big>(</big><em>base</em>, <em>blend</em><big>)</big><a class="reference internal" href="../_modules/fontblend.html#blendlighten"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fontblend.blendlighten" title="Permalink to this definition">¶</a></dt>
+<dd><p>R = max( base, blend )</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>base</strong> &#8211; The base image</li>
+<li><strong>blend</strong> &#8211; The blend image</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="fontblend.blendlinearburn">
+<tt class="descclassname">fontblend.</tt><tt class="descname">blendlinearburn</tt><big>(</big><em>base</em>, <em>blend</em><big>)</big><a class="reference internal" href="../_modules/fontblend.html#blendlinearburn"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fontblend.blendlinearburn" title="Permalink to this definition">¶</a></dt>
+<dd><p>R = base + blend - 1</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>base</strong> &#8211; The base image</li>
+<li><strong>blend</strong> &#8211; The blend image</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="fontblend.blendlineardodge">
+<tt class="descclassname">fontblend.</tt><tt class="descname">blendlineardodge</tt><big>(</big><em>base</em>, <em>blend</em><big>)</big><a class="reference internal" href="../_modules/fontblend.html#blendlineardodge"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fontblend.blendlineardodge" title="Permalink to this definition">¶</a></dt>
+<dd><p>R = base + blend</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>base</strong> &#8211; The base image</li>
+<li><strong>blend</strong> &#8211; The blend image</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="fontblend.blendmultiply">
+<tt class="descclassname">fontblend.</tt><tt class="descname">blendmultiply</tt><big>(</big><em>base</em>, <em>blend</em><big>)</big><a class="reference internal" href="../_modules/fontblend.html#blendmultiply"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fontblend.blendmultiply" title="Permalink to this definition">¶</a></dt>
+<dd><p>R = base * blend</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>base</strong> &#8211; The base image</li>
+<li><strong>blend</strong> &#8211; The blend image</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="fontblend.blendnormal">
+<tt class="descclassname">fontblend.</tt><tt class="descname">blendnormal</tt><big>(</big><em>base</em>, <em>blend</em><big>)</big><a class="reference internal" href="../_modules/fontblend.html#blendnormal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fontblend.blendnormal" title="Permalink to this definition">¶</a></dt>
+<dd><p>R = blend</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>base</strong> &#8211; The base image</li>
+<li><strong>blend</strong> &#8211; The blend image</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="fontblend.blendscreen">
+<tt class="descclassname">fontblend.</tt><tt class="descname">blendscreen</tt><big>(</big><em>base</em>, <em>blend</em><big>)</big><a class="reference internal" href="../_modules/fontblend.html#blendscreen"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fontblend.blendscreen" title="Permalink to this definition">¶</a></dt>
+<dd><p>R = 1 - (1 - base) * (1 - blend)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>base</strong> &#8211; The base image</li>
+<li><strong>blend</strong> &#8211; The blend image</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+        </div>
+        <div class="sidebar">
+          <h3>Table Of Contents</h3>
+          <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../overview.html">1. Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../structure.html">2. The structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../extensions.html">3. Extending the framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../download.html">4. Download &amp; Installation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../reference.html">5. Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../colorfunctions.html">5.1. Color Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../blendfunctions.html">5.2. Blend functions</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="">5.3. fontblend</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fontcreator.html">5.4. fontcreator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fonteffects.html">5.5. fonteffects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fontinfo.html">5.6. fontinfo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fontout_json.html">5.7. fontout_json</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fonttex_bitmap.html">5.8. fonttex_bitmap</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fonttexout_pil.html">5.9. fonttexout_pil</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fontutils.html">5.10. fontutils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="freetype.html">5.11. freetype</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils.html">5.12. utils</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/examples.html">6. Examples</a></li>
+</ul>
+
+          <h3 style="margin-top: 1.5em;">Search</h3>
+          <form class="search" action="../search.html" method="get">
+            <input type="text" name="q" />
+            <input type="submit" value="Go" />
+            <input type="hidden" name="check_keywords" value="yes" />
+            <input type="hidden" name="area" value="default" />
+          </form>
+          <p class="searchtip" style="font-size: 90%">
+            Enter search terms or a module, class or function name.
+          </p>
+        </div>
+        <div class="clearer"></div>
+      </div>
+    </div>
+
+    <div class="footer-wrapper">
+      <div class="footer">
+        <div class="left">
+          <a href="../blendfunctions.html" title="5.2. Blend functions"
+             >previous</a> |
+          <a href="fontcreator.html" title="5.4. fontcreator"
+             >next</a> |
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |
+          <a href="../genindex.html" title="General Index"
+             >index</a>
+            <br/>
+            <a href="../_sources/modules/fontblend.txt"
+               rel="nofollow">Show Source</a>
+        </div>
+
+        <div class="right">
+          
+    <div class="footer">
+        &copy; Copyright 2013, Mathias Westerdahl.
+      Last updated on Feb 24, 2013.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+        </div>
+        <div class="clearer"></div>
+      </div>
+    </div>
+
+  </body>
+</html>
