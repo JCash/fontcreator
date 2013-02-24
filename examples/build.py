@@ -11,6 +11,7 @@ EXT='.png'
 
 HEADERTEXT="FontCreator"
 HEADERNAME="headertext" + EXT
+HEADER_FONTINFO = 'header.fontinfo'
 
 DEBUG = False
 if DEBUG:
@@ -50,7 +51,7 @@ def generate_doc(path, outputdir, profile=False):
     timeit = 'time' if profile else ''
     cprofile = '-m cProfile -o %s' % pstatspath if profile else ''
 
-    cmd = '%s %s %s %s -i %s -o %s -w "%s" %s' % (timeit, sys.executable, cprofile, FONTCREATOR, path, outputpath_text, TEXT, verbose)
+    cmd = '%s %s %s %s -i %s -o %s -w "%s" --bgcolor=0,0,0 %s' % (timeit, sys.executable, cprofile, FONTCREATOR, path, outputpath_text, TEXT, verbose)
     print cmd
     if os.system(cmd) != 0:
         return 1
@@ -160,6 +161,8 @@ if __name__ == '__main__':
         fontinfos = [ os.path.join(EXAMPLEDIR, x) for x in fontinfos if x.endswith('.fontinfo') ]
 
         for file in fontinfos:
+            if file.endswith(HEADER_FONTINFO):
+                continue
             doc = generate_doc( file, OUTPUTDIR, profile=profile )
             if not isinstance(doc, str):
                 print "Aborting, an error occurred"
@@ -169,10 +172,10 @@ if __name__ == '__main__':
             print ""
 
         if not DEBUG:
-            generate_header('03_layers_effects.fontinfo', OUTPUTDIR)
+            generate_header(HEADER_FONTINFO, OUTPUTDIR)
 
         path = os.path.join(OUTPUTDIR, 'examples.rst')
-        rstfiles = [os.path.basename(fi).replace('.fontinfo', '.rst') for fi in fontinfos]
+        rstfiles = [os.path.basename(fi).replace('.fontinfo', '.rst') for fi in fontinfos if not fi.endswith(HEADER_FONTINFO)]
         with open(path, 'wb') as f:
             header = HEADER % '\n'.join(['    ./%s' % rst for rst in rstfiles])
             f.write(header)

@@ -1,0 +1,5 @@
+binpack
+=======
+
+.. automodule:: binpack
+	:members:

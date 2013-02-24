@@ -1,7 +1,7 @@
 fontcreator
 ===========
 
-A font bitmap generator that supports "photoshop" layers. Also supports distance fields.
+A Python/C++ font bitmap generator that supports "photoshop" layers. Also supports distance fields.
 
 Documentation is found here:
 

@@ -1,5 +1,25 @@
 """
+binpack
+=======
+
 Copyright @ 2013 Mathias Westerdahl
+
+Brief
+------
+
+The bin packing functions are implemented by Jukka Jylanki:
+
+- `A thousand ways to pack the bin - A practical approach to two-dimensional rectangle bin packing <http://clb.demon.fi/files/RectangleBinPack.pdf>`_
+- `RectangleBinPack.zip <http://clb.demon.fi/files/RectangleBinPack/RectangleBinPack.zip>`_ (public domain) 
+
+An example of the Skyline Bottom Left packing algorithm which is default in the font creator
+ 
+.. image:: binpack_skyline_bl.png
+
+Reference
+---------
+
+
 """
 
 import sys, os
@@ -17,18 +37,27 @@ elif sys.platform == 'linux2':
 _dirpath = os.path.dirname(__file__)
 _binpack = ctypes.cdll.LoadLibrary(os.path.join(_dirpath, '_binpack%s' % _suffix))
 
+#: Bottom left
 SKYLINE_BL = 0
+#: Min Waste
 SKYLINE_MW = 1
+#: Positions the rectangle against the short side of a free rectangle into which it fits the best.
 MAXRECTS_BSSF = 2
+#: Positions the rectangle against the long side of a free rectangle into which it fits the best.
 MAXRECTS_BLSF = 3
+#: Positions the rectangle into the smallest free rect into which it fits.
 MAXRECTS_BAF = 4
+#: Does the Tetris placement.
 MAXRECTS_BL = 5
+#: Chooses the placement where the rectangle touches other rects as much as possible.
 MAXRECTS_CP = 6
 
 
 c_packer_p = c_void_p
 
 class Rect(ctypes.Structure):
+    """ A rectangle struct (x, y, w, h) 
+    """
     _fields_ = [
         ('x', c_int32),
         ('y', c_int32),
@@ -39,21 +68,70 @@ class Rect(ctypes.Structure):
     def __str__(self):
         return 'Rect(%d, %d, %d, %d)' % (self.x, self.y, self.width, self.height)
 
-create_packer = _binpack.create_packer
-create_packer.restype = c_packer_p
-create_packer.argtypes = [c_int32, c_int32, c_int32, c_bool]
+_create_packer = _binpack.create_packer
+_create_packer.restype = c_packer_p
+_create_packer.argtypes = [c_int32, c_int32, c_int32, c_bool]
 
-destroy_packer = _binpack.destroy_packer
-destroy_packer.argtypes = [c_packer_p]
+_destroy_packer = _binpack.destroy_packer
+_destroy_packer.argtypes = [c_packer_p]
 
-get_occupancy = _binpack.get_occupancy
-get_occupancy.restype = c_float
-get_occupancy.argtypes = [c_packer_p]
+_get_occupancy = _binpack.get_occupancy
+_get_occupancy.restype = c_float
+_get_occupancy.argtypes = [c_packer_p]
 
-pack_rect = _binpack.pack_rect
-pack_rect.restype = Rect
-pack_rect.argtypes = [c_packer_p, c_int32, c_int32]
+_pack_rect = _binpack.pack_rect
+_pack_rect.restype = Rect
+_pack_rect.argtypes = [c_packer_p, c_int32, c_int32]
 
+
+def create_packer(type, width, height, allow_rotate):
+    """ Creates a packer instance for use with consecutive calls to pack_rect()
+    
+    :param type:         The packing algorithm. Must be one of:
+    
+                        - SKYLINE_BL
+                        - SKYLINE_MW
+                        - MAXRECTS_BSSF
+                        - MAXRECTS_BLSF
+                        - MAXRECTS_BAF
+                        - MAXRECTS_BL
+                        - MAXRECTS_CP
+        
+    :param width:        The width of the packing bin (won't change)
+    :param height:       The height of the packing bin (won't change)
+    :param allow_rotate: Tells the packer if it is allowed to rotate the rects.
+    :return:             Returns the packer instance. Must be destroyed with destroy_packer()
+    """
+    return _create_packer(type, width, height, allow_rotate)
+
+
+def destroy_packer(packer):
+    """  Destroys the packer instance
+    
+    :param packer:   The packer instance
+    """
+    _destroy_packer(packer)
+
+
+def get_occupancy(packer):
+    """ Returns the occupancy as a value between 0.0 and 1.0
+    
+    :param packer:   The packer instance
+    :return:         The current occupancy as a unit value
+    """
+    return _get_occupancy(packer)
+
+
+def pack_rect(packer, w, h):
+    """ Packs a rectangle in the bin.
+    
+    :param w:   The width of the rect
+    :param h:   The height of the rect
+    :return:    Returns (0, 0, 0, 0) if the bin is full
+                Returns (x, y, W, H) if the rect was packed
+                Returns (x, y, H, W) if the rect was packed and rotated
+    """
+    return _pack_rect(packer, w, h)
 
 if __name__ == '__main__':
     import time
