@@ -5,6 +5,19 @@ Download & Installation
     :local:
     :backlinks: top
 
+
+Downloads
+---------
+
+Download the zip:
+
+- `fontcreator.zip <https://github.com/JCash/fontcreator/archive/master.zip>`_
+
+Or get the code from GitHub::
+
+	> git clone https://github.com/JCash/fontcreator.git
+
+
 Prerequisites
 -------------
 
@@ -25,17 +38,6 @@ Optional installations:
 
 For Linux and Mac, you can get these as regular packages. (On Mac using macports)
 
-Downloads
----------
-
-Download the zip:
-
-- `fontcreator.zip <https://github.com/JCash/fontcreator/archive/master.zip>`_
-
-Or get the code from GitHub::
-
-	> git clone https://github.com/JCash/fontcreator.git
-	
 
 
 

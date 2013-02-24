@@ -7,7 +7,7 @@ size = 8
 
 letters = letters_ascii.txt
 
-bgcolor = (0, 0, 0)
+bgcolor = (255, 255, 255)
 
 padding = 1
 
@@ -26,4 +26,4 @@ antialias = none
 
 [solid_fill]
 type = solid
-color = (255, 255, 255)
+color = (0, 0, 0)

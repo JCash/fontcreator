@@ -1,4 +1,5 @@
 # The simplest example. Show an anti aliased white font.
+#
 # Uses: Solid
 
 [default]
@@ -7,7 +8,7 @@ size = 42
 
 letters = letters_ascii.txt
 
-bgcolor = (255,255,255)
+bgcolor = (255, 255, 255)
 
 writer = fontout_json
 texturerender = fonttex_bitmap
@@ -20,7 +21,6 @@ layers = [Layer(color=solid_fill)]
 # modes: none, light, normal. Default is 'normal'
 antialias = normal
 
-
 [solid_fill]
 type = solid
-color = (255, 255, 255)
+color = (0, 0, 0)

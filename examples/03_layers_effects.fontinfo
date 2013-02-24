@@ -1,5 +1,6 @@
 # This example show how to combine different layers and post effects
-# Uses: Texture, Outline, Shadow
+#
+# Uses: Texture, Gradient, Outline, DropShadow
 
 [default]
 name = ./fonts/aardvark.ttf
