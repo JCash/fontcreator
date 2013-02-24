@@ -117,7 +117,7 @@ Brief
 Results
 =======
 
-`.json file <./%s>`_
+The JSON file :download:`.json <./%s>`
 
 .. image:: %s
 
