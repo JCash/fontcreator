@@ -1,0 +1,70 @@
+
+==================
+adventure.fontinfo
+==================
+
+.. image:: adventure_text.png
+
+.. contents::
+    :local:
+    :backlinks: top
+    
+Brief
+=====
+
+A.
+.
+.
+
+
+.fontinfo
+=========
+
+.. code-block:: python
+
+    [default]
+    name = ./fonts/helsinki.ttf
+    size = 76
+    
+    letters = letters_ascii.txt
+    
+    bgcolor = (0,0,0)
+    
+    writer = fontout_json
+    texturerender = fonttex_bitmap
+    texturewriter = fonttexout_pil
+    textureformat = .png
+    texturesize = 1024, 512
+    
+    layers = [Layer(color=gradient)]
+    posteffects = [outline_white, outline_black]
+    
+    antialias = light
+    
+    [outline_black]
+    type = outline
+    width = 4
+    spread = 1
+    color = (0, 0, 0)
+    
+    [outline_white]
+    type = outline
+    width = 3
+    color = (255, 255, 255)
+    
+    [gradient]
+    # A gradient with number of rgba values, evenly spaced [bottom color, ..., top color]
+    type = gradient
+    angle = 0
+    colors = [(140, 20, 4), (212, 164, 54)]
+    
+    
+
+
+Results
+=======
+
+The JSON file :download:`.json <./adventure.json>`
+
+.. image:: adventure.png
+

@@ -2712,7 +2712,7 @@
         ]
     ], 
     "size": 32, 
-    "texturename": "/Users/mawe/Documents/work/fontcreator/doc/source/examples/05_distance_fields.png", 
+    "texturename": "05_distance_fields.png", 
     "texturesize": [
         512, 
         256

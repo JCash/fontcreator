@@ -192,23 +192,32 @@
             <span class="k">continue</span>
 
         <span class="n">glyphimage</span> <span class="o">=</span> <span class="n">glyph</span><span class="o">.</span><span class="n">bitmap</span>
+        <span class="n">glyphimage</span><span class="o">.</span><span class="n">flags</span><span class="o">.</span><span class="n">writeable</span> <span class="o">=</span> <span class="bp">False</span>
 
         <span class="c"># ????</span>
         <span class="n">fonteffects</span><span class="o">.</span><span class="n">DefaultMask</span><span class="o">.</span><span class="n">idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">glyphimage</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
         
         <span class="n">previmage</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dstack</span><span class="p">((</span><span class="n">glyphimage</span><span class="p">,</span> <span class="n">glyphimage</span><span class="p">,</span> <span class="n">glyphimage</span><span class="p">,</span> <span class="n">glyphimage</span><span class="p">))</span>
+        
+        <span class="c"># TODO: Fix weird issue in DistanceField</span>
+        <span class="c">#previmage.flags.writeable = False</span>
 
         <span class="n">previmage</span> <span class="o">=</span> <span class="n">_apply_layer</span><span class="p">(</span><span class="n">glyph</span><span class="p">,</span> <span class="n">info</span><span class="p">,</span> <span class="n">info</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">glyph</span><span class="p">,</span> <span class="n">previmage</span><span class="p">,</span> <span class="n">glyphimage</span><span class="p">)</span>
+        <span class="n">previmage</span><span class="o">.</span><span class="n">flags</span><span class="o">.</span><span class="n">writeable</span> <span class="o">=</span> <span class="bp">False</span>
 
         <span class="k">for</span> <span class="n">layer</span> <span class="ow">in</span> <span class="n">info</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
             <span class="n">previmage</span> <span class="o">=</span> <span class="n">_apply_layer</span><span class="p">(</span><span class="n">glyph</span><span class="p">,</span> <span class="n">info</span><span class="p">,</span> <span class="n">layer</span><span class="p">,</span> <span class="n">glyph</span><span class="p">,</span> <span class="n">previmage</span><span class="p">,</span> <span class="n">glyphimage</span><span class="p">)</span>
+            <span class="n">previmage</span><span class="o">.</span><span class="n">flags</span><span class="o">.</span><span class="n">writeable</span> <span class="o">=</span> <span class="bp">False</span>
 
         <span class="k">for</span> <span class="n">effect</span> <span class="ow">in</span> <span class="n">info</span><span class="o">.</span><span class="n">posteffects</span><span class="p">:</span>
             <span class="n">previmage</span> <span class="o">=</span> <span class="n">effect</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">glyph</span><span class="p">,</span> <span class="n">info</span><span class="p">,</span> <span class="n">previmage</span><span class="p">)</span>
+            <span class="n">previmage</span><span class="o">.</span><span class="n">flags</span><span class="o">.</span><span class="n">writeable</span> <span class="o">=</span> <span class="bp">False</span>
         
         <span class="n">bgimage</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span> <span class="n">previmage</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">info</span><span class="o">.</span><span class="n">bgcolor</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">info</span><span class="o">.</span><span class="n">bgcolor</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">info</span><span class="o">.</span><span class="n">bgcolor</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="mf">0.0</span><span class="p">)</span>
+        <span class="n">bgimage</span><span class="o">.</span><span class="n">flags</span><span class="o">.</span><span class="n">writeable</span> <span class="o">=</span> <span class="bp">False</span>
         
         <span class="n">previmage</span> <span class="o">=</span> <span class="n">fu</span><span class="o">.</span><span class="n">alpha_blend</span><span class="p">(</span><span class="n">bgimage</span><span class="p">,</span> <span class="n">previmage</span><span class="p">)</span>
+        <span class="n">previmage</span><span class="o">.</span><span class="n">flags</span><span class="o">.</span><span class="n">writeable</span> <span class="o">=</span> <span class="bp">False</span>
         
         <span class="n">glyph</span><span class="o">.</span><span class="n">bitmap</span> <span class="o">=</span> <span class="n">previmage</span>
 
@@ -498,9 +507,15 @@
     <span class="n">texture_size</span> <span class="o">=</span> <span class="p">(</span><span class="n">texture_size</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="n">info</span><span class="o">.</span><span class="n">padding</span><span class="o">*</span><span class="mi">2</span><span class="o">+</span><span class="mi">60</span><span class="p">,</span> <span class="n">texture_size</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="n">info</span><span class="o">.</span><span class="n">padding</span><span class="o">*</span><span class="mi">2</span><span class="p">)</span>
 
     <span class="n">ones</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">texture_size</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span>
-    <span class="n">r</span> <span class="o">=</span> <span class="n">ones</span> <span class="o">*</span> <span class="n">info</span><span class="o">.</span><span class="n">bgcolor</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="n">g</span> <span class="o">=</span> <span class="n">ones</span> <span class="o">*</span> <span class="n">info</span><span class="o">.</span><span class="n">bgcolor</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-    <span class="n">b</span> <span class="o">=</span> <span class="n">ones</span> <span class="o">*</span> <span class="n">info</span><span class="o">.</span><span class="n">bgcolor</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+    
+    <span class="n">bgcolor</span> <span class="o">=</span> <span class="n">info</span><span class="o">.</span><span class="n">bgcolor</span>
+    <span class="k">if</span> <span class="n">options</span><span class="o">.</span><span class="n">bgcolor</span><span class="p">:</span>
+        <span class="n">bgcolor</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">bgcolor</span><span class="p">)</span>
+        <span class="n">bgcolor</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">/</span><span class="mf">255.0</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="k">else</span> <span class="n">x</span><span class="p">,</span> <span class="n">bgcolor</span> <span class="p">)</span>        
+    
+    <span class="n">r</span> <span class="o">=</span> <span class="n">ones</span> <span class="o">*</span> <span class="n">bgcolor</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">g</span> <span class="o">=</span> <span class="n">ones</span> <span class="o">*</span> <span class="n">bgcolor</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="n">ones</span> <span class="o">*</span> <span class="n">bgcolor</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
 
     <span class="n">zeros</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">texture_size</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span>
     <span class="n">image</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dstack</span><span class="p">(</span> <span class="p">(</span><span class="n">r</span><span class="p">,</span><span class="n">g</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">zeros</span><span class="p">)</span> <span class="p">)</span>
@@ -583,6 +598,7 @@
     <span class="n">parser</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="s">&#39;-v&#39;</span><span class="p">,</span> <span class="s">&#39;--verbose&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s">&#39;store_true&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s">&#39;Specifies verbose mode&#39;</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="s">&#39;-l&#39;</span><span class="p">,</span> <span class="s">&#39;--log&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s">&#39;&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s">&#39;A log file where the stdout is saved logged to.&#39;</span> <span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="s">&#39;-w&#39;</span><span class="p">,</span> <span class="s">&#39;--writetext&#39;</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s">&#39;TEXT&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s">&#39;When used, a .fontinfo file is used as input and the text is written into the output texture.&#39;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="s">&#39;--bgcolor&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s">&#39;&#39;</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s">&#39;COLOR&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s">&#39;The background color used when writing text&#39;</span><span class="p">)</span>
 
     <span class="n">options</span><span class="p">,</span> <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
 
@@ -638,6 +654,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../download.html">4. Download &amp; Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../reference.html">5. Reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../examples/examples.html">6. Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../credits.html">7. Credits</a></li>
 </ul>
 
           <h3 style="margin-top: 1.5em;">Search</h3>

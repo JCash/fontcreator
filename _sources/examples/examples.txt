@@ -7,10 +7,10 @@ Here are some examples that are generated with the font creator
 .. toctree::
     :maxdepth: 1
     
-    ./00_pixel.rst
     ./00_simple.rst
     ./01_outline.rst
-    ./03_layers_effects.rst
     ./05_distance_fields.rst
+    ./adventure.rst
+    ./uncharted.rst
 
 

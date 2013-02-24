@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>5.5. fonteffects &mdash; FontCreator</title>
+    <title>5.7. fonteffects &mdash; FontCreator</title>
     
     <link rel="stylesheet" href="../_static/agogo.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -28,8 +28,8 @@
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="top" title="FontCreator" href="../index.html" />
     <link rel="up" title="5. Reference" href="../reference.html" />
-    <link rel="next" title="5.6. fontinfo" href="fontinfo.html" />
-    <link rel="prev" title="5.4. fontcreator" href="fontcreator.html" /> 
+    <link rel="next" title="5.8. fontinfo" href="fontinfo.html" />
+    <link rel="prev" title="5.6. fontcreator" href="fontcreator.html" /> 
   </head>
   <body>
     <div class="header-wrapper">
@@ -40,9 +40,9 @@
         <div class="headertitle"><a
           href="../index.html">FontCreator</a></div>
         <div class="rel">
-          <a href="fontcreator.html" title="5.4. fontcreator"
+          <a href="fontcreator.html" title="5.6. fontcreator"
              accesskey="P">previous</a> |
-          <a href="fontinfo.html" title="5.6. fontinfo"
+          <a href="fontinfo.html" title="5.8. fontinfo"
              accesskey="N">next</a> |
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |
@@ -61,7 +61,7 @@
           <div class="body">
             
   <div class="section" id="module-fonteffects">
-<span id="fonteffects"></span><h1>5.5. fonteffects<a class="headerlink" href="#module-fonteffects" title="Permalink to this headline">¶</a></h1>
+<span id="fonteffects"></span><h1>5.7. fonteffects<a class="headerlink" href="#module-fonteffects" title="Permalink to this headline">¶</a></h1>
 <p>Copyright &#64; 2013 Mathias Westerdahl</p>
 <p>The fonteffects module provides commonly used base functionality for the effects.</p>
 <dl class="function">
@@ -74,12 +74,18 @@
 <dt id="fonteffects.DistanceField">
 <em class="property">class </em><tt class="descclassname">fonteffects.</tt><tt class="descname">DistanceField</tt><big>(</big><em>*k</em>, <em>**kw</em><big>)</big><a class="reference internal" href="../_modules/fonteffects.html#DistanceField"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fonteffects.DistanceField" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculates a distance field for each glyph</p>
+<dl class="attribute">
+<dt id="fonteffects.DistanceField.factor">
+<tt class="descname">factor</tt><em class="property"> = 4</em><a class="headerlink" href="#fonteffects.DistanceField.factor" title="Permalink to this definition">¶</a></dt>
+<dd><p>The number of times the glyph is enlarged before the glyph is rendered.</p>
 </dd></dl>
 
-<dl class="class">
-<dt id="fonteffects.DistanceFieldOld">
-<em class="property">class </em><tt class="descclassname">fonteffects.</tt><tt class="descname">DistanceFieldOld</tt><big>(</big><em>*k</em>, <em>**kw</em><big>)</big><a class="reference internal" href="../_modules/fonteffects.html#DistanceFieldOld"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fonteffects.DistanceFieldOld" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calculates a distance field for each glyph</p>
+<dl class="attribute">
+<dt id="fonteffects.DistanceField.size">
+<tt class="descname">size</tt><em class="property"> = 16</em><a class="headerlink" href="#fonteffects.DistanceField.size" title="Permalink to this definition">¶</a></dt>
+<dd><p>The spread of the &#8220;blur&#8221; that is applied to the glyphs</p>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="class">
@@ -87,9 +93,39 @@
 <em class="property">class </em><tt class="descclassname">fonteffects.</tt><tt class="descname">DropShadow</tt><big>(</big><em>*k</em>, <em>**kw</em><big>)</big><a class="reference internal" href="../_modules/fonteffects.html#DropShadow"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fonteffects.DropShadow" title="Permalink to this definition">¶</a></dt>
 <dd><p>Applies a drop shadow to the glyphs</p>
 <dl class="attribute">
+<dt id="fonteffects.DropShadow.angle">
+<tt class="descname">angle</tt><em class="property"> = 120</em><a class="headerlink" href="#fonteffects.DropShadow.angle" title="Permalink to this definition">¶</a></dt>
+<dd><p>The angle of the shadow (in degrees)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="fonteffects.DropShadow.color">
+<tt class="descname">color</tt><em class="property"> = (0, 0, 0)</em><a class="headerlink" href="#fonteffects.DropShadow.color" title="Permalink to this definition">¶</a></dt>
+<dd><p>The color of the shadow</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="fonteffects.DropShadow.distance">
+<tt class="descname">distance</tt><em class="property"> = 3</em><a class="headerlink" href="#fonteffects.DropShadow.distance" title="Permalink to this definition">¶</a></dt>
+<dd><p>The offset of the shadow</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="fonteffects.DropShadow.opacity">
+<tt class="descname">opacity</tt><em class="property"> = 100</em><a class="headerlink" href="#fonteffects.DropShadow.opacity" title="Permalink to this definition">¶</a></dt>
+<dd><p>The opacity of the shadow (in percent)</p>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="fonteffects.DropShadow.padding">
 <tt class="descname">padding</tt><a class="reference internal" href="../_modules/fonteffects.html#DropShadow.padding"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fonteffects.DropShadow.padding" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the amount of padding needed to fit the effect as a 4 tuple (left, top, right, bottom)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="fonteffects.DropShadow.size">
+<tt class="descname">size</tt><em class="property"> = 1</em><a class="headerlink" href="#fonteffects.DropShadow.size" title="Permalink to this definition">¶</a></dt>
+<dd><p>The spread of the shadow (in pixels)</p>
 </dd></dl>
 
 </dd></dl>
@@ -110,6 +146,12 @@
 <dt id="fonteffects.GaussianBlur">
 <em class="property">class </em><tt class="descclassname">fonteffects.</tt><tt class="descname">GaussianBlur</tt><big>(</big><em>*k</em>, <em>**kw</em><big>)</big><a class="reference internal" href="../_modules/fonteffects.html#GaussianBlur"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fonteffects.GaussianBlur" title="Permalink to this definition">¶</a></dt>
 <dd><p>Applies a gaussian blur to the glyph</p>
+<dl class="attribute">
+<dt id="fonteffects.GaussianBlur.size">
+<tt class="descname">size</tt><em class="property"> = 1</em><a class="headerlink" href="#fonteffects.GaussianBlur.size" title="Permalink to this definition">¶</a></dt>
+<dd><p>The radius (in pixels) of the kernel</p>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="class">
@@ -140,6 +182,18 @@
 <dt id="fonteffects.KernelBlur">
 <em class="property">class </em><tt class="descclassname">fonteffects.</tt><tt class="descname">KernelBlur</tt><big>(</big><em>*k</em>, <em>**kw</em><big>)</big><a class="reference internal" href="../_modules/fonteffects.html#KernelBlur"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fonteffects.KernelBlur" title="Permalink to this definition">¶</a></dt>
 <dd><p>Applies a simple box filter where the middle element has value &#8216;strength&#8217;</p>
+<dl class="attribute">
+<dt id="fonteffects.KernelBlur.size">
+<tt class="descname">size</tt><em class="property"> = 1</em><a class="headerlink" href="#fonteffects.KernelBlur.size" title="Permalink to this definition">¶</a></dt>
+<dd><p>The radius of the kernel (in pixels). The kernel size is <cite>radius*2+1</cite></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="fonteffects.KernelBlur.strength">
+<tt class="descname">strength</tt><em class="property"> = 1</em><a class="headerlink" href="#fonteffects.KernelBlur.strength" title="Permalink to this definition">¶</a></dt>
+<dd><p>The center value of the kernel</p>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="class">
@@ -242,20 +296,23 @@
 <li class="toctree-l1"><a class="reference internal" href="../download.html">4. Download &amp; Installation</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../reference.html">5. Reference</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../colorfunctions.html">5.1. Color Functions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../blendfunctions.html">5.2. Blend functions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="fontblend.html">5.3. fontblend</a></li>
-<li class="toctree-l2"><a class="reference internal" href="fontcreator.html">5.4. fontcreator</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="">5.5. fonteffects</a></li>
-<li class="toctree-l2"><a class="reference internal" href="fontinfo.html">5.6. fontinfo</a></li>
-<li class="toctree-l2"><a class="reference internal" href="fontout_json.html">5.7. fontout_json</a></li>
-<li class="toctree-l2"><a class="reference internal" href="fonttex_bitmap.html">5.8. fonttex_bitmap</a></li>
-<li class="toctree-l2"><a class="reference internal" href="fonttexout_pil.html">5.9. fonttexout_pil</a></li>
-<li class="toctree-l2"><a class="reference internal" href="fontutils.html">5.10. fontutils</a></li>
-<li class="toctree-l2"><a class="reference internal" href="freetype.html">5.11. freetype</a></li>
-<li class="toctree-l2"><a class="reference internal" href="utils.html">5.12. utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../effectfunctions.html">5.2. Effect Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../blendfunctions.html">5.3. Blend functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="binpack.html">5.4. binpack</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fontblend.html">5.5. fontblend</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fontcreator.html">5.6. fontcreator</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="">5.7. fonteffects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fontinfo.html">5.8. fontinfo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fontout_json.html">5.9. fontout_json</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fonttex_bitmap.html">5.10. fonttex_bitmap</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fonttexout_pil.html">5.11. fonttexout_pil</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fontutils.html">5.12. fontutils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="freetype.html">5.13. freetype</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils.html">5.14. utils</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../examples/examples.html">6. Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../credits.html">7. Credits</a></li>
 </ul>
 
           <h3 style="margin-top: 1.5em;">Search</h3>
@@ -276,9 +333,9 @@
     <div class="footer-wrapper">
       <div class="footer">
         <div class="left">
-          <a href="fontcreator.html" title="5.4. fontcreator"
+          <a href="fontcreator.html" title="5.6. fontcreator"
              >previous</a> |
-          <a href="fontinfo.html" title="5.6. fontinfo"
+          <a href="fontinfo.html" title="5.8. fontinfo"
              >next</a> |
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |

@@ -2262,7 +2262,7 @@
         ]
     ], 
     "size": 42, 
-    "texturename": "/Users/mawe/Documents/work/fontcreator/doc/source/examples/00_simple.png", 
+    "texturename": "00_simple.png", 
     "texturesize": [
         512, 
         256

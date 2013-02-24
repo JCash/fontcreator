@@ -27,7 +27,7 @@
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="shortcut icon" href="_static/favicon.ico"/>
     <link rel="top" title="FontCreator" href="index.html" />
-    <link rel="next" title="3.1. Numpy" href="numpy.html" />
+    <link rel="next" title="3.1. Color functions" href="ext_colorfunction.html" />
     <link rel="prev" title="2. The structure" href="structure.html" /> 
   </head>
   <body>
@@ -41,7 +41,7 @@
         <div class="rel">
           <a href="structure.html" title="2. The structure"
              accesskey="P">previous</a> |
-          <a href="numpy.html" title="3.1. Numpy"
+          <a href="ext_colorfunction.html" title="3.1. Color functions"
              accesskey="N">next</a> |
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |
@@ -61,6 +61,8 @@
             
   <div class="section" id="extending-the-framework">
 <h1>3. Extending the framework<a class="headerlink" href="#extending-the-framework" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+</div>
 <p>It&#8217;s simple enough to extend the framework.
 You can extend the font creator with new:</p>
 <ul class="simple">
@@ -71,11 +73,26 @@ You can extend the font creator with new:</p>
 <li>Texture save function</li>
 <li>Font info save function</li>
 </ul>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="numpy.html">3.1. Numpy</a></li>
-<li class="toctree-l1"><a class="reference internal" href="ext_colorfunction.html">3.2. Color functions</a></li>
+<div class="section" id="good-to-know">
+<h2>3.2. Good to know<a class="headerlink" href="#good-to-know" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="font-info-file">
+<h3>3.2.1. Font Info File<a class="headerlink" href="#font-info-file" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>The colors are usually specified as 3-tuples of integers</li>
+<li>The colors are in the range [0, 255]</li>
+<li>Internally, the colors are converted to floats in the range [0.0, 1.0]</li>
 </ul>
+</div>
+<div class="section" id="image">
+<h3>3.2.2. Image<a class="headerlink" href="#image" title="Permalink to this headline">¶</a></h3>
+<p>For simplicity&#8217;s sake, each function that handle images, expect a numpy array with certain criteria:</p>
+<ul class="simple">
+<li>Colors values are in the range [0.0, 1.0]</li>
+<li>image[x, y] will give you the pixel value of (x,y)</li>
+<li>Origin is at the top left corner of the image</li>
+<li>Most images are 4-channel, except for the glyphimage</li>
+</ul>
+</div>
 </div>
 </div>
 
@@ -90,13 +107,14 @@ You can extend the font creator with new:</p>
 <li class="toctree-l1"><a class="reference internal" href="overview.html">1. Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="structure.html">2. The structure</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="">3. Extending the framework</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="numpy.html">3.1. Numpy</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ext_colorfunction.html">3.2. Color functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ext_colorfunction.html">3.1. Color functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#good-to-know">3.2. Good to know</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="download.html">4. Download &amp; Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="reference.html">5. Reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples/examples.html">6. Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="credits.html">7. Credits</a></li>
 </ul>
 
           <h3 style="margin-top: 1.5em;">Search</h3>
@@ -119,7 +137,7 @@ You can extend the font creator with new:</p>
         <div class="left">
           <a href="structure.html" title="2. The structure"
              >previous</a> |
-          <a href="numpy.html" title="3.1. Numpy"
+          <a href="ext_colorfunction.html" title="3.1. Color functions"
              >next</a> |
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |

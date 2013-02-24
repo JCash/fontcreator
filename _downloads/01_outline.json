@@ -2187,7 +2187,7 @@
         ]
     ], 
     "size": 32, 
-    "texturename": "/Users/mawe/Documents/work/fontcreator/doc/source/examples/01_outline.png", 
+    "texturename": "01_outline.png", 
     "texturesize": [
         512, 
         256

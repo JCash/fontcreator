@@ -14,6 +14,9 @@ Also, at the same time, the project was expected to be an experimental & learnin
 image processing, numpy, fonts and glyphs. The goal was to make a robust and performant platform independent 
 solution for making fonts, ease enough to be used by non artists as well as professional artists.
 
+Although the need for bitmap fonts have lessened over the years, it was still a fun experiment.
+
+
 Layers & Effects
 ----------------
 
@@ -32,4 +35,12 @@ Some good reads:
 - http://www.imagemagick.org/Usage/morphology/
 - http://stackoverflow.com/questions/5919663/how-does-photoshop-blend-two-images-together
 
- 
+Performance
+------------
+
+Another goal was to make the tool as fast as possible with the target of generating a normal bitmap font with several layers in less than a second.
+To reach this goal, the tool has been profiled using ``cProfile`` and ``gprof2dot`` to find the hot spots.
+
+Some functionality was also hard to find a nice pythonic way to implement, so the tool uses C++ for a few
+processing functions such as the bin packing algorithms and the distance field calculations. 
+

@@ -69,6 +69,7 @@ but since it was too heavily relying on windows code, it was not an option.</p>
 <p>Also, at the same time, the project was expected to be an experimental &amp; learning experience in
 image processing, numpy, fonts and glyphs. The goal was to make a robust and performant platform independent
 solution for making fonts, ease enough to be used by non artists as well as professional artists.</p>
+<p>Although the need for bitmap fonts have lessened over the years, it was still a fun experiment.</p>
 </div>
 <div class="section" id="layers-effects">
 <h2>1.2. Layers &amp; Effects<a class="headerlink" href="#layers-effects" title="Permalink to this headline">¶</a></h2>
@@ -85,6 +86,13 @@ Some good reads:</p>
 <li><a class="reference external" href="http://stackoverflow.com/questions/5919663/how-does-photoshop-blend-two-images-together">http://stackoverflow.com/questions/5919663/how-does-photoshop-blend-two-images-together</a></li>
 </ul>
 </div>
+<div class="section" id="performance">
+<h2>1.3. Performance<a class="headerlink" href="#performance" title="Permalink to this headline">¶</a></h2>
+<p>Another goal was to make the tool as fast as possible with the target of generating a normal bitmap font with several layers in less than a second.
+To reach this goal, the tool has been profiled using <tt class="docutils literal"><span class="pre">cProfile</span></tt> and <tt class="docutils literal"><span class="pre">gprof2dot</span></tt> to find the hot spots.</p>
+<p>Some functionality was also hard to find a nice pythonic way to implement, so the tool uses C++ for a few
+processing functions such as the bin packing algorithms and the distance field calculations.</p>
+</div>
 </div>
 
 
@@ -98,6 +106,7 @@ Some good reads:</p>
 <li class="toctree-l1 current"><a class="current reference internal" href="">1. Overview</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#about">1.1. About</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#layers-effects">1.2. Layers &amp; Effects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#performance">1.3. Performance</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="structure.html">2. The structure</a></li>
@@ -105,6 +114,7 @@ Some good reads:</p>
 <li class="toctree-l1"><a class="reference internal" href="download.html">4. Download &amp; Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="reference.html">5. Reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples/examples.html">6. Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="credits.html">7. Credits</a></li>
 </ul>
 
           <h3 style="margin-top: 1.5em;">Search</h3>

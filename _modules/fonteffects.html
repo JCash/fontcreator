@@ -458,10 +458,16 @@
 <div class="viewcode-block" id="DropShadow"><a class="viewcode-back" href="../modules/fonteffects.html#fonteffects.DropShadow">[docs]</a><span class="k">class</span> <span class="nc">DropShadow</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Applies a drop shadow to the glyphs</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="c">#: The color of the shadow</span>
     <span class="n">color</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="c">#: The opacity of the shadow (in percent)</span>
     <span class="n">opacity</span> <span class="o">=</span> <span class="mi">100</span>
+    <span class="c">#: The angle of the shadow (in degrees)</span>
     <span class="n">angle</span> <span class="o">=</span> <span class="mi">120</span>
+    <span class="c">#: The spread of the shadow (in pixels)</span>
     <span class="n">size</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="c">#: The offset of the shadow</span>
     <span class="n">distance</span> <span class="o">=</span> <span class="mi">3</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">k</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
@@ -532,6 +538,8 @@
 <div class="viewcode-block" id="GaussianBlur"><a class="viewcode-back" href="../modules/fonteffects.html#fonteffects.GaussianBlur">[docs]</a><span class="k">class</span> <span class="nc">GaussianBlur</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Applies a gaussian blur to the glyph</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="c">#: The radius (in pixels) of the kernel</span>
     <span class="n">size</span> <span class="o">=</span> <span class="mi">1</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">k</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
@@ -556,7 +564,9 @@
 <div class="viewcode-block" id="KernelBlur"><a class="viewcode-back" href="../modules/fonteffects.html#fonteffects.KernelBlur">[docs]</a><span class="k">class</span> <span class="nc">KernelBlur</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Applies a simple box filter where the middle element has value &#39;strength&#39;</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c">#: The radius of the kernel (in pixels). The kernel size is `radius*2+1`</span>
     <span class="n">size</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="c">#: The center value of the kernel</span>
     <span class="n">strength</span> <span class="o">=</span> <span class="mi">1</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">k</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
@@ -585,7 +595,10 @@
 <div class="viewcode-block" id="DistanceField"><a class="viewcode-back" href="../modules/fonteffects.html#fonteffects.DistanceField">[docs]</a><span class="k">class</span> <span class="nc">DistanceField</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Calculates a distance field for each glyph</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="c">#: The spread of the &quot;blur&quot; that is applied to the glyphs</span>
     <span class="n">size</span> <span class="o">=</span> <span class="mi">16</span>
+    <span class="c">#: The number of times the glyph is enlarged before the glyph is rendered.</span>
     <span class="n">factor</span> <span class="o">=</span> <span class="mi">4</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">k</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
@@ -613,7 +626,6 @@
         <span class="n">face</span><span class="o">.</span><span class="n">load_char</span><span class="p">(</span> <span class="n">glyph</span><span class="o">.</span><span class="n">unicode</span><span class="p">,</span> <span class="n">flags</span> <span class="p">)</span>
         
         <span class="n">bitmap</span> <span class="o">=</span> <span class="n">fu</span><span class="o">.</span><span class="n">make_array_from_bitmap</span><span class="p">(</span><span class="n">face</span><span class="o">.</span><span class="n">glyph</span><span class="o">.</span><span class="n">contents</span><span class="o">.</span><span class="n">bitmap</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
-        <span class="c">#bitmap = np.dstack( (bitmap, ) )</span>
         <span class="n">bitmap</span> <span class="o">=</span> <span class="n">fu</span><span class="o">.</span><span class="n">pad_bitmap</span><span class="p">(</span><span class="n">bitmap</span><span class="p">,</span> <span class="n">info</span><span class="o">.</span><span class="n">extrapadding</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">factor</span><span class="p">,</span> <span class="n">info</span><span class="o">.</span><span class="n">extrapadding</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">factor</span><span class="p">,</span> <span class="n">info</span><span class="o">.</span><span class="n">extrapadding</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">*</span><span class="n">factor</span><span class="p">,</span> <span class="n">info</span><span class="o">.</span><span class="n">extrapadding</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">*</span><span class="n">factor</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
 
         <span class="n">i</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">calculate_sedt</span><span class="p">(</span><span class="n">bitmap</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
@@ -639,36 +651,16 @@
         <span class="n">previmage</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">3</span><span class="p">][</span><span class="n">i</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>
         <span class="k">return</span> <span class="n">previmage</span>
 
-</div>
-<span class="nd">@EffectFunction</span>
-<div class="viewcode-block" id="DistanceFieldOld"><a class="viewcode-back" href="../modules/fonteffects.html#fonteffects.DistanceFieldOld">[docs]</a><span class="k">class</span> <span class="nc">DistanceFieldOld</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Calculates a distance field for each glyph</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">size</span> <span class="o">=</span> <span class="mi">1</span>
-
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">k</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        @param size</span>
+<span class="sd">        TODO: Find out what&#39;s wrong here and why I need to modify the previmage?!</span>
+<span class="sd">        outimage = np.empty_like(previmage)</span>
+<span class="sd">        outimage[:, :, 0] = i</span>
+<span class="sd">        outimage[:, :, 1] = i</span>
+<span class="sd">        outimage[:, :, 2] = i</span>
+<span class="sd">        outimage[:, :, 3][i &gt; 0] = 1.0</span>
+<span class="sd">        outimage[:, :, 3][i == 0] = 0.0</span>
+<span class="sd">        return outimage</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">size</span>
-
-        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">kw</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
-            <span class="k">try</span><span class="p">:</span>
-                <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="nb">eval</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="p">)</span>
-            <span class="k">except</span> <span class="ne">NameError</span><span class="p">:</span>
-                <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="p">)</span>
-        
-        <span class="bp">self</span><span class="o">.</span><span class="n">padding</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">apply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">info</span><span class="p">,</span> <span class="n">glyph</span><span class="p">,</span> <span class="n">image</span><span class="p">):</span>
-        <span class="n">i</span> <span class="o">=</span> <span class="n">image</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">0</span><span class="p">]</span>
-        <span class="n">i</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">calculate_sedt</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
-        <span class="n">image</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span>
-        <span class="n">image</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span>
-        <span class="n">image</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span>
-        <span class="n">image</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">3</span><span class="p">][</span><span class="n">i</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>
-        <span class="k">return</span> <span class="n">image</span>
-        
 
 </div>
 <span class="nd">@EffectFunction</span>
@@ -788,6 +780,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../download.html">4. Download &amp; Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../reference.html">5. Reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../examples/examples.html">6. Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../credits.html">7. Credits</a></li>
 </ul>
 
           <h3 style="margin-top: 1.5em;">Search</h3>

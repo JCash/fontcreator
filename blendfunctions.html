@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>5.2. Blend functions &mdash; FontCreator</title>
+    <title>5.3. Blend functions &mdash; FontCreator</title>
     
     <link rel="stylesheet" href="_static/agogo.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -28,8 +28,8 @@
     <link rel="shortcut icon" href="_static/favicon.ico"/>
     <link rel="top" title="FontCreator" href="index.html" />
     <link rel="up" title="5. Reference" href="reference.html" />
-    <link rel="next" title="5.3. fontblend" href="modules/fontblend.html" />
-    <link rel="prev" title="5.1. Color Functions" href="colorfunctions.html" /> 
+    <link rel="next" title="5.4. binpack" href="modules/binpack.html" />
+    <link rel="prev" title="5.2. Effect Functions" href="effectfunctions.html" /> 
   </head>
   <body>
     <div class="header-wrapper">
@@ -40,9 +40,9 @@
         <div class="headertitle"><a
           href="index.html">FontCreator</a></div>
         <div class="rel">
-          <a href="colorfunctions.html" title="5.1. Color Functions"
+          <a href="effectfunctions.html" title="5.2. Effect Functions"
              accesskey="P">previous</a> |
-          <a href="modules/fontblend.html" title="5.3. fontblend"
+          <a href="modules/binpack.html" title="5.4. binpack"
              accesskey="N">next</a> |
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |
@@ -61,7 +61,7 @@
           <div class="body">
             
   <div class="section" id="blend-functions">
-<h1>5.2. Blend functions<a class="headerlink" href="#blend-functions" title="Permalink to this headline">¶</a></h1>
+<h1>5.3. Blend functions<a class="headerlink" href="#blend-functions" title="Permalink to this headline">¶</a></h1>
 <div class="contents local topic" id="contents">
 <ul class="simple">
 <li><a class="reference internal" href="#normal" id="id1">Normal</a></li>
@@ -78,7 +78,7 @@
 <p>Blend functions are used to blend layers together given a certain formula.</p>
 <p>An excellent read: <a class="reference external" href="http://dunnbypaul.net/blends">http://dunnbypaul.net/blends</a></p>
 <div class="section" id="normal">
-<h2><a class="toc-backref" href="#contents">5.2.1. Normal</a><a class="headerlink" href="#normal" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#contents">5.3.1. Normal</a><a class="headerlink" href="#normal" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt>
 <tt class="descclassname">fontblend.</tt><tt class="descname">blendnormal</tt><big>(</big><em>base</em>, <em>blend</em><big>)</big><a class="reference internal" href="_modules/fontblend.html#blendnormal"><span class="viewcode-link">[source]</span></a></dt>
@@ -99,7 +99,7 @@
 
 </div>
 <div class="section" id="darken">
-<h2><a class="toc-backref" href="#contents">5.2.2. Darken</a><a class="headerlink" href="#darken" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#contents">5.3.2. Darken</a><a class="headerlink" href="#darken" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt>
 <tt class="descclassname">fontblend.</tt><tt class="descname">blenddarken</tt><big>(</big><em>base</em>, <em>blend</em><big>)</big><a class="reference internal" href="_modules/fontblend.html#blenddarken"><span class="viewcode-link">[source]</span></a></dt>
@@ -120,7 +120,7 @@
 
 </div>
 <div class="section" id="multiply">
-<h2><a class="toc-backref" href="#contents">5.2.3. Multiply</a><a class="headerlink" href="#multiply" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#contents">5.3.3. Multiply</a><a class="headerlink" href="#multiply" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt>
 <tt class="descclassname">fontblend.</tt><tt class="descname">blendmultiply</tt><big>(</big><em>base</em>, <em>blend</em><big>)</big><a class="reference internal" href="_modules/fontblend.html#blendmultiply"><span class="viewcode-link">[source]</span></a></dt>
@@ -141,7 +141,7 @@
 
 </div>
 <div class="section" id="color-burn">
-<h2><a class="toc-backref" href="#contents">5.2.4. Color Burn</a><a class="headerlink" href="#color-burn" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#contents">5.3.4. Color Burn</a><a class="headerlink" href="#color-burn" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt>
 <tt class="descclassname">fontblend.</tt><tt class="descname">blendcolorburn</tt><big>(</big><em>base</em>, <em>blend</em><big>)</big><a class="reference internal" href="_modules/fontblend.html#blendcolorburn"><span class="viewcode-link">[source]</span></a></dt>
@@ -162,7 +162,7 @@
 
 </div>
 <div class="section" id="linear-burn">
-<h2><a class="toc-backref" href="#contents">5.2.5. Linear Burn</a><a class="headerlink" href="#linear-burn" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#contents">5.3.5. Linear Burn</a><a class="headerlink" href="#linear-burn" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt>
 <tt class="descclassname">fontblend.</tt><tt class="descname">blendlinearburn</tt><big>(</big><em>base</em>, <em>blend</em><big>)</big><a class="reference internal" href="_modules/fontblend.html#blendlinearburn"><span class="viewcode-link">[source]</span></a></dt>
@@ -183,7 +183,7 @@
 
 </div>
 <div class="section" id="lighten">
-<h2><a class="toc-backref" href="#contents">5.2.6. Lighten</a><a class="headerlink" href="#lighten" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#contents">5.3.6. Lighten</a><a class="headerlink" href="#lighten" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt>
 <tt class="descclassname">fontblend.</tt><tt class="descname">blendlighten</tt><big>(</big><em>base</em>, <em>blend</em><big>)</big><a class="reference internal" href="_modules/fontblend.html#blendlighten"><span class="viewcode-link">[source]</span></a></dt>
@@ -204,7 +204,7 @@
 
 </div>
 <div class="section" id="screen">
-<h2><a class="toc-backref" href="#contents">5.2.7. Screen</a><a class="headerlink" href="#screen" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#contents">5.3.7. Screen</a><a class="headerlink" href="#screen" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt>
 <tt class="descclassname">fontblend.</tt><tt class="descname">blendscreen</tt><big>(</big><em>base</em>, <em>blend</em><big>)</big><a class="reference internal" href="_modules/fontblend.html#blendscreen"><span class="viewcode-link">[source]</span></a></dt>
@@ -225,7 +225,7 @@
 
 </div>
 <div class="section" id="color-dodge">
-<h2><a class="toc-backref" href="#contents">5.2.8. Color Dodge</a><a class="headerlink" href="#color-dodge" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#contents">5.3.8. Color Dodge</a><a class="headerlink" href="#color-dodge" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt>
 <tt class="descclassname">fontblend.</tt><tt class="descname">blendcolordodge</tt><big>(</big><em>base</em>, <em>blend</em><big>)</big><a class="reference internal" href="_modules/fontblend.html#blendcolordodge"><span class="viewcode-link">[source]</span></a></dt>
@@ -246,7 +246,7 @@
 
 </div>
 <div class="section" id="linear-dodge">
-<h2><a class="toc-backref" href="#contents">5.2.9. Linear Dodge</a><a class="headerlink" href="#linear-dodge" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#contents">5.3.9. Linear Dodge</a><a class="headerlink" href="#linear-dodge" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt>
 <tt class="descclassname">fontblend.</tt><tt class="descname">blendlineardodge</tt><big>(</big><em>base</em>, <em>blend</em><big>)</big><a class="reference internal" href="_modules/fontblend.html#blendlineardodge"><span class="viewcode-link">[source]</span></a></dt>
@@ -282,20 +282,23 @@
 <li class="toctree-l1"><a class="reference internal" href="download.html">4. Download &amp; Installation</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="reference.html">5. Reference</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="colorfunctions.html">5.1. Color Functions</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="">5.2. Blend functions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules/fontblend.html">5.3. fontblend</a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules/fontcreator.html">5.4. fontcreator</a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules/fonteffects.html">5.5. fonteffects</a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules/fontinfo.html">5.6. fontinfo</a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules/fontout_json.html">5.7. fontout_json</a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules/fonttex_bitmap.html">5.8. fonttex_bitmap</a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules/fonttexout_pil.html">5.9. fonttexout_pil</a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules/fontutils.html">5.10. fontutils</a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules/freetype.html">5.11. freetype</a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules/utils.html">5.12. utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="effectfunctions.html">5.2. Effect Functions</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="">5.3. Blend functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/binpack.html">5.4. binpack</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/fontblend.html">5.5. fontblend</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/fontcreator.html">5.6. fontcreator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/fonteffects.html">5.7. fonteffects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/fontinfo.html">5.8. fontinfo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/fontout_json.html">5.9. fontout_json</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/fonttex_bitmap.html">5.10. fonttex_bitmap</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/fonttexout_pil.html">5.11. fonttexout_pil</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/fontutils.html">5.12. fontutils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/freetype.html">5.13. freetype</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/utils.html">5.14. utils</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="examples/examples.html">6. Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="credits.html">7. Credits</a></li>
 </ul>
 
           <h3 style="margin-top: 1.5em;">Search</h3>
@@ -316,9 +319,9 @@
     <div class="footer-wrapper">
       <div class="footer">
         <div class="left">
-          <a href="colorfunctions.html" title="5.1. Color Functions"
+          <a href="effectfunctions.html" title="5.2. Effect Functions"
              >previous</a> |
-          <a href="modules/fontblend.html" title="5.3. fontblend"
+          <a href="modules/binpack.html" title="5.4. binpack"
              >next</a> |
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |
