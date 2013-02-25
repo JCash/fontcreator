@@ -13,13 +13,16 @@ c_float_p = POINTER(c_float)
 
 if sys.platform == 'darwin':
     _suffix = '.dylib'
+    platformdir = 'darwin64' if sys.maxsize > 2**32 else 'darwin32'
 elif sys.platform == 'win32':
     _suffix = '.dll'
+    platformdir = 'win64' if sys.maxsize > 2**32 else 'win32'
 elif sys.platform == 'linux2':
     _suffix = '.so'
+    platformdir = 'linux64' if sys.maxsize > 2**32 else 'linux32'
     
 _dirpath = os.path.dirname(__file__)
-_utils = ctypes.cdll.LoadLibrary(os.path.join(_dirpath, '_utils%s' % _suffix))
+_utils = ctypes.cdll.LoadLibrary(os.path.join(_dirpath, 'shared', platformdir, '_utils%s' % _suffix))
 
 LAYOUT_INTERLEAVED = 0
 LAYOUT_STACKED = 1

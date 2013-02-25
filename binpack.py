@@ -29,13 +29,16 @@ from ctypes import c_void_p, c_float, c_int32, c_bool
 
 if sys.platform == 'darwin':
     _suffix = '.dylib'
+    platformdir = 'darwin64' if sys.maxsize > 2**32 else 'darwin32'
 elif sys.platform == 'win32':
     _suffix = '.dll'
+    platformdir = 'win64' if sys.maxsize > 2**32 else 'win32'
 elif sys.platform == 'linux2':
     _suffix = '.so'
-
+    platformdir = 'linux64' if sys.maxsize > 2**32 else 'linux32'
+    
 _dirpath = os.path.dirname(__file__)
-_binpack = ctypes.cdll.LoadLibrary(os.path.join(_dirpath, '_binpack%s' % _suffix))
+_binpack = ctypes.cdll.LoadLibrary(os.path.join(_dirpath, 'shared', platformdir, '_binpack%s' % _suffix))
 
 #: Bottom left
 SKYLINE_BL = 0
