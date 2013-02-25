@@ -1,4 +1,7 @@
-""" The fonteffects module provides commonly used base functionality for the effects.
+"""
+Copyright @ 2013 Mathias Westerdahl
+
+The fonteffects module provides commonly used base functionality for the effects.
 """
 
 import os, logging
@@ -262,12 +265,8 @@ class Stripes(object):
         # onto the normal. Then we can find out the max extents of the blend
         #origin = np.array([width/2.0, height/2.0])
         origin = np.array( [np.round(width/2.0), np.round(height/2.0)], float)
-        #maxextents = np.sqrt( halfextents[0]*halfextents[0]*np.abs(normal[0]) + halfextents[1]*halfextents[1]*np.abs(normal[1]) )
         maxextents = np.sqrt( np.dot( origin, origin ) )
         maxextents = np.round(maxextents)
-
-        #invsizex = 1.0 / width
-        #invsizey = 1.0 / height
 
         data = np.empty((width,height,4), dtype=np.float32)
         for x in xrange(0, width):
@@ -277,7 +276,6 @@ class Stripes(object):
                 v -= origin
 
                 lengthsq = np.dot(v,v)
-                #nv = v / np.sqrt(lengthsq)
 
                 d = (np.dot( v, normal ) / maxextents) / 2.0 + 0.5
 
@@ -403,10 +401,16 @@ class Outline(object):
 class DropShadow(object):
     """ Applies a drop shadow to the glyphs
     """
+    
+    #: The color of the shadow
     color = (0, 0, 0)
+    #: The opacity of the shadow (in percent)
     opacity = 100
+    #: The angle of the shadow (in degrees)
     angle = 120
+    #: The spread of the shadow (in pixels)
     size = 1
+    #: The offset of the shadow
     distance = 3
 
     def __init__(self, *k, **kw):
@@ -477,6 +481,8 @@ class DropShadow(object):
 class GaussianBlur(object):
     """ Applies a gaussian blur to the glyph
     """
+    
+    #: The radius (in pixels) of the kernel
     size = 1
 
     def __init__(self, *k, **kw):
@@ -501,7 +507,9 @@ class GaussianBlur(object):
 class KernelBlur(object):
     """ Applies a simple box filter where the middle element has value 'strength'
     """
+    #: The radius of the kernel (in pixels). The kernel size is `radius*2+1`
     size = 1
+    #: The center value of the kernel
     strength = 1
 
     def __init__(self, *k, **kw):
@@ -530,8 +538,11 @@ class KernelBlur(object):
 class DistanceField(object):
     """ Calculates a distance field for each glyph
     """
-    size = 4
-    factor = 2
+    
+    #: The spread of the "blur" that is applied to the glyphs
+    size = 16
+    #: The number of times the glyph is enlarged before the glyph is rendered.
+    factor = 4
 
     def __init__(self, *k, **kw):
         """
@@ -558,7 +569,6 @@ class DistanceField(object):
         face.load_char( glyph.unicode, flags )
         
         bitmap = fu.make_array_from_bitmap(face.glyph.contents.bitmap).astype(np.float64)
-        #bitmap = np.dstack( (bitmap, ) )
         bitmap = fu.pad_bitmap(bitmap, info.extrapadding[0]*factor, info.extrapadding[1]*factor, info.extrapadding[2]*factor, info.extrapadding[3]*factor, 0.0)
 
         i = utils.calculate_sedt(bitmap, self.size)
@@ -584,36 +594,16 @@ class DistanceField(object):
         previmage[:, :, 3][i > 0] = 1.0
         return previmage
 
-
-@EffectFunction
-class DistanceFieldOld(object):
-    """ Calculates a distance field for each glyph
-    """
-    size = 1
-
-    def __init__(self, *k, **kw):
         """
-        @param size
+        TODO: Find out what's wrong here and why I need to modify the previmage?!
+        outimage = np.empty_like(previmage)
+        outimage[:, :, 0] = i
+        outimage[:, :, 1] = i
+        outimage[:, :, 2] = i
+        outimage[:, :, 3][i > 0] = 1.0
+        outimage[:, :, 3][i == 0] = 0.0
+        return outimage
         """
-        self.size = self.__class__.size
-
-        for name, value in kw.iteritems():
-            try:
-                setattr(self, name, eval(value) )
-            except NameError:
-                setattr(self, name, value )
-        
-        self.padding = (self.size, self.size, self.size, self.size)
-
-    def apply(self, info, glyph, image):
-        i = image[:, :, 0]
-        i = utils.calculate_sedt(i, self.size)
-        image[:, :, 0] = i
-        image[:, :, 1] = i
-        image[:, :, 2] = i
-        image[:, :, 3][i > 0] = 1.0
-        return image
-        
 
 
 @EffectFunction

@@ -1,4 +1,7 @@
-""" A lightweight freetype binding that suits the font creator.
+"""
+Copyright @ 2013 Mathias Westerdahl
+
+A lightweight freetype binding that suits the font creator.
 If you want something more thorough, check these out instead:
 
 http://code.google.com/p/freetype-py/source/browse/trunk/
@@ -23,7 +26,7 @@ elif sys.platform == 'linux2':
 try:
     path = '%sfreetype%s' % (_prefix, _suffix)
     _freetype = ctypes.cdll.LoadLibrary(path)
-except (WindowsError,):
+except (OSError,):
     raise IOError("FAILED TO OPEN " + path)
 
 c_int_p = POINTER(ctypes.c_int)

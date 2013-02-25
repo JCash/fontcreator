@@ -41,3 +41,10 @@ Stripes
 
 .. autoclass:: fonteffects.Stripes
 	:noindex:
+
+	
+DistanceField
+-------------
+
+.. autoclass:: fonteffects.DistanceField
+	:noindex:

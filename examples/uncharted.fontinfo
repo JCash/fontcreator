@@ -1,9 +1,9 @@
-# Here is a font with a 2 pixel outline
-# Uses: Solid, Outline
+# Tries to mimic the subtitle font of the Uncharted game
+#
 
 [default]
-name = ./fonts/verdana.ttf
-size = 32
+name = ./fonts/Cabin-Regular.otf
+size = 50
 
 letters = letters_ascii.txt
 
@@ -15,19 +15,22 @@ texturewriter = fonttexout_pil
 textureformat = .png
 texturesize = 512, 256
 
-layers = [Layer(color=solid_fill)]
-
-# The outline is implemented as a post effect (dilation + cutout)
-posteffects = [outline]
+layers = [Layer(color=solid)]
+posteffects = [outline, shadow]
 
 # modes: none, light, normal. Default is 'normal'
 antialias = none
 
-[solid_fill]
+[solid]
 type = solid
-color = (255, 255, 255)
+color = (195, 185, 175)
 
 [outline]
 type = outline
-width = 2
-color = (0, 0, 0)
+width = 1
+color = (145, 135, 125)
+
+[shadow]
+type = dropshadow
+size = 1
+distance = 4

@@ -4,7 +4,6 @@
 
 [default]
 name = ./fonts/verdana.ttf
-# We scale up the original glyph
 size = 32
 
 letters = letters_ascii.txt
@@ -12,7 +11,7 @@ letters = letters_ascii.txt
 bgcolor = (0, 0, 0)
 
 
-writer = fontout_font
+writer = fontout_json
 texturerender = fonttex_bitmap
 texturesize = 512, 256
 

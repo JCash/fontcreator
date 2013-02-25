@@ -1,4 +1,6 @@
 """
+Copyright @ 2013 Mathias Westerdahl
+
 Generates a .json file given a set of glyphs
 """
 
@@ -9,7 +11,7 @@ def _create_dict(options, info, pairkernings):
     d['name'] = os.path.basename(options.input)
     d['size'] = info.size
     d['texturesize'] = info.texturesize
-    d['texturename'] = options.output
+    d['texturename'] = os.path.basename(options.output)
     d['ascender'] = int(info.ascender)
     d['descender'] = int(info.descender)
     

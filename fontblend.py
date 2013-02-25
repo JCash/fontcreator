@@ -1,3 +1,7 @@
+"""
+Copyright @ 2013 Mathias Westerdahl
+"""
+
 import logging
 import numpy as np
 

@@ -1,4 +1,6 @@
 """
+Copyright @ 2013 Mathias Westerdahl
+
 This is the default rendering of the fonts
     
 .. py:attribute:: texturesize = 512, 512

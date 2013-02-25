@@ -1,4 +1,6 @@
 """
+Copyright @ 2013 Mathias Westerdahl
+
 Generates a binary file given a set of glyphs
 
 http://sv.wikipedia.org/wiki/UTF-8

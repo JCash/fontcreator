@@ -1,9 +1,6 @@
 """
-
-@COPYRIGHT 2013 MATHIAS WESTERDAHL
-
+Copyright @ 2013 Mathias Westerdahl
 """
-
 
 import sys, os, logging
 from optparse import OptionParser
@@ -138,23 +135,32 @@ def _apply_layers(info):
             continue
 
         glyphimage = glyph.bitmap
+        glyphimage.flags.writeable = False
 
         # ????
         fonteffects.DefaultMask.idx = np.where(glyphimage == 0)
         
         previmage = np.dstack((glyphimage, glyphimage, glyphimage, glyphimage))
+        
+        # TODO: Fix weird issue in DistanceField
+        #previmage.flags.writeable = False
 
         previmage = _apply_layer(glyph, info, info.layers[0], glyph, previmage, glyphimage)
+        previmage.flags.writeable = False
 
         for layer in info.layers[1:]:
             previmage = _apply_layer(glyph, info, layer, glyph, previmage, glyphimage)
+            previmage.flags.writeable = False
 
         for effect in info.posteffects:
             previmage = effect.apply(glyph, info, previmage)
+            previmage.flags.writeable = False
         
         bgimage = np.ones( previmage.shape, float) * (info.bgcolor[0], info.bgcolor[1], info.bgcolor[2], 0.0)
+        bgimage.flags.writeable = False
         
         previmage = fu.alpha_blend(bgimage, previmage)
+        previmage.flags.writeable = False
         
         glyph.bitmap = previmage
 
@@ -344,6 +350,8 @@ def _get_pair_kernings(info, face):
             assert c < 0xFFFFFFFF
             assert prevc < 0xFFFFFFFF
             pairkernings[ _encode_pair(prevc, c) ] = kerning.x>>6
+            
+            #print "kerning %s, %s: %d" % (chr(prevc), chr(c), kerning.x>>6), '\t', '0x%016x' % _encode_pair(prevc, c)
     return pairkernings
 
 
@@ -359,6 +367,10 @@ def compile(options):
     # gather the glyph info
     _get_glyph_info(options, info, face)
 
+    pairkernings = None
+    if info.usepairkernings:
+        pairkernings = _get_pair_kernings(info, face)
+    
     # The actual compile step
     render(options, info, face)
     
@@ -438,9 +450,15 @@ def write_text(options, info, pairkernings):
     texture_size = (texture_size[0]+info.padding*2+60, texture_size[1]+info.padding*2)
 
     ones = np.ones(texture_size, float)
-    r = ones * info.bgcolor[0]
-    g = ones * info.bgcolor[1]
-    b = ones * info.bgcolor[2]
+    
+    bgcolor = info.bgcolor
+    if options.bgcolor:
+        bgcolor = eval(options.bgcolor)
+        bgcolor = map( lambda x: float(x)/255.0 if isinstance(x, int) else x, bgcolor )        
+    
+    r = ones * bgcolor[0]
+    g = ones * bgcolor[1]
+    b = ones * bgcolor[2]
 
     zeros = np.zeros(texture_size, float)
     image = np.dstack( (r,g,b,zeros) )
@@ -523,6 +541,7 @@ def init():
     parser.add_option('-v', '--verbose', action='store_true', default=False, help='Specifies verbose mode')
     parser.add_option('-l', '--log', default='', help='A log file where the stdout is saved logged to.' )
     parser.add_option('-w', '--writetext', metavar='TEXT', help='When used, a .fontinfo file is used as input and the text is written into the output texture.')
+    parser.add_option('--bgcolor', default='', metavar='COLOR', help='The background color used when writing text')
 
     options, args = parser.parse_args()
 

@@ -1,3 +1,6 @@
+"""
+Copyright @ 2013 Mathias Westerdahl
+"""
 from math import sqrt
 import numpy as np
 import numpy.ctypeslib

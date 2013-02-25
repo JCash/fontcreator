@@ -1,14 +1,6 @@
-.. FontCreator documentation master file, created by
-   sphinx-quickstart on Sun Apr 15 11:44:17 2012.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
 
 FontCreator
 =======================================
-
-.. contents::
-    :local:
-    :backlinks: top
 
 .. toctree::
     :hidden:
@@ -20,17 +12,17 @@ FontCreator
     ./extensions.rst
     ./download.rst
     ./reference.rst
-    ./examples.rst
+    ./examples/examples.rst
+    ./credits.rst
 
-Welcome to the documentation for FontCreator, a Python based bitmap font generator.
+Welcome to the documentation for FontCreator, a Python/C++ based bitmap font generator.
 
-
-
+Download: :doc:`download`
 
 Features
 --------
 
-The FontCreator has many features/selling points:
+The FontCreator has many great features:
 
 - Multiple platforms (Mac, Linux, Windows)
 - Performance
@@ -42,6 +34,11 @@ The FontCreator has many features/selling points:
 - Single/Pair Kerning support
 - Unicode support
 - Command line support
+
+- Texture rendering:
+
+	- The default renderer uses binpacking to minimize texture waste
+	- Plugin functionality for user specified rendering
 
 - Texture save formats:
 
@@ -57,6 +54,19 @@ The FontCreator has many features/selling points:
 License
 -------
 
+(zlib license: http://opensource.org/licenses/Zlib)
+
+Copyright (c) 2013 Mathias Westerdahl
+
+This software is provided 'AS-IS', without any express or implied warranty. In no event will the authors be held liable for any damages arising from the use of this software.
+
+Permission is granted to anyone to use this software for any purpose, including commercial applications, and to alter it and redistribute it freely, subject to the following restrictions:
+
+	1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
+	
+	2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
+	
+	3. This notice may not be removed or altered from any source distribution.
 
 
 Indices and tables

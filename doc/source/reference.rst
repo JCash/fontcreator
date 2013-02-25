@@ -6,6 +6,7 @@ Reference
     :glob:
     
     colorfunctions*
+    effectfunctions*
     blendfunctions*
     
     modules/*

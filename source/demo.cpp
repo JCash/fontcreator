@@ -493,7 +493,8 @@ int main(int argc, char *argv[])
   glEnable(GL_TEXTURE_2D);
   glGenTextures( 2, textureID );
   //loadDistTexture("build/05_distance_fields.tga", textureID[0], &texw, &texh);
-  png_texture_load("doc/build/05_distance_fields.png", textureID[0], &texw, &texh);
+  //png_texture_load("doc/build/05_distance_fields.png", textureID[0], &texw, &texh);
+  png_texture_load("../minosaur/content/fonts/verdana.png", textureID[0], &texw, &texh);
   loadRefTexture("doc/build/05_distance_fields.png", textureID[1]);
 
   // Create, load and compile the shader programs

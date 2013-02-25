@@ -1,4 +1,7 @@
-""" The font info reads the .fontinfo and creates the layers, effects, and blends
+"""
+Copyright @ 2013 Mathias Westerdahl
+
+The font info reads the .fontinfo and creates the layers, effects, and blends
 
 .. py:attribute:: name = ''
 
