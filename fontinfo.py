@@ -1,7 +1,4 @@
-"""
-Copyright @ 2013 Mathias Westerdahl
-
-The font info reads the .fontinfo and creates the layers, effects, and blends
+""" The font info reads the .fontinfo and creates the layers, effects, and blends
 
 .. py:attribute:: name = ''
 
@@ -11,6 +8,14 @@ The font info reads the .fontinfo and creates the layers, effects, and blends
 .. py:attribute:: size = 32
 
     The size of the font (in pixels)
+    
+.. py:attribute:: leading = 0.0
+
+    The leading of the font.
+    
+.. py:attribute:: tracking = 0.0
+
+    The tracking of the font.
 
 .. py:attribute:: bitmapsize = None
 
@@ -101,6 +106,8 @@ def GetDefaultOptions():
     defaults = dict()
     defaults['name'] = 'not set'
     defaults['size'] = '32'
+    defaults['leading'] = '0.0'
+    defaults['tracking'] = '0.0'
     defaults['bitmapsize'] = None
     defaults['dpi'] = '72'
     defaults['padding'] = '0'
@@ -187,6 +194,9 @@ class SFontInfo(object):
 
         if not os.path.isabs(self.name):
             self.name = os.path.join( os.path.dirname(options.input), self.name )
+
+        self.leading = float(eval(self.leading))
+        self.tracking = float(eval(self.tracking))
 
         self.size = int(eval(self.size))
         if self.bitmapsize is None:
