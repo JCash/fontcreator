@@ -22,7 +22,7 @@ Reference
 
 """
 
-import sys, os
+import sys
 import ctypes
 from ctypes import c_void_p, c_float, c_int32, c_bool
 
@@ -36,9 +36,12 @@ elif sys.platform == 'win32':
 elif sys.platform == 'linux2':
     _suffix = '.so'
     platformdir = 'linux64' if sys.maxsize > 2**32 else 'linux32'
-    
-_dirpath = os.path.dirname(__file__)
-_binpack = ctypes.cdll.LoadLibrary(os.path.join(_dirpath, 'shared', platformdir, '_binpack%s' % _suffix))
+
+try:
+    path = '_binpack%s' % (_suffix)
+    _binpack = ctypes.cdll.LoadLibrary(path)
+except (OSError,):
+    raise IOError("FAILED TO OPEN " + path)
 
 #: Bottom left
 SKYLINE_BL = 0

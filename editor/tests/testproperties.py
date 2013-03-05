@@ -1,8 +1,10 @@
 
-import sys, unittest, traceback
+import sys, os, unittest, traceback
 
-sys.path.append('.')
-from properties import *
+sys.path.append(os.path.join(os.path.dirname(__file__), os.pardir))
+
+from properties.propertyclass import property_class
+from properties.propertytypes import PropertyValidateError, Property, IntProperty, StringProperty
 
 
 def assertRaises(testcase, exc, instance, name, value):

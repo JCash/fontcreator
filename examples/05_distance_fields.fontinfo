@@ -1,10 +1,11 @@
-# A more advanced use is distance fields. Note that the original size is a lot larger than
+# A more advanced use is distance fields
 # the final result
 # Uses: Distance Field
 
 [default]
-name = ./fonts/verdana.ttf
-size = 32
+name = ./fonts/Futura.ttc
+size = 132
+padding = 4
 
 letters = letters_ascii.txt
 
@@ -13,17 +14,19 @@ bgcolor = (0, 0, 0)
 
 writer = fontout_json
 texturerender = fonttex_bitmap
-texturesize = 512, 256
+texturesize = 1024, 1024
 
 texturewriter = fonttexout_pil
 textureformat = .png
 texturechannels = R
 
-layers = [Layer(color=distance_field)]
+layers = [Layer(color=distance_field, mask=None, blend=None)]
 
 # modes: none, light, normal. Default is 'normal'
 antialias = none
 
 [distance_field]
 type = distancefield
-size = 8
+factor = 4
+size = 32
+

@@ -17,13 +17,6 @@
 
     The tracking of the font.
 
-.. py:attribute:: bitmapsize = None
-
-    The size (in pixels) of the font when it should be rendered.
-    This is useful when you wish to render the glyph much larger and later on scale it back down.
-    It is used when generating distance field fonts.
-    If set to None, the *size* will be used. Defaults to None.
-
 .. py:attribute:: dpi = 72
 
     The resolution of the font when being rendered.
@@ -199,10 +192,6 @@ class SFontInfo(object):
         self.tracking = float(eval(self.tracking))
 
         self.size = int(eval(self.size))
-        if self.bitmapsize is None:
-            self.bitmapsize = self.size
-        else:
-            self.bitmapsize = int(eval(self.bitmapsize))
         self.dpi = int(self.dpi)
         self.texturesize = tuple( map( int, self.texturesize.split(',') ) )
         self.textureoffset = tuple( map( int, self.textureoffset.split(',') ) )

@@ -1,6 +1,5 @@
 
 import sys, os, logging
-import subprocess
 from PySide import QtCore
 import model
 from ui.jobs import JobService
@@ -65,7 +64,7 @@ class Presenter(object):
             self.model = model.Model(options)
             self.documents[path] = self.model
             self.view.AddDocument(path)
-        except fontutils.FontException, e:
+        except fontutils.FontException:
             logging.exception("The file %s failed to open", path)
 
         print 'pid main', os.getpid()

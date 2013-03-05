@@ -61,9 +61,9 @@ class PropertyView(QtGui.QWidget):
         #widgetwrapper.setToolTip(tooltip)
 
         # hookup the event
-        def _onValueChanged(value):
-            self.onValueChanged(name, info, widgetwrapper, value)
-        widget.valueChanged.connect(_onValueChanged)
+        #def _onValueChanged(value):
+        #    self.onValueChanged(name, info, widgetwrapper, value)
+        #widget.valueChanged.connect(_onValueChanged)
 
     def validateProperty(self, info, widget, value):
         try:

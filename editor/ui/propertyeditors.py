@@ -1,7 +1,7 @@
 
 from PySide import QtGui, QtCore
-from properties import *
-from propertyview import PropertyView, property_editor
+from properties.propertytypes import IntProperty, AngleProperty, OpacityProperty, Size1DProperty, StringProperty, FileProperty, ColorProperty
+from propertyview import property_editor
 
 
 class PropertyEditor(QtGui.QWidget):

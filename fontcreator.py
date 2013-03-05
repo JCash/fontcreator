@@ -88,15 +88,15 @@ class LogStream(object):
         self.log.flush()
 
 
-def _apply_layer(glyph, info, layer, character, previmage, glyphimage):
+def _apply_layer(info, glyph, layer, previmage, glyphimage):
     # The max y should be the same for all characters in the same row
     # This is necessary for having the same "space" during calculations
     maxsize = info.maxsize
 
-    starty = info.maxbearingY - character.bearingY
+    starty = info.maxbearingY - glyph.bearingY
 
     layer.set_info( glyph, info )
-    image = layer.apply_color( 0, starty, character.bitmap.shape, maxsize, glyphimage, previmage )
+    image = layer.apply_color( 0, starty, glyph.bitmap.shape, maxsize, glyphimage, previmage )
     image = layer.apply_effects( image )
     image = layer.apply_mask( image )
     image = layer.apply_blend( glyphimage, previmage, image )
@@ -107,14 +107,23 @@ def _apply_layer(glyph, info, layer, character, previmage, glyphimage):
 
 def _apply_layers(info):
     
-    bbox = np.array( [0, 0] )
+    #bbox = np.array( [0, 0] )
+    width = 0
+    top = 0
+    bottom = 0
     max_bearing_y = 0
     for glyph in info.glyphs:
         if glyph.bitmap is None:
             continue
-        bbox = np.maximum( bbox, glyph.bitmap.shape )
+        
+        width = max(width, glyph.bitmap.shape[0])
+        top = max(top, glyph.bearingY)
+        bottom = min(bottom, glyph.bearingY - glyph.bitmap.shape[1])
+        
+        #bbox = np.maximum( bbox, glyph.bitmap.shape )
         max_bearing_y = max(max_bearing_y, glyph.bearingY)
     
+    bbox = np.array( [width, top - bottom] )
     bbox[0] += info.extrapadding[0] + info.extrapadding[2]
     bbox[1] += info.extrapadding[1] + info.extrapadding[3]
     
@@ -141,19 +150,17 @@ def _apply_layers(info):
         fonteffects.DefaultMask.idx = np.where(glyphimage == 0)
         
         previmage = np.dstack((glyphimage, glyphimage, glyphimage, glyphimage))
-        
-        # TODO: Fix weird issue in DistanceField
-        #previmage.flags.writeable = False
+        previmage.flags.writeable = False
 
-        previmage = _apply_layer(glyph, info, info.layers[0], glyph, previmage, glyphimage)
+        previmage = _apply_layer(info, glyph, info.layers[0], previmage, glyphimage)
         previmage.flags.writeable = False
 
         for layer in info.layers[1:]:
-            previmage = _apply_layer(glyph, info, layer, glyph, previmage, glyphimage)
+            previmage = _apply_layer(info, glyph, layer, previmage, glyphimage)
             previmage.flags.writeable = False
 
         for effect in info.posteffects:
-            previmage = effect.apply(glyph, info, previmage)
+            previmage = effect.apply(info, glyph, previmage)
             previmage.flags.writeable = False
         
         bgimage = np.ones( previmage.shape, float) * (info.bgcolor[0], info.bgcolor[1], info.bgcolor[2], 0.0)
@@ -290,7 +297,7 @@ def render(options, info, face):
     assert len(info.glyphs) > 0, "No glyphs to process!"
     
     # since the layers might set this, we set it back
-    face.set_char_size( width=0, height=info.bitmapsize * 64, hres=info.dpi, vres=info.dpi )
+    face.set_char_size( width=0, height=info.size * 64, hres=info.dpi, vres=info.dpi )
     
     for glyph in info.glyphs:
 
@@ -454,11 +461,15 @@ def write_text(options, info, pairkernings):
     bgcolor = info.bgcolor
     if options.bgcolor:
         bgcolor = eval(options.bgcolor)
-        bgcolor = map( lambda x: float(x)/255.0 if isinstance(x, int) else x, bgcolor )        
+        bgcolor = map( lambda x: float(x)/255.0 if isinstance(x, int) else x, bgcolor )
+    
+    if len(bgcolor) == 3:
+        bgcolor = list(bgcolor)+[1.0]        
     
     r = ones * bgcolor[0]
     g = ones * bgcolor[1]
     b = ones * bgcolor[2]
+    a = ones * bgcolor[3]
 
     zeros = np.zeros(texture_size, float)
     image = np.dstack( (r,g,b,zeros) )

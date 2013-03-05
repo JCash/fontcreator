@@ -214,8 +214,6 @@ static void _minmax(const Image* image, const float* kernel, size_t kernelwidth,
 				const int32_t xx = x - kernelwidth / 2;
 				const int32_t yy = y - kernelheight / 2;
 
-				const bool test = x == 2 && y == 0;
-
 				DTYPE extrema = maximum ? 0 : DTYPE(MAX);
 				for( size_t ky = 0; ky < kernelheight; ++ky )
 				{
@@ -232,13 +230,7 @@ static void _minmax(const Image* image, const float* kernel, size_t kernelwidth,
 						if( kernel[ky * kernelwidth + kx] == 0 )
 							continue;
 
-						const int32_t index = yyy * width * channels + xxx * channels + c;
 						const DTYPE value = data[yyy * width * channels + xxx * channels + c];
-
-						if( test )
-						{
-							//printf("sample x, y, c %d, %d, %lu = %f    index = %d\n", xxx, yyy, c, value, index);
-						}
 
 						if( maximum )
 						{
@@ -252,14 +244,6 @@ static void _minmax(const Image* image, const float* kernel, size_t kernelwidth,
 						}
 					}
 				}
-
-				static bool first = true;
-				if( test )
-				{
-					first = false;
-					//printf("x, y, c %lu, %lu, %lu = %d\n", x, y, c, extrema);
-				}
-
 				out[ y * width * channels + x * channels + c] = extrema;
 			}
 		}
@@ -432,11 +416,11 @@ static void _half_size(const Image* image, void* _out)
 				uint32_t yy = y*2;
 				for( uint32_t c = 0; c < channels; ++c)
 				{
-					DTYPE s0 = data[ yy * channels + xx * channels + c ];
-					DTYPE s1 = data[ yy * channels + (xx+1) * channels + c ];
-					DTYPE s2 = data[ (yy+1) * channels + xx * channels + c ];
-					DTYPE s3 = data[ (yy+1) * channels + (xx+1) * channels + c ];
-					out[ y * halfwidth * channels + x * channels + c] = (s0 + s1 + s2 + s3) / DTYPE(4);
+					double s0 = data[ yy * channels + xx * channels + c ];
+					double s1 = data[ yy * channels + (xx+1) * channels + c ];
+					double s2 = data[ (yy+1) * channels + xx * channels + c ];
+					double s3 = data[ (yy+1) * channels + (xx+1) * channels + c ];
+					out[ y * halfwidth * channels + x * channels + c] = DTYPE((s0 + s1 + s2 + s3) / 4.0);
 				}
 			}
 		}
@@ -454,12 +438,12 @@ static void _half_size(const Image* image, void* _out)
 				{
 					uint32_t xx = x*2;
 					uint32_t yy = y*2;
-					DTYPE s0 = data[ c * pagesize + yy * width + xx ];
-					DTYPE s1 = data[ c * pagesize + yy * width + (xx+1) ];
-					DTYPE s2 = data[ c * pagesize + (yy+1) * width + xx ];
-					DTYPE s3 = data[ c * pagesize + (yy+1) * width + (xx+1) ];
+					double s0 = data[ c * pagesize + yy * width + xx ];
+					double s1 = data[ c * pagesize + yy * width + (xx+1) ];
+					double s2 = data[ c * pagesize + (yy+1) * width + xx ];
+					double s3 = data[ c * pagesize + (yy+1) * width + (xx+1) ];
 
-					out[ c * halfpagesize + y * halfwidth + x ] = (s0 + s1 + s2 + s3) / DTYPE(4);
+					out[ c * halfpagesize + y * halfwidth + x ] = DTYPE((s0 + s1 + s2 + s3) / 4.0);
 				}
 			}
 		}

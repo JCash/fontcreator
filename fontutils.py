@@ -20,6 +20,7 @@ def make_array_from_bitmap(_bitmap, bitdepth=8):
     width, rows, pitch = bitmap.width, bitmap.rows, bitmap.pitch
 
     a = numpy.ctypeslib.as_array(bitmap.buffer, (rows, pitch) ).transpose()
+    
     return a[:width,:]
 
 
@@ -55,10 +56,18 @@ def pre_multiply_alpha(image):
 
 def alpha_blend(bottom, top):
     """ Creates a new copy by alpha blending top onto bottom
+    
+    :param bottom: A numpy array of shape (x, y, 4)
+    :param top:    A numpy array of shape (x, y, 4)
+    :return:       Returns a new numpy.array with the same dtype as the top array
     """
+    assert bottom.shape == top.shape, "Cannot blend two images of different shapes: %s != %s" % (str(bottom.shape), str(top.shape))
+
+    if bottom.dtype != top.dtype:
+        bottom = bottom.astype(top.dtype)
     br, bg, bb, ba = split_channels(bottom)
     tr, tg, tb, ta = split_channels(top)
-    
+
     out = np.empty_like(bottom)
     out[:, :, 0] = br + (tr-br) * ta
     out[:, :, 1] = bg + (tg-bg) * ta
@@ -67,7 +76,7 @@ def alpha_blend(bottom, top):
     return out
 
 
-def pad_bitmap(bitmap, left, top, right, bottom, value):
+def pad_bitmap(bitmap, left, top, right, bottom, value, debug=False):
     """ Pads a bitmap with pixels on each side. The new cells are applied the value
     
     :param bitmap:   A numpy array
@@ -75,30 +84,52 @@ def pad_bitmap(bitmap, left, top, right, bottom, value):
     :param top:      The number of pixels that should be added to the top
     :param right:    The number of pixels that should be added to the right
     :param bottom:   The number of pixels that should be added to the bottom
-    :param value:    A float
+    :param value:    The value to insert
     :return:         The padded numpy array
+    """
+    
+    pl, pt, pr, pb = left, top, right, bottom
     """
     s = bitmap.shape
     if len(s) == 2:
-        left = np.array([value] * (left*s[1]), float ).reshape(-1, s[1])
-        right = np.array([value] * (right*s[1]), float ).reshape(-1, s[1])
+        left = np.array([value] * (left*s[1]), bitmap.dtype ).reshape(-1, s[1])
+        right = np.array([value] * (right*s[1]), bitmap.dtype ).reshape(-1, s[1])
     elif len(s) == 3:
-        left = np.array([value] * (left*s[1]*s[2]), float ).reshape(-1, s[1], s[2])
-        right = np.array([value] * (right*s[1]*s[2]), float ).reshape(-1, s[1], s[2])
+        left = np.array([value] * (left*s[1]*s[2]), bitmap.dtype ).reshape(-1, s[1], s[2])
+        right = np.array([value] * (right*s[1]*s[2]), bitmap.dtype ).reshape(-1, s[1], s[2])
 
     bm = np.concatenate( (left, bitmap, right), axis=0 )
     s = bm.shape
 
     if len(s) == 2:
-        top = np.array([value] * (top*s[0]), float ).reshape(s[0], -1)
-        bottom = np.array([value] * (bottom*s[0]), float ).reshape(s[0], -1)
+        top = np.array([value] * (top*s[0]), bitmap.dtype ).reshape(s[0], -1)
+        bottom = np.array([value] * (bottom*s[0]), bitmap.dtype ).reshape(s[0], -1)
     elif len(s) == 3:
-        top = np.array([value] * (top*s[0]*s[2]), float ).reshape(s[0], -1, s[2])
-        bottom = np.array([value] * (bottom*s[0]*s[2]), float ).reshape(s[0], -1, s[2])
+        top = np.array([value] * (top*s[0]*s[2]), bitmap.dtype ).reshape(s[0], -1, s[2])
+        bottom = np.array([value] * (bottom*s[0]*s[2]), bitmap.dtype ).reshape(s[0], -1, s[2])
 
     bm = np.concatenate( (top, bm, bottom), axis=1 )
+    
+    #return bm
+    """
+    
+    left, top, right, bottom = pl, pt, pr, pb
+    s = list(bitmap.shape)
+    s[0] += left + right
+    s[1] += top + bottom
+    
+    out = np.empty( tuple(s), dtype=bitmap.dtype)
+    out.fill( value )
+    
+    right = left + bitmap.shape[0]
+    bottom = top + bitmap.shape[1]
+    
+    if len(out.shape) > 2:
+        out[left:right, top:bottom, :] = bitmap
+    else:
+        out[left:right, top:bottom] = bitmap.flatten().reshape( bitmap.shape )
 
-    return bm
+    return out
 
 
 def create_1d_lanczos_kernel(radius):
@@ -183,7 +214,29 @@ def print_ascii(bitmap, char=None, replace=['.', '@']):
                 print xformat % int( bm[x,y]*255 ),
         print ""
     print ""
-    
+
+
+def print_ascii2(bm):
+    for y in xrange(bm.shape[1]):
+        s = ''
+        for x in xrange(bm.shape[0]):
+            v = bm[x,y]
+            c = None
+            if v == 0:
+                c = ' '
+            elif v < 64:
+                c = '.'
+            elif v < 128:
+                c = 'o'
+            elif v < 196:
+                c = 'O'
+            elif v <= 255:
+                c = '@'
+            else:
+                raise Exception("Value not ok: %s" % str(v))
+            s += c
+        print s
+    print ""
 
 if __name__ == '__main__':
     import Image
