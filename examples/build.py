@@ -48,24 +48,23 @@ def generate_doc(path, outputdir, profile=False):
 
     verbose = '-v' if '-v' in sys.argv else ''
 
-    timeit = 'time' if profile else ''
-    cprofile = '-m cProfile -o %s' % pstatspath if profile else ''
+    cmd = '%s %s -i %s -o %s -w "%s" --bgcolor=0,0,0 %s' % (sys.executable, FONTCREATOR, path, outputpath_text, TEXT, verbose)
 
-    cmd = '%s %s %s %s -i %s -o %s -w "%s" --bgcolor=0,0,0 %s' % (timeit, sys.executable, cprofile, FONTCREATOR, path, outputpath_text, TEXT, verbose)
-    print cmd
     if os.system(cmd) != 0:
         return 1
 
-    if profile:
-        gprof = '../../../../external/gprof2dot.py'
-        if os.path.exists(gprof):
-            if os.system('%s %s -f pstats %s | dot -Tpdf -o %s/%s.pdf' % (sys.executable, gprof, pstatspath, OUTPUTDIR, filename)) != 0:
-                return 1
-            print "Wrote %s/%s.pdf" % (OUTPUTDIR, filename)
+    timeit = 'time' if profile else ''
+    cprofile = '-m cProfile -o %s' % pstatspath if profile else ''
 
     if not DEBUG:
-        if os.system('%s %s -i %s -o %s' % (sys.executable, FONTCREATOR, path, outputpath)) != 0:
+        if os.system('%s %s %s %s -i %s -o %s' % (timeit, sys.executable, cprofile, FONTCREATOR, path, outputpath)) != 0:
             return 1
+
+    if profile:
+        gprof = 'gprof2dot'
+        if os.system('%s -f pstats %s -e 0.1 -n 0.1 | dot -Tpdf -o %s/%s.pdf' % (gprof, pstatspath, OUTPUTDIR, filename)) != 0:
+            return 1
+        print "Wrote %s/%s.pdf" % (OUTPUTDIR, filename)
 
     with open(path,'rb') as f:
         lines = f.readlines()
@@ -133,7 +132,6 @@ The JSON file :download:`.json <./%s>`
 def generate_header(path, outputdir):
     print "Generating header logo with %s" % path
 
-    filename = os.path.basename(path)
     outputpath_text = os.path.join(outputdir, HEADERNAME)
 
     if os.system('%s %s -i %s -o %s -w "%s"' % (sys.executable, FONTCREATOR, path, outputpath_text, HEADERTEXT)) != 0:
@@ -156,7 +154,7 @@ if __name__ == '__main__':
             #fontinfos = ['01_outline.fontinfo']
             #fontinfos = ['03_layers_effects.fontinfo']
             #fontinfos = ['05_distance_fields.fontinfo']
-            fontinfos = ['01_outline.fontinfo', '05_distance_fields.fontinfo']
+            fontinfos = ['adventure.fontinfo', '05_distance_fields.fontinfo']
             
         fontinfos = [ os.path.join(EXAMPLEDIR, x) for x in fontinfos if x.endswith('.fontinfo') ]
 

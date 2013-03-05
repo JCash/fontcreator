@@ -4,7 +4,7 @@ A set of C++ functions that help out with the image processing etc.
 The Signed Euclidian Distance Transform functionality is taken from http://www.gbuffer.net/vector-textures
 """
 
-import sys, os
+import sys
 import numpy as np
 import ctypes
 from ctypes import POINTER, byref, c_void_p, c_size_t, c_float, c_uint32
@@ -20,9 +20,12 @@ elif sys.platform == 'win32':
 elif sys.platform == 'linux2':
     _suffix = '.so'
     platformdir = 'linux64' if sys.maxsize > 2**32 else 'linux32'
-    
-_dirpath = os.path.dirname(__file__)
-_utils = ctypes.cdll.LoadLibrary(os.path.join(_dirpath, 'shared', platformdir, '_utils%s' % _suffix))
+
+try:
+    path = '_utils%s' % (_suffix)
+    _utils = ctypes.cdll.LoadLibrary(path)
+except (OSError,):
+    raise IOError("FAILED TO OPEN " + path)
 
 LAYOUT_INTERLEAVED = 0
 LAYOUT_STACKED = 1
@@ -59,7 +62,7 @@ _calculate_sedt = _utils.calculate_sedt
 _calculate_sedt.argtypes = [POINTER(Image), c_float, c_void_p]
 
 
-def _make_image(npimage, layout):
+def _make_image(npimage):
     image = Image()
     image.data = npimage.ctypes.data_as(c_void_p)
     
@@ -69,7 +72,7 @@ def _make_image(npimage, layout):
     else:
         image.width, image.height, image.channels = npimage.shape
         
-    image.layout = layout
+    image.layout = LAYOUT_INTERLEAVED if npimage.flags.c_contiguous else LAYOUT_STACKED
     
     typ = npimage.dtype
     if typ in (np.ubyte, np.uint8, np.uint16, np.uint32, np.uint64):
@@ -96,33 +99,33 @@ def _make_kernel(kernel):
     return kernel
     
 
-def convolve1d(npimage, kernel, axis, layout=LAYOUT_STACKED):
+def convolve1d(npimage, kernel, axis):
     out = np.empty_like(npimage)
-    image = _make_image(npimage, layout)
+    image = _make_image(npimage)
     kernel = _make_kernel(kernel)
     _convolve1d(byref(image), kernel.ctypes.data_as(c_float_p), len(kernel), axis, out.ctypes.data_as(c_void_p))
     return out
 
 
-def maximum(npimage, kernel, layout=LAYOUT_STACKED):
+def maximum(npimage, kernel):
     out = np.empty_like(npimage)
-    image = _make_image(npimage, layout)
+    image = _make_image(npimage)
     kernel = _make_kernel(kernel)
     _maximum( byref(image), kernel.ctypes.data_as(c_float_p), kernel.shape[0], kernel.shape[1], out.ctypes.data_as(c_void_p))
     return out
 
 
-def minimum(npimage, kernel, layout=LAYOUT_STACKED):
+def minimum(npimage, kernel):
     out = np.empty_like(npimage)
-    image = _make_image(npimage, layout)
+    image = _make_image(npimage)
     kernel = _make_kernel(kernel)
     _minimum( byref(image), kernel.ctypes.data_as(c_float_p), kernel.shape[0], kernel.shape[1], out.ctypes.data_as(c_void_p))
     return out
 
-def half_size(npimage, layout=LAYOUT_STACKED):
+def half_size(npimage):
     depth = 1 if len(npimage.shape) == 2 else npimage.shape[2]
-    if layout == LAYOUT_STACKED:
-        empty = np.empty( (npimage.shape[0]//2, npimage.shape[1]//2) )
+    if npimage.flags.f_contiguous:  # stacked
+        empty = np.empty( (npimage.shape[0]//2, npimage.shape[1]//2), npimage.dtype )
         if depth == 1:
             out = np.dstack( (empty,) )
         elif depth == 2:
@@ -133,19 +136,18 @@ def half_size(npimage, layout=LAYOUT_STACKED):
             out = np.dstack( (empty, empty, empty, empty) )
     else:
         if depth == 1:
-            out = np.empty( (npimage.shape[0]//2, npimage.shape[1]//2) )
+            out = np.empty( (npimage.shape[0]//2, npimage.shape[1]//2), npimage.dtype )
         else:
-            out = np.empty( (npimage.shape[0]//2, npimage.shape[1]//2, depth) )
+            out = np.empty( (npimage.shape[0]//2, npimage.shape[1]//2, depth), npimage.dtype )
 
-    image = _make_image(npimage, layout)
+    image = _make_image(npimage)
     _half_size(byref(image), out.ctypes.data_as(c_void_p))
     return out
 
-def calculate_sedt(npimage, radius, layout=LAYOUT_STACKED):
+def calculate_sedt(npimage, radius):
     assert len(npimage.shape) == 2 or npimage.shape[2] == 1, "calculate_sed only supports 1 channel bitmaps"
     out = np.empty_like(npimage)
-    image = _make_image(npimage, layout)
+    image = _make_image(npimage)
     _calculate_sedt( byref(image), radius, out.ctypes.data_as(c_void_p))
     return out
     
-

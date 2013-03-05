@@ -16,7 +16,8 @@ import utils
 import freetype as ft
 import fontutils as fu
 import fontblend as fb
-import editor.properties as prop
+from editor.properties.propertyclass import WrapPropertyClass
+import editor.properties.propertytypes as prop
 
 # good reads:
 #    http://www.imagemagick.org/Usage/morphology/
@@ -45,7 +46,7 @@ def ColorFunction(cls):
     """ Registers a class as a color function
     """
     assert( getattr(cls, '__call__') )
-    prop.WrapPropertyClass(cls)
+    WrapPropertyClass(cls)
     cls.function_type = 'color'
     _CLASSES[cls.__name__.lower()] = cls
     colorfunctions[cls.__name__.lower()] = cls
@@ -63,7 +64,7 @@ def EffectFunction(cls):
     """ Registers a class as a effect function
     """
     assert( getattr(cls, '__call__') )
-    prop.WrapPropertyClass(cls)
+    WrapPropertyClass(cls)
     cls.function_type = 'effect'
     _CLASSES[cls.__name__.lower()] = cls
     effectfunctions[cls.__name__.lower()] = cls
@@ -147,9 +148,6 @@ class Gradient(object):
     :param angle:        The angle of rotation (in degrees)
     """
     colors = [(0,0,0), (255,255,255)]
-    #angle = 120
-
-    #color = prop.ColorProperty( (255,255,255) )
     angle = prop.AngleProperty( 120, help='The angle of rotation (in degrees)' )
 
     def __init__(self, *k, **kw):
@@ -211,6 +209,8 @@ class Gradient(object):
 
     def apply(self, info, glyph, startx, starty, size, maxsize, glyphimage, previmage):
         bm = np.array(self.bitmap[startx:startx+size[0], starty:starty+size[1]])
+        assert bm.shape == previmage.shape, "Wrong sizes: %s != %s" % ( str(bm.shape), str(previmage.shape) )
+        
         idx = np.where(glyphimage == 0)
         r,g,b = (bm[:,:,0], bm[:,:,1], bm[:,:,2])
         r[idx] = 0
@@ -393,7 +393,7 @@ class Outline(object):
         g[np.nonzero(g)] = self.color[1]
         b[np.nonzero(b)] = self.color[2]
         a *= self.opacity
-
+        
         return fu.alpha_blend(out, image)
 
 
@@ -545,9 +545,6 @@ class DistanceField(object):
     factor = 4
 
     def __init__(self, *k, **kw):
-        """
-        @param size
-        """
         self.size = self.__class__.size
 
         for name, value in kw.iteritems():
@@ -556,54 +553,48 @@ class DistanceField(object):
             except NameError:
                 setattr(self, name, value )
         
-        #self.padding = (self.size, self.size, self.size, self.size)
-        
         padding = self.size/self.factor
         self.padding = (padding, padding, padding, padding)
+    
+    def set_dimensions(self, width, height):
+        self.max_dim = (width, height)
 
     def apply(self, info, glyph, startx, starty, size, maxsize, glyphimage, previmage):
         factor = self.factor
         face = info.face
         flags = ft.LOAD_RENDER | ft.LOAD_TARGET_MONO
+        
         face.set_char_size( width=0, height=(info.size*factor)*64, hres=info.dpi, vres=info.dpi )
         face.load_char( glyph.unicode, flags )
-        
-        bitmap = fu.make_array_from_bitmap(face.glyph.contents.bitmap).astype(np.float64)
-        bitmap = fu.pad_bitmap(bitmap, info.extrapadding[0]*factor, info.extrapadding[1]*factor, info.extrapadding[2]*factor, info.extrapadding[3]*factor, 0.0)
 
+        bitmap = fu.make_array_from_bitmap(face.glyph.contents.bitmap) * 255
+        
+        metrics = face.glyph.contents.metrics
+        bearingY = (metrics.horiBearingY >> 6) + info.internalpadding[1]*factor + info.extrapadding[1]*factor
+        
+        # Due to the down scaling, we need to make sure that the bitmap start at the correct pixels
+        offset_y = bearingY - glyph.bearingY * factor
+        
+        bitmap = fu.pad_bitmap(bitmap, info.extrapadding[0]*factor, info.extrapadding[1]*factor - offset_y, info.extrapadding[2]*factor, info.extrapadding[3]*factor + offset_y, 0, debug=glyph.unicode=='r')
+        
+        # TODO: Work out how to eliminate this issue
+        e = np.empty( bitmap.shape, bitmap.dtype, order='F' )
+        e[:, :] = bitmap
+        bitmap = e
+        
         i = utils.calculate_sedt(bitmap, self.size)
+        #i = bitmap
         
         while factor > 1:
             i = utils.half_size(i)
             factor /= 2
         
-        extra_w = previmage.shape[0] - i.shape[0]
-        extra_h = previmage.shape[1] - i.shape[1]
-        if extra_w > 0 or extra_h > 0:
-            i = fu.pad_bitmap(i, 0, 0, max(0, extra_w), max(0, extra_h), 0.0)
-        if extra_w < 0:
-            i = i[:previmage.shape[0], :]
-        if extra_h < 0:
-            i = i[:, :previmage.shape[1]]
-            
-        i = i[:, :, 0]
+        i = i.astype(np.float64) / 255.0
         
-        previmage[:, :, 0] = i
-        previmage[:, :, 1] = i
-        previmage[:, :, 2] = i
-        previmage[:, :, 3][i > 0] = 1.0
-        return previmage
-
-        """
-        TODO: Find out what's wrong here and why I need to modify the previmage?!
-        outimage = np.empty_like(previmage)
-        outimage[:, :, 0] = i
-        outimage[:, :, 1] = i
-        outimage[:, :, 2] = i
-        outimage[:, :, 3][i > 0] = 1.0
-        outimage[:, :, 3][i == 0] = 0.0
-        return outimage
-        """
+        a = np.zeros_like(i)
+        a[i > 0] = 1.0
+        
+        return np.dstack( (i, i, i, a) )
 
 
 @EffectFunction
@@ -643,7 +634,7 @@ class DefaultMask(object):
 class Layer(object):
     """ A class that helps applying layers on top of each other
     """
-    def __init__(self, *k, **kw):
+    def __init__(self, **kw):
         self.opacity = 1.0
         self.blend = fb.blendnormal
         self.effects = []
@@ -697,10 +688,11 @@ class Layer(object):
         return image
     
     def apply_blend(self, glyphimage, previmage, image):
-        image = np.clip( image, 0.0, 1.0 )
-        image = self.blend(base=previmage, blend=image)
-        image = fu.alpha_blend(previmage, image * self.opacity)
-        self._verify(self.blend, image)
+        if self.blend is not None:
+            image = np.clip( image, 0.0, 1.0 )
+            image = self.blend(base=previmage, blend=image)
+            image = fu.alpha_blend(previmage, image * self.opacity)
+            self._verify(self.blend, image)
         return image
 
 

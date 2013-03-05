@@ -1,15 +1,15 @@
-g++ -shared -O2 \
+g++ -shared -O2 -Wall \
 	source/sedt.cpp \
 	source/utils.cpp \
-	-o _utils.dylib
+	-o shared/darwin64/_utils.dylib
 	
-g++ -shared -O2 \
+g++ -shared -O2 -Wall \
 	source/binpack/Rect.cpp \
 	source/binpack/GuillotineBinPack.cpp \
 	source/binpack/SkylineBinPack.cpp \
 	source/binpack/MaxRectsBinPack.cpp \
 	source/binpack.cpp \
-	-o _binpack.dylib
+	-o shared/darwin64/_binpack.dylib
 	
 g++ -O2 \
 	source/demo.cpp \

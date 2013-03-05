@@ -17,10 +17,9 @@ This is the default rendering of the fonts
     If set, will premultiply the alpha
 
 """
-import logging
+
 import numpy as np
-from fontutils import FontException
-import binpack
+from fontutils import FontException, pre_multiply_alpha
 
 DEBUG=False
 
@@ -75,82 +74,51 @@ def render(info):
     :return:        The image all glyphs are rendered to
     """
     
-    # sort the glyphs
-    info.glyphs.sort(cmp=_glyph_cmp)
-    
-    # Work in progress
-    #iw, ih = _guess_dimensions(info.glyphs)
     iw, ih = info.texturesize
-    #ih /= 2
-    #print "guessed image size", iw, ih
     image = _create_image(info, iw, ih)
-    
-    textureoffset = info.textureoffset
-    padding = info.padding
-    packer = binpack.create_packer(binpack.SKYLINE_BL, iw - textureoffset[0], ih - textureoffset[1], False)
-    
-    # DEBUG PACK RENDERING
-    if DEBUG:
-        image[:, :, 0] = 1.0
-        image[:, :, 3] = 1.0
+
+    y = info.ascender + info.textureoffset[1]
+    x = info.textureoffset[0]
     
     for glyph in info.glyphs:
         if glyph.bitmap is None:
             continue
         
-        bitmap = glyph.bitmap
+        w, h, d = glyph.bitmap.shape
         
-        w, h, d = bitmap.shape
+        if x + w + info.padding >= iw:
+            x = info.textureoffset[0]
+            y += info.ascender - info.descender + info.padding
+                
+        top = y - glyph.bearingY
+        left = x
+        right = x + w
+        bottom = top + h
         
-        rect = binpack.pack_rect(packer, w + padding, h + padding)
-        if rect.height == 0:
+        if right >= iw or bottom >= ih:
+            print "glyph", glyph.unicode
+            print "RECT", (left, top, right, bottom)
             raise FontException("The texture size is too small: (%d, %d) Increase the 'texturesize' property in the font info" % (info.texturesize[0], info.texturesize[1]) )
-        
-        rect.x += textureoffset[0]
-        rect.y += textureoffset[1]
-        rect.width -= padding
-        rect.height -= padding
-        
-        glyph.bitmapbox = (rect.x, rect.y, rect.width, rect.height)
-        
-        # check if the glyph has been flipped
-        if w != h and w == rect.height:
-            bitmap = np.rot90(bitmap)
+
+        glyph.bitmapbox = (left, top, w, h)
         
         try:
-            image[ rect.x : rect.x + rect.width, rect.y : rect.y + rect.height ] = bitmap
+            image[ left : right, top : bottom ] = glyph.bitmap
 
-            # DEBUG PACK RENDERING
-            if DEBUG:
-                import fontutils
-                top = image[ rect.x : rect.x + rect.width, rect.y : rect.y + rect.height ]
-                ones = np.ones( (top.shape[0], top.shape[1]) )
-                
-                from random import random
-                r = random() * 0.4 + 0.6
-                g = random() * 0.4 + 0.6
-                b = random() * 0.4 + 0.6
-                a = 1.0
-                bottom = np.dstack( (ones * r, ones * g, ones * b, ones * a) )
-            
-                result = fontutils.alpha_blend(bottom, top)
-                image[ rect.x : rect.x + rect.width, rect.y : rect.y + rect.height ] = result
         except Exception, e:
+            print "glyph", glyph.unicode
             print "ERROR", e
-            print "RECT", rect
+            print "RECT", (left, top, right, bottom)
             
-            #print "bmshape", (bx,by,w,h)
             print "image.shape", image.shape
             print "char.bitmap.shape", glyph.bitmap.shape
             raise
 
         #x += max(w, w2) + info.padding + info.internalpadding[0]*2
-    
-    logging.debug('Used %f %% of the texture', (binpack.get_occupancy(packer) * 100))
-    binpack.destroy_packer(packer)
+        x += info.padding + w
     
     if info.usepremultipliedalpha:
-        image = fontutils.pre_multiply_alpha(image)
+        image = pre_multiply_alpha(image)
         
     return image
         

@@ -1,10 +1,7 @@
 
 from PySide import QtGui
 
-import toolbar
 import propertyview
-import propertyeditors
-from properties import *
 
 class FunctionWidget(QtGui.QWidget):
     

@@ -12,13 +12,6 @@ The font info reads the .fontinfo and creates the layers, effects, and blends
 
     The size of the font (in pixels)
 
-.. py:attribute:: bitmapsize = None
-
-    The size (in pixels) of the font when it should be rendered.
-    This is useful when you wish to render the glyph much larger and later on scale it back down.
-    It is used when generating distance field fonts.
-    If set to None, the *size* will be used. Defaults to None.
-
 .. py:attribute:: dpi = 72
 
     The resolution of the font when being rendered.
@@ -101,7 +94,6 @@ def GetDefaultOptions():
     defaults = dict()
     defaults['name'] = 'not set'
     defaults['size'] = '32'
-    defaults['bitmapsize'] = None
     defaults['dpi'] = '72'
     defaults['padding'] = '0'
     defaults['internalpadding'] = '0, 0'
@@ -189,10 +181,6 @@ class SFontInfo(object):
             self.name = os.path.join( os.path.dirname(options.input), self.name )
 
         self.size = int(eval(self.size))
-        if self.bitmapsize is None:
-            self.bitmapsize = self.size
-        else:
-            self.bitmapsize = int(eval(self.bitmapsize))
         self.dpi = int(self.dpi)
         self.texturesize = tuple( map( int, self.texturesize.split(',') ) )
         self.textureoffset = tuple( map( int, self.textureoffset.split(',') ) )

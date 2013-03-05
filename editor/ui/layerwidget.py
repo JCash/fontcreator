@@ -2,7 +2,8 @@
 from PySide import QtGui
 import toolbar
 import propertyview
-from properties import *
+from properties.propertyclass import property_class
+from properties.propertytypes import IntProperty
 
 def lerp(a,b,t):
     return (t * b) + ((1.0 - t) * a)

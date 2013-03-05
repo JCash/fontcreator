@@ -33,7 +33,7 @@ template<typename DTYPE, size_t MAX>
 class SEDT
 {
 private:
-	Vector2int16 *distMap;
+	Vector2int16* distMap;
 	int w, h;
 
 public:
@@ -44,7 +44,22 @@ public:
 
 	void init(int w, int h, const DTYPE* binImg, bool invert = false);
 
-	void updatePix(int idx, int idxOffset, int x, int y, int xOffset, int yOffset );
+	inline void updatePix(int idx, int idxOffset, int x, int y, int xOffset, int yOffset )
+	{
+		if (x+xOffset < 0 || x+xOffset >= w || y+yOffset < 0 || y+yOffset >= h)
+		{
+			return;
+		}
+
+		Vector2int16 n = distMap[idx + idxOffset];
+		Vector2int16 &p = distMap[idx];
+
+		n.x += xOffset;
+		n.y += yOffset;
+
+		if (p.x*p.x + p.y*p.y > n.x*n.x + n.y*n.y)
+			p = n;
+	}
 
 	void compute(float* outDist);
 };
@@ -82,7 +97,6 @@ void SEDT<DTYPE, MAX>::init( int w, int h, const DTYPE* binImg, bool invert )
 	distMap = new Vector2int16[w*h];
 
 	const DTYPE halfrange = DTYPE(MAX) / 2;
-
 	if (invert)
 	{
 		for (int i=0; i<w*h; ++i)
@@ -97,25 +111,6 @@ void SEDT<DTYPE, MAX>::init( int w, int h, const DTYPE* binImg, bool invert )
 			distMap[i] = (binImg[i] < halfrange) ? z : max;
 		}
 	}
-}
-
-
-template<typename DTYPE, size_t MAX>
-void SEDT<DTYPE, MAX>::updatePix( int idx, int idxOffset, int x, int y, int xOffset, int yOffset )
-{
-	if (x+xOffset < 0 || x+xOffset >= w || y+yOffset < 0 || y+yOffset >= h)
-	{
-		return;
-	}
-
-	Vector2int16 n = distMap[idx + idxOffset];
-	Vector2int16 &p = distMap[idx];
-
-	n.x += xOffset;
-	n.y += yOffset;
-
-	if (p.x*p.x + p.y*p.y > n.x*n.x + n.y*n.y)
-		p = n;
 }
 
 template<typename DTYPE, size_t MAX>
@@ -145,7 +140,6 @@ void SEDT<DTYPE, MAX>::compute( float* outDist )
 			updatePix( idx, 1, x, y, 1, 0 );
 
 			--idx;
-
 		}
 	}
 
@@ -199,7 +193,7 @@ static void _calculate_sedt(const Image* image, float radius, void* _out)
 
 	/*
 	printf("sizeof( DTYPE ) == %u\n", sizeof(DTYPE));
-	printf("image %d\n", image->m_Layout);
+	printf("layout %s\n", image->m_Layout == 0 ? "c_contiguous" : "f_fontiguous");
 	printf("chdepth %d\n", image->m_ChannelDepth);
 	printf("w, h, d %d, %d, %d\n", w, h, image->m_Channels);
 	*/
@@ -221,6 +215,21 @@ static void _calculate_sedt(const Image* image, float radius, void* _out)
 		out[i] = DTYPE(value * MAX);
 	}
 
+	/*
+	printf("w, h: %lu, %lu\n", w, h);
+	int ww = w < 30 ? w : 30;
+	int hh = h < 30 ? h : 30;
+	for( int y = 0; y < hh; ++y )
+	{
+		printf("%02d: ", y);
+		for( int x = 0; x < ww; ++x )
+		{
+			uint8_t c = src[y * w + x];
+			printf("%03u ", c );
+		}
+		printf("\n");
+	}*/
+
 	delete [] img1;
 }
 
@@ -234,12 +243,17 @@ void calculate_sedt(const Image* image, float radius, void* out)
 
 	if( image->m_Type == E_UINT )
 	{
-		assert(false && "UINT Not implemented!!");
-		/*
 		if( image->m_ChannelDepth == 8 )
+		{
 			_calculate_sedt<uint8_t, 255>( image, radius, out );
+		}
 		else if( image->m_ChannelDepth == 16 )
 			_calculate_sedt<uint16_t, 65535>( image, radius, out );
+		else
+		{
+			assert(false && "UINT Not implemented!!");
+		}
+		/*
 		else if( image->m_ChannelDepth == 32 )
 			_calculate_sedt<uint32_t, 0xFFFFFFFF>( image, radius, out );
 		else if( image->m_ChannelDepth == 64 )

@@ -4,7 +4,6 @@ import time
 import multiprocessing
 import threading
 import Queue
-from cStringIO import StringIO
 from PySide import QtCore, QtGui, QtUiTools
 
 
