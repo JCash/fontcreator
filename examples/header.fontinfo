@@ -1,8 +1,8 @@
 # Used for generating the header logo
 
 [default]
-name = ./fonts/helsinki.ttf
-size = 50
+name = ./fonts/Commodore_Pixelized_v1.2.ttf
+size = 64
 
 letters = letters_ascii.txt
 

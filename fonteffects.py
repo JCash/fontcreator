@@ -33,6 +33,9 @@ _CLASSES = dict()
 colorfunctions = dict()
 effectfunctions = dict()
 
+#def _get_pixel(i, x, y):
+#    return i[:,:,0][y][x], i[:,:,1][y][x], i[:,:,2][y][x], i[:,:,3][y][x]
+
 
 def GetClassByName(name):
     return _CLASSES[name]
@@ -386,14 +389,14 @@ class Outline(object):
         
         if self.spread:
             out = fu.blur_image(out, self.spread)
+        
+        r, g, b, a = fu.split_channels(out)
+        
+        r[a > 0] = self.color[0]
+        g[a > 0] = self.color[1]
+        b[a > 0] = self.color[2]
+        a[a > 0] = self.opacity
 
-        r, g, b, a = (out[:, :, 0], out[:, :, 1], out[:, :, 2], out[:, :, 3])
-        
-        r[np.nonzero(r)] = self.color[0]
-        g[np.nonzero(g)] = self.color[1]
-        b[np.nonzero(b)] = self.color[2]
-        a *= self.opacity
-        
         return fu.alpha_blend(out, image)
 
 

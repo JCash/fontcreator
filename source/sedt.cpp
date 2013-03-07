@@ -205,7 +205,7 @@ static void _calculate_sedt(const Image* image, float radius, void* _out)
 	sedt.init(w, h, src, 1);
 	sedt.compute(img2);
 
-	for( int i = 0; i < pagesize; ++i )
+	for( size_t i = 0; i < pagesize; ++i )
 	{
 		float value = (img1[i] - img2[i]) / radius;
 		value = (value * 0.5f) + 0.5f;

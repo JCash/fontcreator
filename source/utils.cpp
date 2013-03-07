@@ -29,7 +29,7 @@ static void _convolve1d(const Image* image, const float* kernel, size_t kernelsi
 					for( size_t i = 0; i < kernelsize; ++i )
 					{
 						double value = 0;
-						if( xx >= 0 && xx < width )
+						if( xx >= 0 && xx < (int32_t)width )
 						{
 							value = data[y * rowsize + (xx + i) * channels + c];
 						}
@@ -58,7 +58,7 @@ static void _convolve1d(const Image* image, const float* kernel, size_t kernelsi
 					for( size_t i = 0; i < kernelsize; ++i )
 					{
 						double value = 0;
-						if( yy >= 0 && yy < height )
+						if( yy >= 0 && yy < (int32_t)height )
 						{
 							value = data[(yy + i) * rowsize + x * channels + c];
 						}
@@ -101,7 +101,7 @@ static void _convolve1d_stacked(const Image* image, const float* kernel, size_t 
 						int32_t xx = x - halfkernelsize + k;
 						if( xx < 0 )
 							xx = 0;
-						else if( xx >= width )
+						else if( xx >= (int32_t)width )
 							xx = width -1;
 
 						const double value = data[c * pagesize + y * width + xx];
@@ -131,7 +131,7 @@ static void _convolve1d_stacked(const Image* image, const float* kernel, size_t 
 						int32_t yy = y - halfkernelsize + k;
 						if( yy < 0 )
 							yy = 0;
-						else if( yy >= height )
+						else if( yy >= (int32_t)height )
 							yy = height - 1;
 
 						const double value = data[c * pagesize + yy * width + x];
@@ -218,13 +218,13 @@ static void _minmax(const Image* image, const float* kernel, size_t kernelwidth,
 				for( size_t ky = 0; ky < kernelheight; ++ky )
 				{
 					const int32_t yyy = yy + ky;
-					if( yyy < 0 || yyy >= height )
+					if( yyy < 0 || yyy >= (int32_t)height )
 						continue;
 
 					for( size_t kx = 0; kx < kernelwidth; ++kx )
 					{
 						const int32_t xxx = xx + kx;
-						if( xxx < 0 || xxx >= width )
+						if( xxx < 0 || xxx >= (int32_t)width )
 							continue;
 
 						if( kernel[ky * kernelwidth + kx] == 0 )
@@ -273,13 +273,13 @@ static void _minmax_stacked(const Image* image, const float* kernel, size_t kern
 				for( size_t ky = 0; ky < kernelheight; ++ky )
 				{
 					const int32_t yyy = yy + ky;
-					if( yyy < 0 || yyy >= height )
+					if( yyy < 0 || yyy >= (int32_t)height )
 						continue;
 
 					for( size_t kx = 0; kx < kernelwidth; ++kx )
 					{
 						const int32_t xxx = xx + kx;
-						if( xxx < 0 || xxx >= width )
+						if( xxx < 0 || xxx >= (int32_t)width )
 							continue;
 
 						if( kernel[ky * kernelwidth + kx] == 0 )

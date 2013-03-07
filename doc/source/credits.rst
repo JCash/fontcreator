@@ -10,8 +10,8 @@ Fonts
 
   - Distributed under license: http://www.fontsquirrel.com/license/helsinki
 
-- `Cabin <http://www.fontsquirrel.com/fonts/cabin>`_ by Pablo Impallari and Igino Marini
+- `Petita <http://www.dafont.com/petita.font>`_ by Manfred Klein
 
-  - Distributed under license: http://www.fontsquirrel.com/license/cabin
+- `Commodore 64 Pixelized <http://www.dafont.com/commodore-64-pixelized.font>`_ by Devin Cook
 
 Thanks for the free fonts!

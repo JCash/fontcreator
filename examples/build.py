@@ -154,7 +154,7 @@ if __name__ == '__main__':
             #fontinfos = ['01_outline.fontinfo']
             #fontinfos = ['03_layers_effects.fontinfo']
             #fontinfos = ['05_distance_fields.fontinfo']
-            fontinfos = ['adventure.fontinfo', '05_distance_fields.fontinfo']
+            fontinfos = ['subtitle.fontinfo']
             
         fontinfos = [ os.path.join(EXAMPLEDIR, x) for x in fontinfos if x.endswith('.fontinfo') ]
 

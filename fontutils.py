@@ -65,6 +65,24 @@ def alpha_blend(bottom, top):
 
     if bottom.dtype != top.dtype:
         bottom = bottom.astype(top.dtype)
+    """
+    br, bg, bb, ba = split_channels(bottom)
+    tr, tg, tb, ta = split_channels(top)
+
+    oneminusa = 1.0 - ta
+    
+    out = np.empty_like(bottom)
+    out[:, :, 0] = br * oneminusa + tr * ta
+    out[:, :, 1] = bg * oneminusa + tg * ta
+    out[:, :, 2] = bb * oneminusa + tb * ta
+    out[:, :, 3] = np.maximum(ba, ta)
+    #return out
+    #return top
+    out = top.copy()
+    out[:, :, 3] = np.maximum(ba, ta)
+    return out
+    """
+
     br, bg, bb, ba = split_channels(bottom)
     tr, tg, tb, ta = split_channels(top)
 
@@ -74,6 +92,7 @@ def alpha_blend(bottom, top):
     out[:, :, 2] = bb + (tb-bb) * ta
     out[:, :, 3] = np.maximum(ba, ta)
     return out
+    
 
 
 def pad_bitmap(bitmap, left, top, right, bottom, value, debug=False):

@@ -1,0 +1,37 @@
+# A subtitle example
+#
+
+[default]
+name = ./fonts/Commodore_Pixelized_v1.2.ttf
+size = 64
+
+letters = letters_ascii.txt
+
+bgcolor = (0, 0, 0)
+
+writer = fontout_json
+texturerender = fonttex_bitmap
+texturewriter = fonttexout_pil
+textureformat = .png
+texturesize = 1024, 512
+
+layers = [Layer(color=solid)]
+posteffects = [outline, outline2]
+
+# modes: none, light, normal. Default is 'normal'
+antialias = none
+
+[solid]
+type = solid
+#color = (123,91,70)
+color = (166,80,33)
+
+[outline]
+type = outline
+width = 4
+color = (255, 255, 255)
+
+[outline2]
+type = outline
+width = 4
+color = (0, 0, 0)
