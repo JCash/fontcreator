@@ -10,8 +10,21 @@ Fonts
 
   - Distributed under license: http://www.fontsquirrel.com/license/helsinki
 
-- `Cabin <http://www.fontsquirrel.com/fonts/cabin>`_ by Pablo Impallari and Igino Marini
+- `N.O. Moevement <http://www.dafont.com/n-o-movement.font>`_ by Peter Saville
 
-  - Distributed under license: http://www.fontsquirrel.com/license/cabin
+- `Commodore 64 Pixelized <http://www.dafont.com/commodore-64-pixelized.font>`_ by Devin Cook
 
 Thanks for the free fonts!
+
+
+Code
+----
+
+Thanks to the FreeType library maintainers!
+Freetype is used under the FreeType license (BSD with a credit clause)
+
+Thanks Jukka Jylanki for the bin packing code: `RectangleBinPack.zip <http://clb.demon.fi/files/RectangleBinPack/RectangleBinPack.zip>`_
+
+Thanks Stefan Gustavsson for the demo code: `Interactive Demo <http://webstaff.itn.liu.se/~stegu/aadist>`_
+
+ 

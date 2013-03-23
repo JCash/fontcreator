@@ -145,15 +145,15 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
 
 
-<span class="k">def</span> <span class="nf">_apply_layer</span><span class="p">(</span><span class="n">glyph</span><span class="p">,</span> <span class="n">info</span><span class="p">,</span> <span class="n">layer</span><span class="p">,</span> <span class="n">character</span><span class="p">,</span> <span class="n">previmage</span><span class="p">,</span> <span class="n">glyphimage</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">_apply_layer</span><span class="p">(</span><span class="n">info</span><span class="p">,</span> <span class="n">glyph</span><span class="p">,</span> <span class="n">layer</span><span class="p">,</span> <span class="n">previmage</span><span class="p">,</span> <span class="n">glyphimage</span><span class="p">):</span>
     <span class="c"># The max y should be the same for all characters in the same row</span>
     <span class="c"># This is necessary for having the same &quot;space&quot; during calculations</span>
     <span class="n">maxsize</span> <span class="o">=</span> <span class="n">info</span><span class="o">.</span><span class="n">maxsize</span>
 
-    <span class="n">starty</span> <span class="o">=</span> <span class="n">info</span><span class="o">.</span><span class="n">maxbearingY</span> <span class="o">-</span> <span class="n">character</span><span class="o">.</span><span class="n">bearingY</span>
+    <span class="n">starty</span> <span class="o">=</span> <span class="n">info</span><span class="o">.</span><span class="n">maxbearingY</span> <span class="o">-</span> <span class="n">glyph</span><span class="o">.</span><span class="n">bearingY</span>
 
     <span class="n">layer</span><span class="o">.</span><span class="n">set_info</span><span class="p">(</span> <span class="n">glyph</span><span class="p">,</span> <span class="n">info</span> <span class="p">)</span>
-    <span class="n">image</span> <span class="o">=</span> <span class="n">layer</span><span class="o">.</span><span class="n">apply_color</span><span class="p">(</span> <span class="mi">0</span><span class="p">,</span> <span class="n">starty</span><span class="p">,</span> <span class="n">character</span><span class="o">.</span><span class="n">bitmap</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">maxsize</span><span class="p">,</span> <span class="n">glyphimage</span><span class="p">,</span> <span class="n">previmage</span> <span class="p">)</span>
+    <span class="n">image</span> <span class="o">=</span> <span class="n">layer</span><span class="o">.</span><span class="n">apply_color</span><span class="p">(</span> <span class="mi">0</span><span class="p">,</span> <span class="n">starty</span><span class="p">,</span> <span class="n">glyph</span><span class="o">.</span><span class="n">bitmap</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">maxsize</span><span class="p">,</span> <span class="n">glyphimage</span><span class="p">,</span> <span class="n">previmage</span> <span class="p">)</span>
     <span class="n">image</span> <span class="o">=</span> <span class="n">layer</span><span class="o">.</span><span class="n">apply_effects</span><span class="p">(</span> <span class="n">image</span> <span class="p">)</span>
     <span class="n">image</span> <span class="o">=</span> <span class="n">layer</span><span class="o">.</span><span class="n">apply_mask</span><span class="p">(</span> <span class="n">image</span> <span class="p">)</span>
     <span class="n">image</span> <span class="o">=</span> <span class="n">layer</span><span class="o">.</span><span class="n">apply_blend</span><span class="p">(</span> <span class="n">glyphimage</span><span class="p">,</span> <span class="n">previmage</span><span class="p">,</span> <span class="n">image</span> <span class="p">)</span>
@@ -164,14 +164,23 @@
 
 <span class="k">def</span> <span class="nf">_apply_layers</span><span class="p">(</span><span class="n">info</span><span class="p">):</span>
     
-    <span class="n">bbox</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="p">)</span>
+    <span class="c">#bbox = np.array( [0, 0] )</span>
+    <span class="n">width</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">top</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">bottom</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">max_bearing_y</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="k">for</span> <span class="n">glyph</span> <span class="ow">in</span> <span class="n">info</span><span class="o">.</span><span class="n">glyphs</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">glyph</span><span class="o">.</span><span class="n">bitmap</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
             <span class="k">continue</span>
-        <span class="n">bbox</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span> <span class="n">bbox</span><span class="p">,</span> <span class="n">glyph</span><span class="o">.</span><span class="n">bitmap</span><span class="o">.</span><span class="n">shape</span> <span class="p">)</span>
+        
+        <span class="n">width</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">glyph</span><span class="o">.</span><span class="n">bitmap</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">top</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">top</span><span class="p">,</span> <span class="n">glyph</span><span class="o">.</span><span class="n">bearingY</span><span class="p">)</span>
+        <span class="n">bottom</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">bottom</span><span class="p">,</span> <span class="n">glyph</span><span class="o">.</span><span class="n">bearingY</span> <span class="o">-</span> <span class="n">glyph</span><span class="o">.</span><span class="n">bitmap</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        
+        <span class="c">#bbox = np.maximum( bbox, glyph.bitmap.shape )</span>
         <span class="n">max_bearing_y</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">max_bearing_y</span><span class="p">,</span> <span class="n">glyph</span><span class="o">.</span><span class="n">bearingY</span><span class="p">)</span>
     
+    <span class="n">bbox</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span> <span class="p">[</span><span class="n">width</span><span class="p">,</span> <span class="n">top</span> <span class="o">-</span> <span class="n">bottom</span><span class="p">]</span> <span class="p">)</span>
     <span class="n">bbox</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="n">info</span><span class="o">.</span><span class="n">extrapadding</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">info</span><span class="o">.</span><span class="n">extrapadding</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
     <span class="n">bbox</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+=</span> <span class="n">info</span><span class="o">.</span><span class="n">extrapadding</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">info</span><span class="o">.</span><span class="n">extrapadding</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
     
@@ -198,19 +207,17 @@
         <span class="n">fonteffects</span><span class="o">.</span><span class="n">DefaultMask</span><span class="o">.</span><span class="n">idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">glyphimage</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
         
         <span class="n">previmage</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dstack</span><span class="p">((</span><span class="n">glyphimage</span><span class="p">,</span> <span class="n">glyphimage</span><span class="p">,</span> <span class="n">glyphimage</span><span class="p">,</span> <span class="n">glyphimage</span><span class="p">))</span>
-        
-        <span class="c"># TODO: Fix weird issue in DistanceField</span>
-        <span class="c">#previmage.flags.writeable = False</span>
+        <span class="n">previmage</span><span class="o">.</span><span class="n">flags</span><span class="o">.</span><span class="n">writeable</span> <span class="o">=</span> <span class="bp">False</span>
 
-        <span class="n">previmage</span> <span class="o">=</span> <span class="n">_apply_layer</span><span class="p">(</span><span class="n">glyph</span><span class="p">,</span> <span class="n">info</span><span class="p">,</span> <span class="n">info</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">glyph</span><span class="p">,</span> <span class="n">previmage</span><span class="p">,</span> <span class="n">glyphimage</span><span class="p">)</span>
+        <span class="n">previmage</span> <span class="o">=</span> <span class="n">_apply_layer</span><span class="p">(</span><span class="n">info</span><span class="p">,</span> <span class="n">glyph</span><span class="p">,</span> <span class="n">info</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">previmage</span><span class="p">,</span> <span class="n">glyphimage</span><span class="p">)</span>
         <span class="n">previmage</span><span class="o">.</span><span class="n">flags</span><span class="o">.</span><span class="n">writeable</span> <span class="o">=</span> <span class="bp">False</span>
 
         <span class="k">for</span> <span class="n">layer</span> <span class="ow">in</span> <span class="n">info</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
-            <span class="n">previmage</span> <span class="o">=</span> <span class="n">_apply_layer</span><span class="p">(</span><span class="n">glyph</span><span class="p">,</span> <span class="n">info</span><span class="p">,</span> <span class="n">layer</span><span class="p">,</span> <span class="n">glyph</span><span class="p">,</span> <span class="n">previmage</span><span class="p">,</span> <span class="n">glyphimage</span><span class="p">)</span>
+            <span class="n">previmage</span> <span class="o">=</span> <span class="n">_apply_layer</span><span class="p">(</span><span class="n">info</span><span class="p">,</span> <span class="n">glyph</span><span class="p">,</span> <span class="n">layer</span><span class="p">,</span> <span class="n">previmage</span><span class="p">,</span> <span class="n">glyphimage</span><span class="p">)</span>
             <span class="n">previmage</span><span class="o">.</span><span class="n">flags</span><span class="o">.</span><span class="n">writeable</span> <span class="o">=</span> <span class="bp">False</span>
 
         <span class="k">for</span> <span class="n">effect</span> <span class="ow">in</span> <span class="n">info</span><span class="o">.</span><span class="n">posteffects</span><span class="p">:</span>
-            <span class="n">previmage</span> <span class="o">=</span> <span class="n">effect</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">glyph</span><span class="p">,</span> <span class="n">info</span><span class="p">,</span> <span class="n">previmage</span><span class="p">)</span>
+            <span class="n">previmage</span> <span class="o">=</span> <span class="n">effect</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">info</span><span class="p">,</span> <span class="n">glyph</span><span class="p">,</span> <span class="n">previmage</span><span class="p">)</span>
             <span class="n">previmage</span><span class="o">.</span><span class="n">flags</span><span class="o">.</span><span class="n">writeable</span> <span class="o">=</span> <span class="bp">False</span>
         
         <span class="n">bgimage</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span> <span class="n">previmage</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">info</span><span class="o">.</span><span class="n">bgcolor</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">info</span><span class="o">.</span><span class="n">bgcolor</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">info</span><span class="o">.</span><span class="n">bgcolor</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="mf">0.0</span><span class="p">)</span>
@@ -347,7 +354,7 @@
     <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">info</span><span class="o">.</span><span class="n">glyphs</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s">&quot;No glyphs to process!&quot;</span>
     
     <span class="c"># since the layers might set this, we set it back</span>
-    <span class="n">face</span><span class="o">.</span><span class="n">set_char_size</span><span class="p">(</span> <span class="n">width</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="n">info</span><span class="o">.</span><span class="n">bitmapsize</span> <span class="o">*</span> <span class="mi">64</span><span class="p">,</span> <span class="n">hres</span><span class="o">=</span><span class="n">info</span><span class="o">.</span><span class="n">dpi</span><span class="p">,</span> <span class="n">vres</span><span class="o">=</span><span class="n">info</span><span class="o">.</span><span class="n">dpi</span> <span class="p">)</span>
+    <span class="n">face</span><span class="o">.</span><span class="n">set_char_size</span><span class="p">(</span> <span class="n">width</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="n">info</span><span class="o">.</span><span class="n">size</span> <span class="o">*</span> <span class="mi">64</span><span class="p">,</span> <span class="n">hres</span><span class="o">=</span><span class="n">info</span><span class="o">.</span><span class="n">dpi</span><span class="p">,</span> <span class="n">vres</span><span class="o">=</span><span class="n">info</span><span class="o">.</span><span class="n">dpi</span> <span class="p">)</span>
     
     <span class="k">for</span> <span class="n">glyph</span> <span class="ow">in</span> <span class="n">info</span><span class="o">.</span><span class="n">glyphs</span><span class="p">:</span>
 
@@ -511,11 +518,15 @@
     <span class="n">bgcolor</span> <span class="o">=</span> <span class="n">info</span><span class="o">.</span><span class="n">bgcolor</span>
     <span class="k">if</span> <span class="n">options</span><span class="o">.</span><span class="n">bgcolor</span><span class="p">:</span>
         <span class="n">bgcolor</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">bgcolor</span><span class="p">)</span>
-        <span class="n">bgcolor</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">/</span><span class="mf">255.0</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="k">else</span> <span class="n">x</span><span class="p">,</span> <span class="n">bgcolor</span> <span class="p">)</span>        
+        <span class="n">bgcolor</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">/</span><span class="mf">255.0</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="k">else</span> <span class="n">x</span><span class="p">,</span> <span class="n">bgcolor</span> <span class="p">)</span>
+    
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">bgcolor</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="n">bgcolor</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">bgcolor</span><span class="p">)</span><span class="o">+</span><span class="p">[</span><span class="mf">1.0</span><span class="p">]</span>        
     
     <span class="n">r</span> <span class="o">=</span> <span class="n">ones</span> <span class="o">*</span> <span class="n">bgcolor</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
     <span class="n">g</span> <span class="o">=</span> <span class="n">ones</span> <span class="o">*</span> <span class="n">bgcolor</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
     <span class="n">b</span> <span class="o">=</span> <span class="n">ones</span> <span class="o">*</span> <span class="n">bgcolor</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">ones</span> <span class="o">*</span> <span class="n">bgcolor</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
 
     <span class="n">zeros</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">texture_size</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span>
     <span class="n">image</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dstack</span><span class="p">(</span> <span class="p">(</span><span class="n">r</span><span class="p">,</span><span class="n">g</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">zeros</span><span class="p">)</span> <span class="p">)</span>
@@ -685,7 +696,7 @@
           
     <div class="footer">
         &copy; Copyright 2013, Mathias Westerdahl.
-      Last updated on Feb 24, 2013.
+      Last updated on Mar 23, 2013.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </div>
         </div>

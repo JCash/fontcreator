@@ -69,6 +69,7 @@
 <li><a class="reference internal" href="#building-code" id="id4">Building Code</a></li>
 <li><a class="reference internal" href="#building-examples" id="id5">Building Examples</a></li>
 <li><a class="reference internal" href="#building-documentation" id="id6">Building Documentation</a></li>
+<li><a class="reference internal" href="#the-demo-app" id="id7">The Demo app</a></li>
 </ul>
 </div>
 <div class="section" id="downloads">
@@ -94,6 +95,7 @@
 <ul class="simple">
 <li><a class="reference external" href="http://sphinx.pocoo.org">sphinx</a> (for the documentation)</li>
 <li><a class="reference external" href="http://qt-project.org/wiki/PySideDownloads">PySide</a> (for the Editor)</li>
+<li>libpng and libglfw (for the demo app)</li>
 </ul>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
@@ -126,6 +128,8 @@ calling the appropriate compile script:</p>
 <div class="highlight-python"><pre>&gt; python fontcreator.py -i examples/00_pixel.fontinfo -o build/00_pixel.fontinfo</pre>
 </div>
 <p>If all goes well, you should now be able to find two files <em>build/00_pixel.png</em> and <em>build/00_pixel.json</em></p>
+<p>There are versions of the compile script for Win6 and Win32, but they don&#8217;t build the demo app.
+You can easily fix that yourself if you provide the libpng and the libglfw.</p>
 </div>
 <div class="section" id="building-examples">
 <h2><a class="toc-backref" href="#contents">4.5. Building Examples</a><a class="headerlink" href="#building-examples" title="Permalink to this headline">¶</a></h2>
@@ -142,6 +146,17 @@ calling the appropriate compile script:</p>
 <div class="highlight-python"><pre>&gt; ./build_doc.sh
 &gt; open doc/build/html/index.html</pre>
 </div>
+</div>
+<div class="section" id="the-demo-app">
+<h2><a class="toc-backref" href="#contents">4.7. The Demo app</a><a class="headerlink" href="#the-demo-app" title="Permalink to this headline">¶</a></h2>
+<p>The demo app shows the sdf rendering of a texture created with the FontCreator.
+Keys:</p>
+<ul class="simple">
+<li>Zoom   - Left Shift + Left Mouse + Mouse Move</li>
+<li>Rotate - Left Control + Left Mouse + Mouse Move</li>
+<li>Pan    - Left Mouse + Mouse Move</li>
+</ul>
+<img alt="_images/demo.png" src="_images/demo.png" />
 </div>
 </div>
 
@@ -163,6 +178,7 @@ calling the appropriate compile script:</p>
 <li class="toctree-l2"><a class="reference internal" href="#building-code">4.4. Building Code</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#building-examples">4.5. Building Examples</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#building-documentation">4.6. Building Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#the-demo-app">4.7. The Demo app</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="reference.html">5. Reference</a></li>
@@ -205,7 +221,7 @@ calling the appropriate compile script:</p>
           
     <div class="footer">
         &copy; Copyright 2013, Mathias Westerdahl.
-      Last updated on Feb 24, 2013.
+      Last updated on Mar 23, 2013.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </div>
         </div>

@@ -68,13 +68,14 @@
 <span class="sd">.. py:attribute:: size = 32</span>
 
 <span class="sd">    The size of the font (in pixels)</span>
+<span class="sd">    </span>
+<span class="sd">.. py:attribute:: leading = 0.0</span>
 
-<span class="sd">.. py:attribute:: bitmapsize = None</span>
+<span class="sd">    The leading of the font.</span>
+<span class="sd">    </span>
+<span class="sd">.. py:attribute:: tracking = 0.0</span>
 
-<span class="sd">    The size (in pixels) of the font when it should be rendered.</span>
-<span class="sd">    This is useful when you wish to render the glyph much larger and later on scale it back down.</span>
-<span class="sd">    It is used when generating distance field fonts.</span>
-<span class="sd">    If set to None, the *size* will be used. Defaults to None.</span>
+<span class="sd">    The tracking of the font.</span>
 
 <span class="sd">.. py:attribute:: dpi = 72</span>
 
@@ -158,7 +159,8 @@
     <span class="n">defaults</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
     <span class="n">defaults</span><span class="p">[</span><span class="s">&#39;name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;not set&#39;</span>
     <span class="n">defaults</span><span class="p">[</span><span class="s">&#39;size&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;32&#39;</span>
-    <span class="n">defaults</span><span class="p">[</span><span class="s">&#39;bitmapsize&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="n">defaults</span><span class="p">[</span><span class="s">&#39;leading&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;0.0&#39;</span>
+    <span class="n">defaults</span><span class="p">[</span><span class="s">&#39;tracking&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;0.0&#39;</span>
     <span class="n">defaults</span><span class="p">[</span><span class="s">&#39;dpi&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;72&#39;</span>
     <span class="n">defaults</span><span class="p">[</span><span class="s">&#39;padding&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;0&#39;</span>
     <span class="n">defaults</span><span class="p">[</span><span class="s">&#39;internalpadding&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;0, 0&#39;</span>
@@ -245,11 +247,10 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isabs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">input</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="p">)</span>
 
+        <span class="bp">self</span><span class="o">.</span><span class="n">leading</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="nb">eval</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">leading</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tracking</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="nb">eval</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tracking</span><span class="p">))</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">eval</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">))</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">bitmapsize</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">bitmapsize</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">bitmapsize</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">eval</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bitmapsize</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">dpi</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dpi</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">texturesize</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span> <span class="nb">map</span><span class="p">(</span> <span class="nb">int</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">texturesize</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;,&#39;</span><span class="p">)</span> <span class="p">)</span> <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">textureoffset</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span> <span class="nb">map</span><span class="p">(</span> <span class="nb">int</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">textureoffset</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;,&#39;</span><span class="p">)</span> <span class="p">)</span> <span class="p">)</span>
@@ -570,7 +571,7 @@
           
     <div class="footer">
         &copy; Copyright 2013, Mathias Westerdahl.
-      Last updated on Feb 24, 2013.
+      Last updated on Mar 23, 2013.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </div>
         </div>

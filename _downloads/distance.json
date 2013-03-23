@@ -1,0 +1,1344 @@
+{
+    "ascender": 140, 
+    "descender": -43, 
+    "glyphs": [
+        {
+            "advance": 51, 
+            "bearing": [
+                13, 
+                54
+            ], 
+            "bitmapbox": [
+                0, 
+                0, 
+                49, 
+                25
+            ], 
+            "character": "-"
+        }, 
+        {
+            "advance": 72, 
+            "bearing": [
+                6, 
+                -7
+            ], 
+            "bitmapbox": [
+                53, 
+                0, 
+                85, 
+                25
+            ], 
+            "character": "_"
+        }, 
+        {
+            "advance": 45, 
+            "bearing": [
+                16, 
+                22
+            ], 
+            "bitmapbox": [
+                142, 
+                0, 
+                34, 
+                31
+            ], 
+            "character": "."
+        }, 
+        {
+            "advance": 82, 
+            "bearing": [
+                8, 
+                53
+            ], 
+            "bitmapbox": [
+                180, 
+                0, 
+                89, 
+                40
+            ], 
+            "character": "~"
+        }, 
+        {
+            "advance": 54, 
+            "bearing": [
+                10, 
+                104
+            ], 
+            "bitmapbox": [
+                273, 
+                0, 
+                56, 
+                41
+            ], 
+            "character": "`"
+        }, 
+        {
+            "advance": 45, 
+            "bearing": [
+                11, 
+                24
+            ], 
+            "bitmapbox": [
+                333, 
+                0, 
+                47, 
+                50
+            ], 
+            "character": ","
+        }, 
+        {
+            "advance": 82, 
+            "bearing": [
+                9, 
+                60
+            ], 
+            "bitmapbox": [
+                384, 
+                0, 
+                87, 
+                53
+            ], 
+            "character": "="
+        }, 
+        {
+            "advance": 44, 
+            "bearing": [
+                9, 
+                108
+            ], 
+            "bitmapbox": [
+                475, 
+                0, 
+                47, 
+                54
+            ], 
+            "character": "'"
+        }, 
+        {
+            "advance": 63, 
+            "bearing": [
+                12, 
+                106
+            ], 
+            "bitmapbox": [
+                526, 
+                0, 
+                62, 
+                56
+            ], 
+            "character": "*"
+        }, 
+        {
+            "advance": 64, 
+            "bearing": [
+                16, 
+                106
+            ], 
+            "bitmapbox": [
+                592, 
+                0, 
+                54, 
+                58
+            ], 
+            "character": "\""
+        }, 
+        {
+            "advance": 82, 
+            "bearing": [
+                8, 
+                106
+            ], 
+            "bitmapbox": [
+                650, 
+                0, 
+                89, 
+                73
+            ], 
+            "character": "^"
+        }, 
+        {
+            "advance": 95, 
+            "bearing": [
+                12, 
+                69
+            ], 
+            "bitmapbox": [
+                743, 
+                0, 
+                93, 
+                76
+            ], 
+            "character": "x"
+        }, 
+        {
+            "advance": 91, 
+            "bearing": [
+                12, 
+                69
+            ], 
+            "bitmapbox": [
+                840, 
+                0, 
+                90, 
+                76
+            ], 
+            "character": "z"
+        }, 
+        {
+            "advance": 82, 
+            "bearing": [
+                9, 
+                72
+            ], 
+            "bitmapbox": [
+                0, 
+                29, 
+                87, 
+                78
+            ], 
+            "character": "<"
+        }, 
+        {
+            "advance": 82, 
+            "bearing": [
+                9, 
+                72
+            ], 
+            "bitmapbox": [
+                142, 
+                44, 
+                87, 
+                78
+            ], 
+            "character": ">"
+        }, 
+        {
+            "advance": 106, 
+            "bearing": [
+                12, 
+                71
+            ], 
+            "bitmapbox": [
+                233, 
+                54, 
+                104, 
+                78
+            ], 
+            "character": "m"
+        }, 
+        {
+            "advance": 75, 
+            "bearing": [
+                13, 
+                71
+            ], 
+            "bitmapbox": [
+                934, 
+                0, 
+                72, 
+                78
+            ], 
+            "character": "n"
+        }, 
+        {
+            "advance": 77, 
+            "bearing": [
+                7, 
+                69
+            ], 
+            "bitmapbox": [
+                341, 
+                57, 
+                85, 
+                78
+            ], 
+            "character": "v"
+        }, 
+        {
+            "advance": 74, 
+            "bearing": [
+                13, 
+                71
+            ], 
+            "bitmapbox": [
+                430, 
+                58, 
+                71, 
+                79
+            ], 
+            "character": "c"
+        }, 
+        {
+            "advance": 76, 
+            "bearing": [
+                13, 
+                69
+            ], 
+            "bitmapbox": [
+                505, 
+                60, 
+                72, 
+                79
+            ], 
+            "character": "u"
+        }, 
+        {
+            "advance": 45, 
+            "bearing": [
+                15, 
+                71
+            ], 
+            "bitmapbox": [
+                91, 
+                29, 
+                36, 
+                80
+            ], 
+            "character": ":"
+        }, 
+        {
+            "advance": 85, 
+            "bearing": [
+                13, 
+                71
+            ], 
+            "bitmapbox": [
+                581, 
+                77, 
+                82, 
+                80
+            ], 
+            "character": "a"
+        }, 
+        {
+            "advance": 84, 
+            "bearing": [
+                11, 
+                71
+            ], 
+            "bitmapbox": [
+                667, 
+                80, 
+                85, 
+                80
+            ], 
+            "character": "o"
+        }, 
+        {
+            "advance": 65, 
+            "bearing": [
+                13, 
+                71
+            ], 
+            "bitmapbox": [
+                756, 
+                80, 
+                62, 
+                80
+            ], 
+            "character": "s"
+        }, 
+        {
+            "advance": 92, 
+            "bearing": [
+                12, 
+                72
+            ], 
+            "bitmapbox": [
+                822, 
+                80, 
+                89, 
+                81
+            ], 
+            "character": "e"
+        }, 
+        {
+            "advance": 53, 
+            "bearing": [
+                13, 
+                74
+            ], 
+            "bitmapbox": [
+                915, 
+                82, 
+                50, 
+                81
+            ], 
+            "character": "r"
+        }, 
+        {
+            "advance": 82, 
+            "bearing": [
+                9, 
+                74
+            ], 
+            "bitmapbox": [
+                0, 
+                111, 
+                87, 
+                82
+            ], 
+            "character": "+"
+        }, 
+        {
+            "advance": 115, 
+            "bearing": [
+                9, 
+                72
+            ], 
+            "bitmapbox": [
+                91, 
+                126, 
+                120, 
+                82
+            ], 
+            "character": "w"
+        }, 
+        {
+            "advance": 45, 
+            "bearing": [
+                10, 
+                71
+            ], 
+            "bitmapbox": [
+                969, 
+                82, 
+                47, 
+                96
+            ], 
+            "character": ";"
+        }, 
+        {
+            "advance": 55, 
+            "bearing": [
+                13, 
+                92
+            ], 
+            "bitmapbox": [
+                215, 
+                136, 
+                52, 
+                99
+            ], 
+            "character": "t"
+        }, 
+        {
+            "advance": 82, 
+            "bearing": [
+                8, 
+                101
+            ], 
+            "bitmapbox": [
+                271, 
+                139, 
+                89, 
+                109
+            ], 
+            "character": "#"
+        }, 
+        {
+            "advance": 40, 
+            "bearing": [
+                15, 
+                103
+            ], 
+            "bitmapbox": [
+                364, 
+                139, 
+                33, 
+                110
+            ], 
+            "character": "i"
+        }, 
+        {
+            "advance": 93, 
+            "bearing": [
+                13, 
+                69
+            ], 
+            "bitmapbox": [
+                401, 
+                141, 
+                90, 
+                110
+            ], 
+            "character": "y"
+        }, 
+        {
+            "advance": 79, 
+            "bearing": [
+                12, 
+                106
+            ], 
+            "bitmapbox": [
+                495, 
+                143, 
+                77, 
+                113
+            ], 
+            "character": "B"
+        }, 
+        {
+            "advance": 97, 
+            "bearing": [
+                12, 
+                106
+            ], 
+            "bitmapbox": [
+                576, 
+                164, 
+                95, 
+                113
+            ], 
+            "character": "D"
+        }, 
+        {
+            "advance": 64, 
+            "bearing": [
+                13, 
+                106
+            ], 
+            "bitmapbox": [
+                675, 
+                164, 
+                63, 
+                113
+            ], 
+            "character": "E"
+        }, 
+        {
+            "advance": 65, 
+            "bearing": [
+                13, 
+                106
+            ], 
+            "bitmapbox": [
+                742, 
+                164, 
+                62, 
+                113
+            ], 
+            "character": "F"
+        }, 
+        {
+            "advance": 94, 
+            "bearing": [
+                13, 
+                106
+            ], 
+            "bitmapbox": [
+                808, 
+                165, 
+                91, 
+                113
+            ], 
+            "character": "H"
+        }, 
+        {
+            "advance": 38, 
+            "bearing": [
+                14, 
+                106
+            ], 
+            "bitmapbox": [
+                903, 
+                167, 
+                33, 
+                113
+            ], 
+            "character": "I"
+        }, 
+        {
+            "advance": 96, 
+            "bearing": [
+                13, 
+                106
+            ], 
+            "bitmapbox": [
+                0, 
+                212, 
+                93, 
+                113
+            ], 
+            "character": "K"
+        }, 
+        {
+            "advance": 67, 
+            "bearing": [
+                14, 
+                106
+            ], 
+            "bitmapbox": [
+                940, 
+                182, 
+                62, 
+                113
+            ], 
+            "character": "L"
+        }, 
+        {
+            "advance": 87, 
+            "bearing": [
+                13, 
+                106
+            ], 
+            "bitmapbox": [
+                97, 
+                212, 
+                83, 
+                113
+            ], 
+            "character": "R"
+        }, 
+        {
+            "advance": 75, 
+            "bearing": [
+                12, 
+                106
+            ], 
+            "bitmapbox": [
+                184, 
+                239, 
+                73, 
+                113
+            ], 
+            "character": "T"
+        }, 
+        {
+            "advance": 94, 
+            "bearing": [
+                9, 
+                106
+            ], 
+            "bitmapbox": [
+                261, 
+                252, 
+                98, 
+                113
+            ], 
+            "character": "X"
+        }, 
+        {
+            "advance": 100, 
+            "bearing": [
+                12, 
+                106
+            ], 
+            "bitmapbox": [
+                363, 
+                255, 
+                100, 
+                113
+            ], 
+            "character": "Y"
+        }, 
+        {
+            "advance": 97, 
+            "bearing": [
+                13, 
+                106
+            ], 
+            "bitmapbox": [
+                467, 
+                260, 
+                93, 
+                113
+            ], 
+            "character": "Z"
+        }, 
+        {
+            "advance": 75, 
+            "bearing": [
+                13, 
+                106
+            ], 
+            "bitmapbox": [
+                564, 
+                281, 
+                72, 
+                113
+            ], 
+            "character": "h"
+        }, 
+        {
+            "advance": 80, 
+            "bearing": [
+                13, 
+                106
+            ], 
+            "bitmapbox": [
+                640, 
+                281, 
+                76, 
+                113
+            ], 
+            "character": "k"
+        }, 
+        {
+            "advance": 37, 
+            "bearing": [
+                13, 
+                106
+            ], 
+            "bitmapbox": [
+                720, 
+                281, 
+                32, 
+                113
+            ], 
+            "character": "l"
+        }, 
+        {
+            "advance": 85, 
+            "bearing": [
+                13, 
+                71
+            ], 
+            "bitmapbox": [
+                756, 
+                282, 
+                81, 
+                113
+            ], 
+            "character": "p"
+        }, 
+        {
+            "advance": 54, 
+            "bearing": [
+                13, 
+                107
+            ], 
+            "bitmapbox": [
+                841, 
+                282, 
+                50, 
+                114
+            ], 
+            "character": "1"
+        }, 
+        {
+            "advance": 77, 
+            "bearing": [
+                13, 
+                107
+            ], 
+            "bitmapbox": [
+                895, 
+                299, 
+                74, 
+                114
+            ], 
+            "character": "P"
+        }, 
+        {
+            "advance": 83, 
+            "bearing": [
+                12, 
+                72
+            ], 
+            "bitmapbox": [
+                0, 
+                329, 
+                82, 
+                114
+            ], 
+            "character": "g"
+        }, 
+        {
+            "advance": 86, 
+            "bearing": [
+                13, 
+                72
+            ], 
+            "bitmapbox": [
+                86, 
+                329, 
+                82, 
+                114
+            ], 
+            "character": "q"
+        }, 
+        {
+            "advance": 84, 
+            "bearing": [
+                10, 
+                108
+            ], 
+            "bitmapbox": [
+                172, 
+                369, 
+                86, 
+                115
+            ], 
+            "character": "2"
+        }, 
+        {
+            "advance": 89, 
+            "bearing": [
+                12, 
+                106
+            ], 
+            "bitmapbox": [
+                262, 
+                369, 
+                88, 
+                115
+            ], 
+            "character": "5"
+        }, 
+        {
+            "advance": 94, 
+            "bearing": [
+                11, 
+                106
+            ], 
+            "bitmapbox": [
+                354, 
+                372, 
+                93, 
+                115
+            ], 
+            "character": "7"
+        }, 
+        {
+            "advance": 60, 
+            "bearing": [
+                12, 
+                106
+            ], 
+            "bitmapbox": [
+                451, 
+                377, 
+                58, 
+                115
+            ], 
+            "character": "J"
+        }, 
+        {
+            "advance": 95, 
+            "bearing": [
+                13, 
+                106
+            ], 
+            "bitmapbox": [
+                513, 
+                398, 
+                92, 
+                115
+            ], 
+            "character": "U"
+        }, 
+        {
+            "advance": 49, 
+            "bearing": [
+                19, 
+                106
+            ], 
+            "bitmapbox": [
+                973, 
+                299, 
+                35, 
+                116
+            ], 
+            "character": "!"
+        }, 
+        {
+            "advance": 85, 
+            "bearing": [
+                13, 
+                106
+            ], 
+            "bitmapbox": [
+                609, 
+                398, 
+                82, 
+                116
+            ], 
+            "character": "d"
+        }, 
+        {
+            "advance": 99, 
+            "bearing": [
+                8, 
+                108
+            ], 
+            "bitmapbox": [
+                695, 
+                399, 
+                107, 
+                117
+            ], 
+            "character": "%"
+        }, 
+        {
+            "advance": 96, 
+            "bearing": [
+                12, 
+                108
+            ], 
+            "bitmapbox": [
+                806, 
+                417, 
+                108, 
+                117
+            ], 
+            "character": "&"
+        }, 
+        {
+            "advance": 83, 
+            "bearing": [
+                12, 
+                108
+            ], 
+            "bitmapbox": [
+                918, 
+                419, 
+                81, 
+                117
+            ], 
+            "character": "3"
+        }, 
+        {
+            "advance": 91, 
+            "bearing": [
+                10, 
+                110
+            ], 
+            "bitmapbox": [
+                0, 
+                447, 
+                93, 
+                117
+            ], 
+            "character": "4"
+        }, 
+        {
+            "advance": 84, 
+            "bearing": [
+                11, 
+                108
+            ], 
+            "bitmapbox": [
+                97, 
+                488, 
+                85, 
+                117
+            ], 
+            "character": "6"
+        }, 
+        {
+            "advance": 82, 
+            "bearing": [
+                12, 
+                108
+            ], 
+            "bitmapbox": [
+                186, 
+                488, 
+                81, 
+                117
+            ], 
+            "character": "8"
+        }, 
+        {
+            "advance": 84, 
+            "bearing": [
+                11, 
+                109
+            ], 
+            "bitmapbox": [
+                271, 
+                491, 
+                85, 
+                117
+            ], 
+            "character": "9"
+        }, 
+        {
+            "advance": 111, 
+            "bearing": [
+                10, 
+                108
+            ], 
+            "bitmapbox": [
+                360, 
+                496, 
+                114, 
+                117
+            ], 
+            "character": "@"
+        }, 
+        {
+            "advance": 108, 
+            "bearing": [
+                7, 
+                110
+            ], 
+            "bitmapbox": [
+                478, 
+                517, 
+                116, 
+                117
+            ], 
+            "character": "A"
+        }, 
+        {
+            "advance": 96, 
+            "bearing": [
+                11, 
+                108
+            ], 
+            "bitmapbox": [
+                598, 
+                520, 
+                97, 
+                117
+            ], 
+            "character": "C"
+        }, 
+        {
+            "advance": 117, 
+            "bearing": [
+                12, 
+                108
+            ], 
+            "bitmapbox": [
+                699, 
+                538, 
+                116, 
+                117
+            ], 
+            "character": "G"
+        }, 
+        {
+            "advance": 121, 
+            "bearing": [
+                11, 
+                108
+            ], 
+            "bitmapbox": [
+                819, 
+                540, 
+                122, 
+                117
+            ], 
+            "character": "O"
+        }, 
+        {
+            "advance": 85, 
+            "bearing": [
+                13, 
+                107
+            ], 
+            "bitmapbox": [
+                0, 
+                568, 
+                82, 
+                117
+            ], 
+            "character": "b"
+        }, 
+        {
+            "advance": 117, 
+            "bearing": [
+                14, 
+                110
+            ], 
+            "bitmapbox": [
+                86, 
+                609, 
+                112, 
+                118
+            ], 
+            "character": "M"
+        }, 
+        {
+            "advance": 95, 
+            "bearing": [
+                13, 
+                109
+            ], 
+            "bitmapbox": [
+                202, 
+                612, 
+                91, 
+                118
+            ], 
+            "character": "N"
+        }, 
+        {
+            "advance": 128, 
+            "bearing": [
+                12, 
+                108
+            ], 
+            "bitmapbox": [
+                297, 
+                617, 
+                125, 
+                118
+            ], 
+            "character": "Q"
+        }, 
+        {
+            "advance": 83, 
+            "bearing": [
+                11, 
+                108
+            ], 
+            "bitmapbox": [
+                426, 
+                638, 
+                84, 
+                118
+            ], 
+            "character": "S"
+        }, 
+        {
+            "advance": 100, 
+            "bearing": [
+                7, 
+                106
+            ], 
+            "bitmapbox": [
+                514, 
+                641, 
+                108, 
+                118
+            ], 
+            "character": "V"
+        }, 
+        {
+            "advance": 80, 
+            "bearing": [
+                12, 
+                108
+            ], 
+            "bitmapbox": [
+                626, 
+                659, 
+                79, 
+                119
+            ], 
+            "character": "0"
+        }, 
+        {
+            "advance": 141, 
+            "bearing": [
+                8, 
+                108
+            ], 
+            "bitmapbox": [
+                709, 
+                661, 
+                147, 
+                119
+            ], 
+            "character": "W"
+        }, 
+        {
+            "advance": 66, 
+            "bearing": [
+                10, 
+                111
+            ], 
+            "bitmapbox": [
+                945, 
+                540, 
+                68, 
+                120
+            ], 
+            "character": "?"
+        }, 
+        {
+            "advance": 79, 
+            "bearing": [
+                8, 
+                121
+            ], 
+            "bitmapbox": [
+                860, 
+                664, 
+                86, 
+                128
+            ], 
+            "character": "\\"
+        }, 
+        {
+            "advance": 81, 
+            "bearing": [
+                36, 
+                121
+            ], 
+            "bitmapbox": [
+                950, 
+                664, 
+                32, 
+                128
+            ], 
+            "character": "|"
+        }, 
+        {
+            "advance": 79, 
+            "bearing": [
+                8, 
+                115
+            ], 
+            "bitmapbox": [
+                0, 
+                731, 
+                85, 
+                132
+            ], 
+            "character": "/"
+        }, 
+        {
+            "advance": 82, 
+            "bearing": [
+                12, 
+                119
+            ], 
+            "bitmapbox": [
+                89, 
+                731, 
+                82, 
+                142
+            ], 
+            "character": "$"
+        }, 
+        {
+            "advance": 40, 
+            "bearing": [
+                15, 
+                103
+            ], 
+            "bitmapbox": [
+                986, 
+                664, 
+                33, 
+                144
+            ], 
+            "character": "j"
+        }, 
+        {
+            "advance": 45, 
+            "bearing": [
+                12, 
+                113
+            ], 
+            "bitmapbox": [
+                175, 
+                734, 
+                45, 
+                145
+            ], 
+            "character": "("
+        }, 
+        {
+            "advance": 45, 
+            "bearing": [
+                12, 
+                113
+            ], 
+            "bitmapbox": [
+                224, 
+                734, 
+                44, 
+                146
+            ], 
+            "character": ")"
+        }, 
+        {
+            "advance": 48, 
+            "bearing": [
+                13, 
+                113
+            ], 
+            "bitmapbox": [
+                272, 
+                739, 
+                45, 
+                146
+            ], 
+            "character": "["
+        }, 
+        {
+            "advance": 48, 
+            "bearing": [
+                13, 
+                113
+            ], 
+            "bitmapbox": [
+                321, 
+                739, 
+                45, 
+                146
+            ], 
+            "character": "]"
+        }, 
+        {
+            "advance": 51, 
+            "bearing": [
+                12, 
+                113
+            ], 
+            "bitmapbox": [
+                370, 
+                739, 
+                51, 
+                146
+            ], 
+            "character": "{"
+        }, 
+        {
+            "advance": 51, 
+            "bearing": [
+                12, 
+                113
+            ], 
+            "bitmapbox": [
+                425, 
+                760, 
+                51, 
+                146
+            ], 
+            "character": "}"
+        }, 
+        {
+            "advance": 56, 
+            "bearing": [
+                13, 
+                107
+            ], 
+            "bitmapbox": [
+                480, 
+                763, 
+                53, 
+                148
+            ], 
+            "character": "f"
+        }, 
+        {
+            "advance": 45, 
+            "bearing": [
+                0, 
+                0
+            ], 
+            "bitmapbox": [
+                0, 
+                0, 
+                0, 
+                0
+            ], 
+            "character": " "
+        }
+    ], 
+    "name": "distance.fontinfo", 
+    "pairkernings": [], 
+    "size": 132, 
+    "texturename": "distance.png", 
+    "texturesize": [
+        1024, 
+        1024
+    ]
+}

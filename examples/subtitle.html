@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>6.1. 00_simple.fontinfo &mdash; FontCreator</title>
+    <title>6.3. subtitle.fontinfo &mdash; FontCreator</title>
     
     <link rel="stylesheet" href="../_static/agogo.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -28,8 +28,8 @@
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="top" title="FontCreator" href="../index.html" />
     <link rel="up" title="6. Examples" href="examples.html" />
-    <link rel="next" title="6.2. 01_outline.fontinfo" href="01_outline.html" />
-    <link rel="prev" title="6. Examples" href="examples.html" /> 
+    <link rel="next" title="7. Credits" href="../credits.html" />
+    <link rel="prev" title="6.2. distance.fontinfo" href="distance.html" /> 
   </head>
   <body>
     <div class="header-wrapper">
@@ -40,9 +40,9 @@
         <div class="headertitle"><a
           href="../index.html">FontCreator</a></div>
         <div class="rel">
-          <a href="examples.html" title="6. Examples"
+          <a href="distance.html" title="6.2. distance.fontinfo"
              accesskey="P">previous</a> |
-          <a href="01_outline.html" title="6.2. 01_outline.fontinfo"
+          <a href="../credits.html" title="7. Credits"
              accesskey="N">next</a> |
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |
@@ -60,9 +60,9 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="simple-fontinfo">
-<h1>6.1. 00_simple.fontinfo<a class="headerlink" href="#simple-fontinfo" title="Permalink to this headline">¶</a></h1>
-<img alt="../_images/00_simple_text.png" src="../_images/00_simple_text.png" />
+  <div class="section" id="subtitle-fontinfo">
+<h1>6.3. subtitle.fontinfo<a class="headerlink" href="#subtitle-fontinfo" title="Permalink to this headline">¶</a></h1>
+<img alt="../_images/subtitle_text.png" src="../_images/subtitle_text.png" />
 <div class="contents local topic" id="contents">
 <ul class="simple">
 <li><a class="reference internal" href="#brief" id="id1">Brief</a></li>
@@ -71,42 +71,52 @@
 </ul>
 </div>
 <div class="section" id="brief">
-<h2><a class="toc-backref" href="#contents">6.1.1. Brief</a><a class="headerlink" href="#brief" title="Permalink to this headline">¶</a></h2>
-<p>The simplest example. Show an anti aliased font..
-.
-Uses: Solid.</p>
+<h2><a class="toc-backref" href="#contents">6.3.1. Brief</a><a class="headerlink" href="#brief" title="Permalink to this headline">¶</a></h2>
+<p>A subtitle example.
+.</p>
 </div>
 <div class="section" id="fontinfo">
-<h2><a class="toc-backref" href="#contents">6.1.2. .fontinfo</a><a class="headerlink" href="#fontinfo" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#contents">6.3.2. .fontinfo</a><a class="headerlink" href="#fontinfo" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-python"><div class="highlight"><pre><span class="p">[</span><span class="n">default</span><span class="p">]</span>
-<span class="n">name</span> <span class="o">=</span> <span class="o">./</span><span class="n">fonts</span><span class="o">/</span><span class="n">verdana</span><span class="o">.</span><span class="n">ttf</span>
-<span class="n">size</span> <span class="o">=</span> <span class="mi">42</span>
+<span class="n">name</span> <span class="o">=</span> <span class="o">./</span><span class="n">fonts</span><span class="o">/</span><span class="n">Commodore_Pixelized_v1</span><span class="o">.</span><span class="mf">2.</span><span class="n">ttf</span>
+<span class="n">size</span> <span class="o">=</span> <span class="mi">32</span>
 
 <span class="n">letters</span> <span class="o">=</span> <span class="n">letters_ascii</span><span class="o">.</span><span class="n">txt</span>
 
-<span class="n">bgcolor</span> <span class="o">=</span> <span class="p">(</span><span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">)</span>
+<span class="n">bgcolor</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
 
 <span class="n">writer</span> <span class="o">=</span> <span class="n">fontout_json</span>
 <span class="n">texturerender</span> <span class="o">=</span> <span class="n">fonttex_bitmap</span>
 <span class="n">texturewriter</span> <span class="o">=</span> <span class="n">fonttexout_pil</span>
 <span class="n">textureformat</span> <span class="o">=</span> <span class="o">.</span><span class="n">png</span>
-<span class="n">texturesize</span> <span class="o">=</span> <span class="mi">512</span><span class="p">,</span> <span class="mi">256</span>
+<span class="n">texturesize</span> <span class="o">=</span> <span class="mi">512</span><span class="p">,</span><span class="mi">256</span>
 
-<span class="n">layers</span> <span class="o">=</span> <span class="p">[</span><span class="n">Layer</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="n">solid_fill</span><span class="p">)]</span>
+<span class="n">layers</span> <span class="o">=</span> <span class="p">[</span><span class="n">Layer</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="n">solid</span><span class="p">)]</span>
+<span class="n">posteffects</span> <span class="o">=</span> <span class="p">[</span><span class="n">outline</span><span class="p">,</span> <span class="n">outline2</span><span class="p">]</span>
 
 <span class="c"># modes: none, light, normal. Default is &#39;normal&#39;</span>
-<span class="n">antialias</span> <span class="o">=</span> <span class="n">normal</span>
+<span class="n">antialias</span> <span class="o">=</span> <span class="n">none</span>
 
-<span class="p">[</span><span class="n">solid_fill</span><span class="p">]</span>
+<span class="p">[</span><span class="n">solid</span><span class="p">]</span>
 <span class="nb">type</span> <span class="o">=</span> <span class="n">solid</span>
+<span class="n">color</span> <span class="o">=</span> <span class="p">(</span><span class="mi">166</span><span class="p">,</span><span class="mi">80</span><span class="p">,</span><span class="mi">33</span><span class="p">)</span>
+
+<span class="p">[</span><span class="n">outline</span><span class="p">]</span>
+<span class="nb">type</span> <span class="o">=</span> <span class="n">outline</span>
+<span class="n">width</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">color</span> <span class="o">=</span> <span class="p">(</span><span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">)</span>
+
+<span class="p">[</span><span class="n">outline2</span><span class="p">]</span>
+<span class="nb">type</span> <span class="o">=</span> <span class="n">outline</span>
+<span class="n">width</span> <span class="o">=</span> <span class="mi">2</span>
 <span class="n">color</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="results">
-<h2><a class="toc-backref" href="#contents">6.1.3. Results</a><a class="headerlink" href="#results" title="Permalink to this headline">¶</a></h2>
-<p>The JSON file <a class="reference download internal" href="../_downloads/00_simple.json"><tt class="xref download docutils literal"><span class="pre">.json</span></tt></a></p>
-<img alt="../_images/00_simple.png" src="../_images/00_simple.png" />
+<h2><a class="toc-backref" href="#contents">6.3.3. Results</a><a class="headerlink" href="#results" title="Permalink to this headline">¶</a></h2>
+<p>The JSON file <a class="reference download internal" href="../_downloads/subtitle.json"><tt class="xref download docutils literal"><span class="pre">.json</span></tt></a></p>
+<img alt="../_images/subtitle.png" src="../_images/subtitle.png" />
 </div>
 </div>
 
@@ -124,11 +134,9 @@ Uses: Solid.</p>
 <li class="toctree-l1"><a class="reference internal" href="../download.html">4. Download &amp; Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../reference.html">5. Reference</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="examples.html">6. Examples</a><ul class="current">
-<li class="toctree-l2 current"><a class="current reference internal" href="">6.1. 00_simple.fontinfo</a></li>
-<li class="toctree-l2"><a class="reference internal" href="01_outline.html">6.2. 01_outline.fontinfo</a></li>
-<li class="toctree-l2"><a class="reference internal" href="05_distance_fields.html">6.3. 05_distance_fields.fontinfo</a></li>
-<li class="toctree-l2"><a class="reference internal" href="adventure.html">6.4. adventure.fontinfo</a></li>
-<li class="toctree-l2"><a class="reference internal" href="uncharted.html">6.5. uncharted.fontinfo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adventure.html">6.1. adventure.fontinfo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="distance.html">6.2. distance.fontinfo</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="">6.3. subtitle.fontinfo</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../credits.html">7. Credits</a></li>
@@ -152,16 +160,16 @@ Uses: Solid.</p>
     <div class="footer-wrapper">
       <div class="footer">
         <div class="left">
-          <a href="examples.html" title="6. Examples"
+          <a href="distance.html" title="6.2. distance.fontinfo"
              >previous</a> |
-          <a href="01_outline.html" title="6.2. 01_outline.fontinfo"
+          <a href="../credits.html" title="7. Credits"
              >next</a> |
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |
           <a href="../genindex.html" title="General Index"
              >index</a>
             <br/>
-            <a href="../_sources/examples/00_simple.txt"
+            <a href="../_sources/examples/subtitle.txt"
                rel="nofollow">Show Source</a>
         </div>
 
@@ -169,7 +177,7 @@ Uses: Solid.</p>
           
     <div class="footer">
         &copy; Copyright 2013, Mathias Westerdahl.
-      Last updated on Feb 24, 2013.
+      Last updated on Mar 23, 2013.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </div>
         </div>

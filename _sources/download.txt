@@ -33,6 +33,8 @@ Optional installations:
 - `sphinx <http://sphinx.pocoo.org>`_ (for the documentation)
 - `PySide <http://qt-project.org/wiki/PySideDownloads>`_ (for the Editor)
 
+- libpng and libglfw (for the demo app)
+
 .. note:: Note that the PIL package is only necessary if you want to use it for saving
 	to a standard image format (e.g. PNG, TGA etc). The examples use PIL.
 
@@ -74,6 +76,8 @@ Once the code is built and the library path is set, you can test that the tool b
 
 If all goes well, you should now be able to find two files *build/00_pixel.png* and *build/00_pixel.json*
 
+There are versions of the compile script for Win6 and Win32, but they don't build the demo app.
+You can easily fix that yourself if you provide the libpng and the libglfw.
 
 Building Examples
 -----------------
@@ -96,3 +100,14 @@ To build the documentation::
 	> open doc/build/html/index.html
     
 
+The Demo app
+------------
+
+The demo app shows the sdf rendering of a texture created with the FontCreator.
+Keys:
+
+- Zoom   - Left Shift + Left Mouse + Mouse Move
+- Rotate - Left Control + Left Mouse + Mouse Move
+- Pan    - Left Mouse + Mouse Move
+
+.. image:: demo.png
