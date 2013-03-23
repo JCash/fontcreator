@@ -492,10 +492,8 @@ int main(int argc, char *argv[])
   // Load textures
   glEnable(GL_TEXTURE_2D);
   glGenTextures( 2, textureID );
-  //loadDistTexture("build/05_distance_fields.tga", textureID[0], &texw, &texh);
-  //png_texture_load("doc/build/05_distance_fields.png", textureID[0], &texw, &texh);
-  png_texture_load("../minosaur/content/fonts/verdana.png", textureID[0], &texw, &texh);
-  loadRefTexture("doc/build/05_distance_fields.png", textureID[1]);
+  png_texture_load("build/font.png", textureID[0], &texw, &texh);
+  loadRefTexture("build/font.tga", textureID[1]);
 
   // Create, load and compile the shader programs
   programObj[0] = createShader("build/vertex.glsl", "build/fragment1.glsl");
@@ -544,6 +542,7 @@ int main(int argc, char *argv[])
         }
       }
 
+      /*
       if(glfwGetKey('1')) {
         loadDistTexture("build/dist1.tga", textureID[0], &texw, &texh);
         loadRefTexture("build/ref1.tga", textureID[1]);
@@ -568,17 +567,17 @@ int main(int argc, char *argv[])
         loadDistTexture("build/05_distance_fields.tga", textureID[0], &texw, &texh);
         loadRefTexture("build/05_distance_fields.tga", textureID[1]);
       }
-
-      if(glfwGetKey('8')) {
+	*/
+      if(glfwGetKey('1')) {
         currentProgramObj = programObj[0];
       }
-      if(glfwGetKey('9')) {
+      if(glfwGetKey('2')) {
         currentProgramObj = programObj[1];
       }
 
       // Check if the ESC key is pressed or the window has been closed
       running = !glfwGetKey( GLFW_KEY_ESC ) &&
-	glfwGetWindowParam( GLFW_OPENED );
+    		  	  glfwGetWindowParam( GLFW_OPENED );
     }
 
   // Close the window (if still open) and terminate GLFW

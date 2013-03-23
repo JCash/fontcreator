@@ -3,7 +3,7 @@
 # Uses: Distance Field
 
 [default]
-name = ./fonts/PetitaBold.ttf
+name = ./fonts/No-move.ttf
 size = 132
 padding = 4
 

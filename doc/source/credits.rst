@@ -10,8 +10,21 @@ Fonts
 
   - Distributed under license: http://www.fontsquirrel.com/license/helsinki
 
-- `Petita <http://www.dafont.com/petita.font>`_ by Manfred Klein
+- `N.O. Moevement <http://www.dafont.com/n-o-movement.font>`_ by Peter Saville
 
 - `Commodore 64 Pixelized <http://www.dafont.com/commodore-64-pixelized.font>`_ by Devin Cook
 
 Thanks for the free fonts!
+
+
+Code
+----
+
+Thanks to the FreeType library maintainers!
+Freetype is used under the FreeType license (BSD with a credit clause)
+
+Thanks Jukka Jylänki for the bin packing code: `RectangleBinPack.zip <http://clb.demon.fi/files/RectangleBinPack/RectangleBinPack.zip>`_
+
+Thanks Stefan Gustavsson for the demo code: `Interactive Demo <http://webstaff.itn.liu.se/~stegu/aadist>`_
+
+ 

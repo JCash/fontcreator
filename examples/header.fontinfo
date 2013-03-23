@@ -2,7 +2,7 @@
 
 [default]
 name = ./fonts/Commodore_Pixelized_v1.2.ttf
-size = 64
+size = 48
 
 letters = letters_ascii.txt
 
@@ -21,13 +21,12 @@ antialias = light
 
 [outline_black]
 type = outline
-width = 4
-spread = 1
+width = 2
 color = (0, 0, 0)
 
 [outline_white]
 type = outline
-width = 3
+width = 2
 color = (255, 255, 255)
 
 [gradient]
